@@ -5,7 +5,7 @@ const Transaction = require('../models/Transaction');
 // Public
 exports.getTransactions = async (req, res, next) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find().sort({"date": -1});
     return res.status(200).json({
       success: true,
       count: transactions.length,

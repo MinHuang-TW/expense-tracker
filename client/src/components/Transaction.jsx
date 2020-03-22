@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { numberWithCommas } from '../utils/format';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { numberWithCommas, formatDate } from '../utils/format';
+// import DeleteIcon from '@material-ui/icons/Delete';
+import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 const Transaction = ({ transaction }) => {
   const { deleteTransaction } = useContext(GlobalContext);
@@ -9,16 +10,31 @@ const Transaction = ({ transaction }) => {
 
   return (
     <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
-      {transaction.text}
-      <span>
-        {sign} $ {numberWithCommas(Math.abs(transaction.amount))}
-      </span>
-      <div
+      <span
         className='delete-btn'
         onClick={() => deleteTransaction(transaction._id)}
       >
-        <DeleteIcon />
-      </div>
+        <BackspaceSharpIcon
+          style={{ fontSize: '20px', transform: 'scaleX(-1)' }} 
+        />
+      </span>
+      <div style={{ marginLeft: '35px' }}>
+        <p>{transaction.text}</p>
+        <p style={{ 
+          opacity: 0.3, 
+          fontSize: '14px', 
+          marginTop: '3px',
+          letterSpacing: '1px' 
+        }}>
+          {formatDate(transaction.date)}
+        </p>
+      </div> 
+      <span style={{
+        fontSize: '20px',
+        color: transaction.amount > 0 ? '#00c853' : '#f44336',
+      }}>
+        {sign} {numberWithCommas(Math.abs(transaction.amount))}
+      </span>
     </li>
   );
 };

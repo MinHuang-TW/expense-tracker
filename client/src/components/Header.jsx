@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -54,14 +54,9 @@ function ScrollTop(props) {
 const Header = (props) => {
   const classes = useStyles();
 
-  const fabStyle = {
-    background: '#00bcd4',
-    color: 'white'
-  }
-
   return (
     <React.Fragment>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <AppBar className="nav-bar">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -72,7 +67,12 @@ const Header = (props) => {
       </AppBar>
       <Toolbar id="back-to-top-anchor" />
       <ScrollTop {...props}>
-        <Fab style={fabStyle} size="small" aria-label="scroll back to top">
+        <Fab 
+          style={{ zIndex: 5 }} 
+          color='primary' 
+          size="small" 
+          aria-label="scroll back to top"
+        >
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>

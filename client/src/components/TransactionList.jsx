@@ -21,12 +21,14 @@ const TransactionList = () => {
 
   return (
     <div>
-      <p style={classes.text}>Recent</p>
+      <p style={classes.text}>Recent Transactions</p>
       {transactions.length > 0 
         ? <ul className='list'>
-          {transactions.map(transaction => (
-            <Transaction key={transaction._id} transaction={transaction} />
-          ))}
+          {transactions
+            .map(transaction => (
+              <Transaction key={transaction._id} transaction={transaction} />
+            ))
+          }
         </ul>
         : <div>No transaction</div>
       }
