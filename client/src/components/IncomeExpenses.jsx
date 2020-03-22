@@ -14,25 +14,15 @@ const IncomeExpenses = () => {
     -1
   ).toFixed(2);
 
-  const classes = {
-    text: {
-      color: '#fff',
-      opacity: 0.5,
-      fontSize: '16px',
-      marginBottom: '10px',
-      letterSpacing: '1px'
-    },
-  }
-
   return (
     <div className='inc-exp-container'>
       <div>
-        <p style={classes.text}>Income</p>
-        <p className='money plus'>+ {numberWithCommas(income)}</p>
+        <p className='sub-title'>Income</p>
+        <p className='sub-amount'>+{numberWithCommas(income)}</p>
       </div>
       <div>
-        <p style={classes.text}>Expense</p>
-        <p className='money minus'>- {numberWithCommas(expense)}</p>
+        <p className='sub-title'>Expense</p>
+        <p className='sub-amount'>-{numberWithCommas(expense)}</p>
       </div>
     </div>
   );

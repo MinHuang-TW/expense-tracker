@@ -12,6 +12,8 @@ import TextField from '@material-ui/core/TextField';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -24,9 +26,14 @@ const useStyles = makeStyles(theme => ({
   },
   root: {
     '& > *': {
-      margin: theme.spacing(1),
-      width: '350px',
+      margin: theme.spacing(3),
     },
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    left: '50%',
+    transform: 'translateX(-50%)'
   },
 }));
 
@@ -74,30 +81,39 @@ const AddTransaction = () => {
   };
 
   return (
-    <>
-      <button 
+    <div>
+      <Fab 
+        className={classes.fab}
+        color='primary'
+        aria-label="add"
+        onClick={handleClickOpen}
+      >
+        <AddIcon />
+      </Fab>
+
+      {/* <button 
         className='btn' 
         onClick={handleClickOpen}
         style={{ margin: '50px auto' }}
       >
         Add New Transaction
-      </button>
+      </button> */}
       
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              New Transaction
+            </Typography>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Add New Transaction
-            </Typography>
           </Toolbar>
         </AppBar>
 
         <form 
           onSubmit={onSubmit}
-          className={classes.root} 
+          className={classes.root}
           noValidate 
           autoComplete="off"
           style={{ 
@@ -110,10 +126,11 @@ const AddTransaction = () => {
           }}
         >
           <TextField
-            error={errorText}
-            required
-            id="standard-required"
+            id="standard-full-width"
             label="Description" 
+            fullWidth
+            required
+            error={errorText}
             helperText={errorText && "Please enter the name of the transaction"}
             onChange={e => {
               setText(e.target.value);
@@ -121,22 +138,24 @@ const AddTransaction = () => {
             }}
           />
           <TextField
-            error={errorAmount}
-            required
-            id="standard-required"
+            id="standard-full-width"
             label="Amount" 
-            onChange={e => {
-              setAmount(e.target.value);
-              setErrorAmount(/^[+-]?[0-9]+.?[0-9]*$/.test(e.target.value) ? false : true)
-            }} 
+            fullWidth
+            required
+            error={errorAmount}
             helperText={errorAmount 
               ? "Please enter a valid number" 
               : "positive - Income, negative - Expense"
             }
+            onChange={e => {
+              setAmount(e.target.value);
+              setErrorAmount(/^[+-]?[0-9]+.?[0-9]*$/.test(e.target.value) ? false : true)
+            }} 
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               disableToolbar
+              fullWidth
               format="dd / MM / yyyy"
               margin="normal"
               id="date-picker-dialog"
@@ -148,16 +167,16 @@ const AddTransaction = () => {
               }}
             />
           </MuiPickersUtilsProvider>
-        <button 
-          className='btn' 
-          style={{ marginTop: '50px' }}
-          disabled={!text || !amount || errorAmount ? true : false}
-        >
-          Confirm
-        </button>
+          <button 
+            className='btn' 
+            style={{ marginTop: '50px' }}
+            disabled={!text || !amount || errorAmount ? true : false}
+          >
+            SAVE
+          </button>
         </form>
       </Dialog>
-    </>
+    </div>
   );
 };
 

@@ -9,31 +9,43 @@ body {
   justify-content: center;
   min-height: 100vh;
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: Roboto, sans-serif;
 }
 
-.nav-bar {
-  box-shadow: none !important;
+.container {
+  margin: 30px auto;
+  width: 350px;
 }
+
+/* HEADER */
 
 .container-top {
   background: #00bcd4;
   width: 100vw;
-  padding-top: 25px;
-  padding-bottom: 5px;
+  padding-top: calc(56px + 30px);
+  text-align: center;
 }
 
-.container {
-  margin: 50px auto;
-  width: 350px;
+
+.main-title {
+  color: white;
+  opacity: 0.5;
+  font-size: 18px;
+  margin-bottom: 10px;
+  letter-spacing: 1px
+}
+
+.main-amount {
+  color: white;
+  font-size: 45px
 }
 
 .inc-exp-container {
   width: 350px;
-  padding: 20px;
+  margin: 20px auto;
+  padding: 20px 0;
   display: flex;
   justify-content: space-between;
-  margin: 20px auto;
 }
 
 .inc-exp-container > div {
@@ -45,21 +57,28 @@ body {
   border-right: 1px solid #4dd0e1;
 }
 
-.money {
+.sub-title {
+  color: #fff;
+  opacity: 0.5;
+  font-size: 16px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.sub-amount {
   font-size: 20px;
   letter-spacing: 1px;
   margin: 5px 0;
+  color: white;
 }
 
-.money.plus {
-  /* color: #00c853; */
-  color: white;
+/* .money.plus {
+  color: #00c853;
 }
 
 .money.minus {
-  /* color: #f44336; */
-  color: white;
-}
+  color: #f44336;
+} */
 
 .btn {
   opacity: 1;
@@ -70,7 +89,8 @@ body {
   display: block;
   font-size: 18px;
   padding: 15px;
-  width: 350px;
+  width: 100%;
+  letter-spacing: 1px;
 }
 
 .btn:disabled {
@@ -91,10 +111,10 @@ body {
   list-style-type: none;
   padding: 0;
   margin-bottom: 40px;
+  background: transparent;
 }
 
 .list li {
-  background-color: #fff;
   font-size: 16px;
   color: #607d8b;
   border-bottom: 1px solid #eee;
@@ -117,15 +137,12 @@ body {
 
 .delete-btn {
   cursor: pointer;
-  /* background-color: #e74c3c; */
   border: 0;
   color: #607d8b;
-  /* font-size: 20px; */
-  /* line-height: 20px; */
-  /* padding: 2px 5px; */
-  position: absolute;
   left: 0;
-  /* opacity: 0.4; */
+  transform: scaleX(-1);
+  position: absolute;
+  opacity: 0.5;
   /* top: 50%;
   transform: translate(-100%, -50%);
   transition: opacity 0.3s ease; */
@@ -135,4 +152,25 @@ body {
   opacity: 1;
 } */
 
+@media only screen and (max-width: 375px) {
+  .container,
+  .inc-exp-container {
+    width: 90vw;
+  }
 
+  .main-title {
+    font-size: 16px;
+  }
+
+  .main-amount {
+    font-size: 36px
+  }
+
+  .sub-title {
+    font-size: 16px;
+  }
+
+  .sub-amount {
+    font-size: 18px;
+  }
+}

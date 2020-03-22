@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { numberWithCommas, formatDate } from '../utils/format';
-// import DeleteIcon from '@material-ui/icons/Delete';
 import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 const Transaction = ({ transaction }) => {
@@ -10,14 +9,11 @@ const Transaction = ({ transaction }) => {
 
   return (
     <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
-      <span
-        className='delete-btn'
-        onClick={() => deleteTransaction(transaction._id)}
-      >
         <BackspaceSharpIcon
-          style={{ fontSize: '20px', transform: 'scaleX(-1)' }} 
+          className='delete-btn'
+          style={{ fontSize: '20px' }} 
+          onClick={() => deleteTransaction(transaction._id)}
         />
-      </span>
       <div style={{ marginLeft: '35px' }}>
         <p>{transaction.text}</p>
         <p style={{ 

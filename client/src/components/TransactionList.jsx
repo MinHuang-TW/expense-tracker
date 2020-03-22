@@ -9,7 +9,7 @@ const TransactionList = () => {
     text: {
       color: '#00bcd4',
       fontSize: '16px',
-      marginBottom: '30px',
+      marginBottom: '10px',
       letterSpacing: '1px'
     },
   }
@@ -29,6 +29,7 @@ const TransactionList = () => {
               <Transaction key={transaction._id} transaction={transaction} />
             ))
           }
+          <div style={{ height: '56px' }} /> 
         </ul>
         : <div>No transaction</div>
       }
