@@ -152,10 +152,24 @@ body {
   opacity: 1;
 } */
 
+.new-form {
+  width: 350px;
+  margin: auto;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @media only screen and (max-width: 375px) {
   .container,
   .inc-exp-container {
     width: 90vw;
+  }
+
+  .new-form {
+    width: 80vw;
   }
 
   .main-title {

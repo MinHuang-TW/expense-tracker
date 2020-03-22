@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
   root: {
     '& > *': {
-      margin: theme.spacing(3),
+      margin: theme.spacing(1),
     },
   },
   fab: {
@@ -113,17 +113,18 @@ const AddTransaction = () => {
 
         <form 
           onSubmit={onSubmit}
-          className={classes.root}
+          className={`new-form ${classes.root}`}
           noValidate 
           autoComplete="off"
-          style={{ 
-            margin: 'auto',
-            height: '400px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}
+          // style={{
+          //   width: '290px',
+          //   margin: 'auto',
+          //   height: '400px',
+          //   display: 'flex',
+          //   flexDirection: 'column',
+          //   justifyContent: 'space-around',
+          //   alignItems: 'center',
+          // }}
         >
           <TextField
             id="standard-full-width"
