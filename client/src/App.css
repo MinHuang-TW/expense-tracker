@@ -17,7 +17,7 @@ body {
   width: 350px;
 }
 
-/* HEADER */
+/* ----- HEADER ----- */
 
 .container-top {
   background: #00bcd4;
@@ -26,18 +26,36 @@ body {
   text-align: center;
 }
 
-
 .main-title {
   color: white;
   opacity: 0.5;
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 10px;
-  letter-spacing: 1px
+  /* letter-spacing: 1px; */
+  text-transform: uppercase;
 }
 
 .main-amount {
   color: white;
   font-size: 45px
+}
+
+/* ----- INCOME - EXPENSE ----- */
+
+.sub-title {
+  color: #fff;
+  opacity: 0.5;
+  font-size: 16px;
+  margin-bottom: 10px;
+  /* letter-spacing: 1px; */
+  text-transform: uppercase;
+}
+
+.sub-amount {
+  font-size: 20px;
+  /* letter-spacing: 1px; */
+  margin: 5px 0;
+  color: white;
 }
 
 .inc-exp-container {
@@ -57,28 +75,17 @@ body {
   border-right: 1px solid #4dd0e1;
 }
 
-.sub-title {
-  color: #fff;
-  opacity: 0.5;
-  font-size: 16px;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-}
+/* ----- ADD TRANSACTION ----- */
 
-.sub-amount {
-  font-size: 20px;
-  letter-spacing: 1px;
-  margin: 5px 0;
-  color: white;
+.new-form {
+  width: 350px;
+  margin: auto;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
-
-/* .money.plus {
-  color: #00c853;
-}
-
-.money.minus {
-  color: #f44336;
-} */
 
 .btn {
   opacity: 1;
@@ -98,25 +105,22 @@ body {
   cursor: default;
 }
 
-/* .btn:hover {
-  background: #00838f;
-} */
-
 .btn:focus,
 .delete-btn:focus {
   outline: 0;
 }
 
+/* ----- TRANSACTION LIST ----- */
+
 .list {
   list-style-type: none;
   padding: 0;
-  margin-bottom: 40px;
-  background: transparent;
+  color: #607d8b;
+  /* margin-bottom: 40px; */
 }
 
 .list li {
   font-size: 16px;
-  color: #607d8b;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
@@ -127,18 +131,28 @@ body {
   text-transform: capitalize;
 }
 
-/* .list li.plus {
-  border-right: 5px solid #00c853;
+.list-date {
+  font-size: 14px; 
+  margin-top: 3px;
+  opacity: 0.5; 
+  letter-spacing: 1px;
 }
 
-.list li.minus {
-  border-right: 5px solid #f44336;
-} */
+.list-amount {
+  font-size: 20px;
+}
+
+.plus {
+  color: #00c853;
+}
+
+.minus {
+  color: #f44336;
+}
 
 .delete-btn {
   cursor: pointer;
   border: 0;
-  color: #607d8b;
   left: 0;
   transform: scaleX(-1);
   position: absolute;
@@ -148,19 +162,7 @@ body {
   transition: opacity 0.3s ease; */
 }
 
-/* .list li:hover .delete-btn {
-  opacity: 1;
-} */
-
-.new-form {
-  width: 350px;
-  margin: auto;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
+/* ----- RWD ----- */
 
 @media only screen and (max-width: 375px) {
   .container,
@@ -173,15 +175,15 @@ body {
   }
 
   .main-title {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .main-amount {
-    font-size: 36px
+    font-size: 34px
   }
 
   .sub-title {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .sub-amount {

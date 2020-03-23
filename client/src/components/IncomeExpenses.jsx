@@ -18,11 +18,11 @@ const IncomeExpenses = () => {
     <div className='inc-exp-container'>
       <div>
         <p className='sub-title'>Income</p>
-        <p className='sub-amount'>+{numberWithCommas(income)}</p>
+        <p className='sub-amount'>+ {numberWithCommas(income)}</p>
       </div>
       <div>
         <p className='sub-title'>Expense</p>
-        <p className='sub-amount'>-{numberWithCommas(expense)}</p>
+        <p className='sub-amount'>- {numberWithCommas(expense)}</p>
       </div>
     </div>
   );

@@ -8,27 +8,19 @@ const Transaction = ({ transaction }) => {
   const sign = transaction.amount < 0 ? '-' : '+';
 
   return (
-    <li className={transaction.amount < 0 ? 'minus' : 'plus'}>
-        <BackspaceSharpIcon
-          className='delete-btn'
-          style={{ fontSize: '20px' }} 
-          onClick={() => deleteTransaction(transaction._id)}
-        />
+    <li>
+      <BackspaceSharpIcon
+        className='delete-btn'
+        style={{ fontSize: '20px' }} 
+        onClick={() => deleteTransaction(transaction._id)}
+      />
       <div style={{ marginLeft: '35px' }}>
         <p>{transaction.text}</p>
-        <p style={{ 
-          opacity: 0.3, 
-          fontSize: '14px', 
-          marginTop: '3px',
-          letterSpacing: '1px' 
-        }}>
+        <p className='list-date'>
           {formatDate(transaction.date)}
         </p>
       </div> 
-      <span style={{
-        fontSize: '20px',
-        color: transaction.amount > 0 ? '#00c853' : '#f44336',
-      }}>
+      <span className={`list-amount ${transaction.amount > 0 ? 'plus' : 'minus'}`}>
         {sign} {numberWithCommas(Math.abs(transaction.amount))}
       </span>
     </li>

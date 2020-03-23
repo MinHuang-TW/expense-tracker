@@ -23,7 +23,7 @@ const Header = (props) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="absolute" style={{ boxShadow: 'none' }}>
+      <AppBar position="fixed" style={{ boxShadow: 'none' }}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />

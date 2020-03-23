@@ -37,8 +37,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+const Transition = React.forwardRef(
+  function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const AddTransaction = () => {
@@ -54,10 +55,6 @@ const AddTransaction = () => {
 
   const classes = useStyles();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
     setErrorText(false);
@@ -66,6 +63,7 @@ const AddTransaction = () => {
 
   const onSubmit = e => {
     e.preventDefault();
+
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
@@ -73,6 +71,7 @@ const AddTransaction = () => {
       date
     };
     addTransaction(newTransaction);
+
     setAmount(null);
     setText('');
     setDate(null);
@@ -86,7 +85,7 @@ const AddTransaction = () => {
         className={classes.fab}
         color='primary'
         aria-label="add"
-        onClick={handleClickOpen}
+        onClick={() => setOpen(true)}
       >
         <AddIcon />
       </Fab>
@@ -99,7 +98,12 @@ const AddTransaction = () => {
         Add New Transaction
       </button> */}
       
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog 
+        fullScreen 
+        open={open} 
+        onClose={handleClose} 
+        TransitionComponent={Transition}
+      >
         <AppBar className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
@@ -116,15 +120,6 @@ const AddTransaction = () => {
           className={`new-form ${classes.root}`}
           noValidate 
           autoComplete="off"
-          // style={{
-          //   width: '290px',
-          //   margin: 'auto',
-          //   height: '400px',
-          //   display: 'flex',
-          //   flexDirection: 'column',
-          //   justifyContent: 'space-around',
-          //   alignItems: 'center',
-          // }}
         >
           <TextField
             id="standard-full-width"
@@ -155,13 +150,13 @@ const AddTransaction = () => {
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-              disableToolbar
-              fullWidth
-              format="dd / MM / yyyy"
-              margin="normal"
               id="date-picker-dialog"
               label="Date"
               value={date}
+              format="dd / MM / yyyy"
+              margin="normal"
+              // disableToolbar
+              fullWidth
               onChange={date => setDate(date)}
               KeyboardButtonProps={{
                 'aria-label': 'change date',

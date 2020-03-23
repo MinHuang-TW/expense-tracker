@@ -9,7 +9,7 @@ const Balance = () => {
 
   return (
     <div>
-      <p className='main-title'>Overall Balance</p>
+      <p className='main-title'>Total Balance</p>
       <p className='main-amount'>€ {numberWithCommas(total)}</p>
     </div>
   );
