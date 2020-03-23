@@ -162,6 +162,13 @@ body {
   transition: opacity 0.3s ease; */
 }
 
+.list-status {
+  text-align: center;
+  margin-top: 20vh;
+  color: #607d8b;
+  text-transform: capitalize;
+}
+
 /* ----- RWD ----- */
 
 @media only screen and (max-width: 375px) {
@@ -172,6 +179,10 @@ body {
 
   .new-form {
     width: 80vw;
+  }
+
+  .list-status {
+    margin-top: 10vh;
   }
 
   .main-title {
@@ -187,6 +198,6 @@ body {
   }
 
   .sub-amount {
-    font-size: 18px;
+    font-size: 20px;
   }
 }

@@ -74,7 +74,7 @@ const AddTransaction = () => {
 
     setAmount(null);
     setText('');
-    setDate(null);
+    setDate(new Date());
 
     setOpen(false);
   };

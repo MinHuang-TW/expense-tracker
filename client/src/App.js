@@ -16,7 +16,11 @@ function App() {
       primary: {
         main: cyan[500],
         contrastText: '#fff'
-      }
+      },
+      secondary: {
+        main: '#607d8b',
+        contrastText: '#fff'
+      },
     },
   });
   

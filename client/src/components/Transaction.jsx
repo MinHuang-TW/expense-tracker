@@ -20,7 +20,11 @@ const Transaction = ({ transaction }) => {
           {formatDate(transaction.date)}
         </p>
       </div> 
-      <span className={`list-amount ${transaction.amount > 0 ? 'plus' : 'minus'}`}>
+      <span 
+        className={`list-amount ${transaction.amount === 0 
+          ? null : transaction.amount > 0 
+          ? 'plus' : 'minus'}`}
+      >
         {sign} {numberWithCommas(Math.abs(transaction.amount))}
       </span>
     </li>
