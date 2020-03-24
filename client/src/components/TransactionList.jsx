@@ -30,7 +30,7 @@ const TransactionList = () => {
   return (
     <div>
       <ButtonGroup
-        fullWidth
+        fullWidth disableRipple
         color='primary'
         aria-label='outlined primary button group'
         style={{ marginBottom: '10px' }}

@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+    opacity: 0.8,
   },
   root: {
     '& > *': {
@@ -32,8 +33,10 @@ const useStyles = makeStyles(theme => ({
   fab: {
     position: 'fixed',
     bottom: theme.spacing(2),
-    left: '50%',
-    transform: 'translateX(-50%)'
+    right: theme.spacing(2),
+    boxShadow: 'none',
+    // left: '50%',
+    // transform: 'translateX(-50%)'
   },
 }));
 
@@ -82,9 +85,10 @@ const AddTransaction = () => {
   return (
     <>
       <Fab 
+        disableRipple
         className={classes.fab}
         color='primary'
-        aria-label="add"
+        aria-label='add'
         onClick={() => setOpen(true)}
       >
         <AddIcon />

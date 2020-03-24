@@ -5,9 +5,10 @@
 }
 
 body {
+  background: white !important;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   margin: 0;
   font-family: Roboto, sans-serif;
 }
@@ -20,8 +21,8 @@ body {
 /* ----- HEADER ----- */
 
 .container-top {
-  background: #00bcd4;
-  width: 100vw;
+  background: #65BCBF;
+  /* width: 100vw; */
   padding-top: calc(56px + 30px);
   text-align: center;
 }
@@ -37,7 +38,7 @@ body {
 
 .main-amount {
   color: white;
-  font-size: 45px;
+  font-size: 40px;
 }
 
 /* ----- INCOME - EXPENSE ----- */
@@ -47,15 +48,15 @@ body {
   opacity: 0.5;
   font-size: 16px;
   margin-bottom: 10px;
-  /* letter-spacing: 1px; */
   text-transform: uppercase;
+  /* letter-spacing: 1px; */
 }
 
 .sub-amount {
   font-size: 20px;
-  /* letter-spacing: 1px; */
   margin: 5px 0;
   color: white;
+  /* letter-spacing: 1px; */
 }
 
 .inc-exp-container {
@@ -72,7 +73,7 @@ body {
 }
 
 .inc-exp-container > div:first-of-type {
-  border-right: 1px solid #4dd0e1;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* ----- ADD TRANSACTION ----- */
@@ -90,7 +91,7 @@ body {
 .btn {
   opacity: 1;
   cursor: pointer;
-  background-color: #00bcd4;
+  background-color: #65BCBF;
   color: #fff;
   border: 0;
   display: block;
@@ -139,15 +140,15 @@ body {
 }
 
 .list-amount {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .plus {
-  color: #00c853;
+  color: #65BCBF;
 }
 
 .minus {
-  color: #f44336;
+  color: #F8777D;
 }
 
 .delete-btn {
@@ -187,7 +188,7 @@ body {
   }
 
   .main-amount {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .sub-title {
@@ -195,7 +196,11 @@ body {
   }
 
   .sub-amount {
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .list-amount {
+    font-size: 18px;
   }
 }
 
