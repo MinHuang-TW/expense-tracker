@@ -125,7 +125,7 @@ const AddTransaction = () => {
             id="standard-full-width"
             label="Description" 
             fullWidth
-            required
+            required autoFocus
             error={errorText}
             helperText={errorText && "Please enter the name of the transaction"}
             onChange={e => {

@@ -37,7 +37,7 @@ body {
 
 .main-amount {
   color: white;
-  font-size: 45px
+  font-size: 45px;
 }
 
 /* ----- INCOME - EXPENSE ----- */
@@ -116,7 +116,7 @@ body {
   list-style-type: none;
   padding: 0;
   color: #607d8b;
-  /* margin-bottom: 40px; */
+  margin-bottom: 56px;
 }
 
 .list li {
@@ -132,9 +132,9 @@ body {
 }
 
 .list-date {
-  font-size: 14px; 
+  font-size: 14px;
   margin-top: 3px;
-  opacity: 0.5; 
+  opacity: 0.5;
   letter-spacing: 1px;
 }
 
@@ -163,10 +163,11 @@ body {
 }
 
 .list-status {
-  text-align: center;
-  margin-top: 20vh;
   color: #607d8b;
-  text-transform: capitalize;
+  line-height: 30vh;
+  text-align: center;
+  margin: auto;
+  text-transform: uppercase;
 }
 
 /* ----- RWD ----- */
@@ -181,16 +182,12 @@ body {
     width: 80vw;
   }
 
-  .list-status {
-    margin-top: 10vh;
-  }
-
   .main-title {
     font-size: 14px;
   }
 
   .main-amount {
-    font-size: 34px
+    font-size: 34px;
   }
 
   .sub-title {
@@ -199,5 +196,11 @@ body {
 
   .sub-amount {
     font-size: 20px;
+  }
+}
+
+@media only screen and (max-height: 670px) {
+  .list-status {
+    line-height: 20vh;
   }
 }

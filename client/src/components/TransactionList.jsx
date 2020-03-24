@@ -10,23 +10,17 @@ const TransactionList = () => {
   const [selected, setSelected] = useState('all');
   const [progress, setProgress] = useState(0);
 
-  const transactionsIncome = transactions.filter(e => e.amount > 0);
-  const transactionsExpense = transactions.filter(e => e.amount < 0);
-  const transFilters = [
-    {name: 'all', list: transactions}, 
-    {name: 'income', list: transactionsIncome}, 
-    {name: 'expense', list: transactionsExpense},
-  ];
-
+  const transFilters = ['all', 'income', 'expense'];
+  let counter = 0;
 
   useEffect(() => {
     const tick = () => {
       setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-    }
+    };
     const timer = setInterval(tick, 20);
 
     getTransactions();
-    
+
     return () => {
       clearInterval(timer);
     };
@@ -35,51 +29,61 @@ const TransactionList = () => {
 
   return (
     <div>
-      <ButtonGroup 
-        fullWidth color="primary" 
-        aria-label="outlined primary button group"
+      <ButtonGroup
+        fullWidth
+        color='primary'
+        aria-label='outlined primary button group'
         style={{ marginBottom: '10px' }}
       >
-        {transFilters.map(transFilter =>
-          <Button 
-            key={transFilter.name}
+        {transFilters.map(transFilter => (
+          <Button
+            key={transFilter}
             disableElevation
-            variant={selected === transFilter.name ? 'contained' : null} 
-            color={selected === transFilter.name ? 'primary' : null}  
-            onClick={() => setSelected(transFilter.name)}
+            variant={selected === transFilter ? 'contained' : null}
+            color={selected === transFilter ? 'primary' : null}
+            onClick={() => setSelected(transFilter)}
           >
-            {transFilter.name}
+            {transFilter}
           </Button>
-        )}
+        ))}
       </ButtonGroup>
 
-      {transactions.length > 0
-        ? <ul className='list'>
-            {selected === 'all' 
-              ? transactions.map(transaction => 
+      {transactions.length > 0 ? (
+        <ul className='list'>
+          {transactions
+            .filter(transaction => {
+              switch (selected) {
+                case 'income':
+                  return transaction.amount > 0;
+                case 'expense':
+                  return transaction.amount < 0;
+                default:
+                  return transaction;
+              }
+            })
+            .map(transaction => {
+              counter++;
+              return (
                 <Transaction key={transaction._id} transaction={transaction} />
-              )
-              : selected === 'income' && transactionsIncome.length > 0 
-                ? transactionsIncome.map(transaction => 
-                  <Transaction key={transaction._id} transaction={transaction} />
-                )
-              : selected === 'expense' && transactionsExpense.length > 0 
-                ? transactionsExpense.map(transaction => 
-                    <Transaction key={transaction._id} transaction={transaction} />
-                  )
-              : <div className="list-status">
-                  No {selected} transaction
-                </div>
-            }
-            <div style={{ height: '56px' }} /> 
-          </ul>
-        : (<div className='list-status'>
-            {loading 
-              ? <CircularProgress variant="determinate" value={progress} color='secondary' /> 
-              : 'No transaction'
-            }
-          </div>)
-      }
+              );
+            })}
+          {counter === 0 && (
+            <div className='list-status'>No {selected} transaction</div>
+          )}
+        </ul>
+      ) : (
+        <div className='list-status'>
+          {loading ? (
+            <CircularProgress
+              variant='determinate'
+              value={progress}
+              color='secondary'
+            />
+          ) : (
+            'No transaction'
+          )}
+        </div>
+      )}
     </div>
   );
 };
