@@ -80,7 +80,7 @@ const AddTransaction = () => {
   };
 
   return (
-    <div>
+    <>
       <Fab 
         className={classes.fab}
         color='primary'
@@ -89,14 +89,6 @@ const AddTransaction = () => {
       >
         <AddIcon />
       </Fab>
-
-      {/* <button 
-        className='btn' 
-        onClick={handleClickOpen}
-        style={{ margin: '50px auto' }}
-      >
-        Add New Transaction
-      </button> */}
       
       <Dialog 
         fullScreen 
@@ -172,7 +164,7 @@ const AddTransaction = () => {
           </button>
         </form>
       </Dialog>
-    </div>
+    </>
   );
 };
 
