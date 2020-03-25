@@ -1,5 +1,11 @@
-export function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export function numberEuro(x) {
+  return x.toString()
+    .replace(/\./, ",")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+export function numberValid(x) {
+  return /^(\d+|\d{1,3}(\.\d{3})*)(,\d{1,2})?$/.test(x);
 }
 
 export function formatDate(date) {

@@ -21,7 +21,7 @@ body {
 /* ----- HEADER ----- */
 
 .container-top {
-  background: #65BCBF;
+  background: #65bcbf;
   /* width: 100vw; */
   padding-top: calc(56px + 30px);
   text-align: center;
@@ -88,10 +88,18 @@ body {
   align-items: center;
 }
 
+.input-amount {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .btn {
   opacity: 1;
   cursor: pointer;
-  background-color: #65BCBF;
+  background-color: #65bcbf;
   color: #fff;
   border: 0;
   display: block;
@@ -109,6 +117,17 @@ body {
 .btn:focus,
 .delete-btn:focus {
   outline: 0;
+}
+
+.no-outline:active,
+.no-outline.active,
+.no-outline:active:focus,
+.no-outline:focus {
+  outline: 0 !important;
+  outline-offset: 0 !important;
+  background-image: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 /* ----- TRANSACTION LIST ----- */
@@ -144,11 +163,11 @@ body {
 }
 
 .plus {
-  color: #65BCBF;
+  color: #65bcbf;
 }
 
 .minus {
-  color: #F8777D;
+  color: #f8777d;
 }
 
 .delete-btn {

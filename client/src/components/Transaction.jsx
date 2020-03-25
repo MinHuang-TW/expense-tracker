@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { numberWithCommas, formatDate } from '../utils/format';
+import { numberEuro, formatDate } from '../utils/format';
 import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 const Transaction = ({ transaction }) => {
@@ -25,7 +25,7 @@ const Transaction = ({ transaction }) => {
           ? null : transaction.amount > 0 
           ? 'plus' : 'minus'}`}
       >
-        {sign} {numberWithCommas(Math.abs(transaction.amount))}
+        {sign} {numberEuro(Math.abs(transaction.amount))}
       </span>
     </li>
   );

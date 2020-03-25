@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { makeStyles } from '@material-ui/core/styles';
+import { numberValid } from '../utils/format';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,11 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -25,18 +28,24 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     opacity: 0.8,
   },
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
+  sign: {
+    width: '20px', 
+    textAlign: 'center',
+  },
+  input : {
+    fontSize: '36px',
+  },
+  inputPlus: {
+    color: '#65BCBF',
+  },
+  inputMinus: {
+    color: '#F8777D',
   },
   fab: {
     position: 'fixed',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
     boxShadow: 'none',
-    // left: '50%',
-    // transform: 'translateX(-50%)'
   },
 }));
 
@@ -44,6 +53,40 @@ const Transition = React.forwardRef(
   function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const AntSwitch = withStyles(theme => ({
+  root: {
+    width: 50,
+    height: 30,
+    padding: 0,
+    display: 'flex',
+  },
+  switchBase: {
+    padding: 2,
+    color: theme.palette.common.white,
+    '&$checked': {
+      transform: 'translateX(20px)',
+      color: theme.palette.common.white,
+      '& + $track': {
+        opacity: 1,
+        backgroundColor: '#F8777D',
+        borderColor: '#F8777D',
+      },
+    },
+  },
+  thumb: {
+    width: 26,
+    height: 26,
+    boxShadow: 'none',
+  },
+  track: {
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: 30 / 2,
+    opacity: 1,
+    backgroundColor: theme.palette.primary.main,
+  },
+  checked: {},
+}))(Switch);
 
 const AddTransaction = () => {
   const { addTransaction } = useContext(GlobalContext);
@@ -56,12 +99,15 @@ const AddTransaction = () => {
   const [errorText, setErrorText] = useState(false);
   const [errorAmount, setErrorAmount] = useState(false);
 
+  const [minus, setMinus] = useState(true);
+
   const classes = useStyles();
 
   const handleClose = () => {
     setOpen(false);
     setErrorText(false);
     setErrorAmount(false);
+    setDate(new Date());
   };
 
   const onSubmit = e => {
@@ -70,7 +116,7 @@ const AddTransaction = () => {
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
-      amount: +amount,
+      amount: Number(amount.replace(/\./, '').replace(/,/, '.')),
       date
     };
     addTransaction(newTransaction);
@@ -83,10 +129,10 @@ const AddTransaction = () => {
   };
 
   return (
-    <>
+    <Fragment>
       <Fab 
         disableRipple
-        className={classes.fab}
+        className={`${classes.fab} no-outline`}
         color='primary'
         aria-label='add'
         onClick={() => setOpen(true)}
@@ -111,39 +157,55 @@ const AddTransaction = () => {
           </Toolbar>
         </AppBar>
 
-        <form 
-          onSubmit={onSubmit}
-          className={`new-form ${classes.root}`}
-          noValidate 
-          autoComplete="off"
-        >
+        <form onSubmit={onSubmit} className="new-form" noValidate autoComplete="off">
+          <div className='input-amount'>
+            <div style={{ marginRight: '10px' }}>
+              <TextField
+                id="standard-full-width"
+                label="Amount" 
+                // type="number"
+                required autoFocus
+                InputProps={{
+                  className: `${classes.input} ${minus ? classes.inputMinus : classes.inputPlus}`,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <div className={classes.sign}>
+                        {minus
+                          ? <div className={classes.inputMinus}>-</div> 
+                          : <div className={classes.inputPlus}>+</div>
+                        }
+                      </div>
+                    </InputAdornment>)
+                  }}
+                error={errorAmount}
+                helperText={errorAmount 
+                  ? "Please enter a valid number" 
+                  : "Toggle between Income & Expense"
+                }
+                onChange={e => {
+                  setAmount(e.target.value);
+                  setErrorAmount(numberValid(e.target.value) ? false : true)
+                }} 
+              />
+            </div>
+            <div style={{ width: '50px' }}>
+              <AntSwitch checked={minus} onChange={() => setMinus(!minus)} />
+            </div>
+          </div>
+
           <TextField
             id="standard-full-width"
             label="Description" 
-            fullWidth
-            required autoFocus
+            fullWidth required
             error={errorText}
+            InputLabelProps={{ shrink: true }}
             helperText={errorText && "Please enter the name of the transaction"}
             onChange={e => {
               setText(e.target.value);
               setErrorText(!e.target.value ? true : false)
             }}
           />
-          <TextField
-            id="standard-full-width"
-            label="Amount" 
-            fullWidth
-            required
-            error={errorAmount}
-            helperText={errorAmount 
-              ? "Please enter a valid number" 
-              : "positive - Income, negative - Expense"
-            }
-            onChange={e => {
-              setAmount(e.target.value);
-              setErrorAmount(/^[+-]?[0-9]+.?[0-9]*$/.test(e.target.value) ? false : true)
-            }} 
-          />
+
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               id="date-picker-dialog"
@@ -151,7 +213,6 @@ const AddTransaction = () => {
               value={date}
               format="dd / MM / yyyy"
               margin="normal"
-              // disableToolbar
               fullWidth
               onChange={date => setDate(date)}
               KeyboardButtonProps={{
@@ -159,6 +220,7 @@ const AddTransaction = () => {
               }}
             />
           </MuiPickersUtilsProvider>
+
           <button 
             className='btn' 
             style={{ marginTop: '50px' }}
@@ -168,7 +230,7 @@ const AddTransaction = () => {
           </button>
         </form>
       </Dialog>
-    </>
+    </Fragment>
   );
 };
 
