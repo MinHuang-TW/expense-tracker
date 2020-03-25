@@ -33,10 +33,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: '36px',
   },
   inputPlus: {
-    color: '#65BCBF',
+    color: theme.palette.primary.main,
   },
   inputMinus: {
-    color: '#F8777D',
+    color: theme.palette.secondary.main,
   },
   fab: {
     position: 'fixed',
@@ -66,8 +66,8 @@ const AntSwitch = withStyles(theme => ({
       color: theme.palette.common.white,
       '& + $track': {
         opacity: 1,
-        backgroundColor: '#F8777D',
-        borderColor: '#F8777D',
+        backgroundColor: theme.palette.secondary.main,
+        borderColor: theme.palette.secondary.main,
       },
     },
   },

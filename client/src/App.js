@@ -18,7 +18,7 @@ function App() {
         contrastText: '#fff'
       },
       secondary: {
-        main: '#607d8b',
+        main: '#f8777d',
         contrastText: '#fff'
       },
     },

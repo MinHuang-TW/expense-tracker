@@ -81,15 +81,9 @@ const TransactionList = () => {
         </ul>
       ) : (
         <div className='list-status'>
-          {loading ? (
-            <CircularProgress
-              variant='determinate'
-              value={progress}
-              color='secondary'
-            />
-          ) : (
-            'No transaction'
-          )}
+          {loading 
+            ? <CircularProgress variant='determinate' value={progress} color='secondary'/>
+            : 'No transaction'}
         </div>
       )}
     </div>
