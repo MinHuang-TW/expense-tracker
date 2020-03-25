@@ -1,6 +1,6 @@
 import React, { useState, useContext, Fragment } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { numberValid } from '../utils/format';
+import { numberValid, numberCalc } from '../utils/format';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -116,7 +116,7 @@ const AddTransaction = () => {
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
-      amount: Number(amount.replace(/\./, '').replace(/,/, '.')),
+      amount: minus ? -numberCalc(amount) : numberCalc(amount),
       date
     };
     addTransaction(newTransaction);
@@ -162,8 +162,7 @@ const AddTransaction = () => {
             <div style={{ marginRight: '10px' }}>
               <TextField
                 id="standard-full-width"
-                label="Amount" 
-                // type="number"
+                label="Amount"
                 required autoFocus
                 InputProps={{
                   className: `${classes.input} ${minus ? classes.inputMinus : classes.inputPlus}`,
@@ -199,7 +198,7 @@ const AddTransaction = () => {
             fullWidth required
             error={errorText}
             InputLabelProps={{ shrink: true }}
-            helperText={errorText && "Please enter the name of the transaction"}
+            helperText={errorText && "Please describe the transaction"}
             onChange={e => {
               setText(e.target.value);
               setErrorText(!e.target.value ? true : false)
