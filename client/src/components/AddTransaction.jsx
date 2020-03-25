@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     opacity: 0.8,
   },
+  textColor: {
+    color: '#232C2D',
+    opacity: 0.8,
+  },
   input : {
     fontSize: '36px',
   },
@@ -167,6 +171,7 @@ const AddTransaction = () => {
               fullWidth required
               error={errorText}
               InputLabelProps={{ shrink: true }}
+              InputProps={{ className: classes.textColor }}
               helperText={errorText && "Please describe the transaction"}
               onChange={e => {
                 setText(e.target.value);
@@ -182,6 +187,7 @@ const AddTransaction = () => {
                 value={date} format="dd / MM / yyyy"
                 fullWidth
                 onChange={date => setDate(date)}
+                InputProps={{ className: classes.textColor }}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}

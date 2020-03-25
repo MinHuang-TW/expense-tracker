@@ -141,7 +141,8 @@ body {
 .list {
   list-style-type: none;
   padding: 0;
-  color: #607d8b;
+  color: #232C2D;
+  opacity: 0.8;
   margin-bottom: 90px;
 }
 
@@ -189,7 +190,8 @@ body {
 }
 
 .list-status {
-  color: #607d8b;
+  color: #232C2D;
+  opacity: 0.8;
   line-height: 30vh;
   text-align: center;
   margin: auto;
