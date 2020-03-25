@@ -16,6 +16,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles(theme => ({
@@ -27,10 +28,6 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     flex: 1,
     opacity: 0.8,
-  },
-  sign: {
-    width: '20px', 
-    textAlign: 'center',
   },
   input : {
     fontSize: '36px',
@@ -90,7 +87,6 @@ const AntSwitch = withStyles(theme => ({
 
 const AddTransaction = () => {
   const { addTransaction } = useContext(GlobalContext);
-
   const [text, setText] = useState('');
   const [amount, setAmount] = useState(null);
   const [date, setDate] = useState(new Date());
@@ -108,6 +104,7 @@ const AddTransaction = () => {
     setErrorText(false);
     setErrorAmount(false);
     setDate(new Date());
+    setMinus(true);
   };
 
   const onSubmit = e => {
@@ -130,22 +127,15 @@ const AddTransaction = () => {
 
   return (
     <Fragment>
-      <Fab 
-        disableRipple
+      <Fab
+        color='primary' aria-label='add' disableRipple
         className={`${classes.fab} no-outline`}
-        color='primary'
-        aria-label='add'
         onClick={() => setOpen(true)}
       >
         <AddIcon />
       </Fab>
       
-      <Dialog 
-        fullScreen 
-        open={open} 
-        onClose={handleClose} 
-        TransitionComponent={Transition}
-      >
+      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
@@ -162,24 +152,18 @@ const AddTransaction = () => {
             <div style={{ marginRight: '10px' }}>
               <TextField
                 id="standard-full-width"
-                label="Amount"
-                required autoFocus
+                label="Amount" required autoFocus
                 InputProps={{
                   className: `${classes.input} ${minus ? classes.inputMinus : classes.inputPlus}`,
                   startAdornment: (
-                    <InputAdornment position="start">
-                      <div className={classes.sign}>
-                        {minus
-                          ? <div className={classes.inputMinus}>-</div> 
-                          : <div className={classes.inputPlus}>+</div>
-                        }
-                      </div>
+                    <InputAdornment position="start" style={{ margin: 0 }}>
+                      {minus ? <RemoveIcon /> : <AddIcon />}
                     </InputAdornment>)
                   }}
                 error={errorAmount}
                 helperText={errorAmount 
                   ? "Please enter a valid number" 
-                  : "Toggle between Income & Expense"
+                  : "Toggle Income / Expense"
                 }
                 onChange={e => {
                   setAmount(e.target.value);
@@ -188,7 +172,7 @@ const AddTransaction = () => {
               />
             </div>
             <div style={{ width: '50px' }}>
-              <AntSwitch checked={minus} onChange={() => setMinus(!minus)} />
+              <AntSwitch tabIndex="-1" checked={minus} onChange={() => setMinus(!minus)} />
             </div>
           </div>
 

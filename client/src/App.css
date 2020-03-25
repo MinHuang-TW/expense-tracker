@@ -32,7 +32,6 @@ body {
   opacity: 0.5;
   font-size: 16px;
   margin-bottom: 10px;
-  /* letter-spacing: 1px; */
   text-transform: uppercase;
 }
 
@@ -49,14 +48,12 @@ body {
   font-size: 16px;
   margin-bottom: 10px;
   text-transform: uppercase;
-  /* letter-spacing: 1px; */
 }
 
 .sub-amount {
-  font-size: 20px;
+  font-size: 24px;
   margin: 5px 0;
   color: white;
-  /* letter-spacing: 1px; */
 }
 
 .inc-exp-container {
@@ -159,7 +156,7 @@ body {
 }
 
 .list-amount {
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .plus {
@@ -207,19 +204,16 @@ body {
   }
 
   .main-amount {
-    font-size: 32px;
+    font-size: 40px;
   }
 
   .sub-title {
     font-size: 14px;
   }
 
-  .sub-amount {
-    font-size: 18px;
-  }
-
+  .sub-amount,
   .list-amount {
-    font-size: 18px;
+    font-size: 22px;
   }
 }
 

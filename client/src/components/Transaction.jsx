@@ -5,7 +5,8 @@ import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 const Transaction = ({ transaction }) => {
   const { deleteTransaction } = useContext(GlobalContext);
-  const sign = transaction.amount < 0 ? '-' : '+';
+  const sign = transaction.amount === 0 
+    ? null : transaction.amount < 0 ?'-' : '+';
 
   return (
     <li>
@@ -25,7 +26,7 @@ const Transaction = ({ transaction }) => {
           ? null : transaction.amount > 0 
           ? 'plus' : 'minus'}`}
       >
-        {sign} {numberEuro(Math.abs(transaction.amount))}
+        {sign}{numberEuro(Math.abs(transaction.amount))}
       </span>
     </li>
   );
