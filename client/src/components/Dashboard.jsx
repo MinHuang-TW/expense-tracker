@@ -14,5 +14,5 @@ const Dashboard = () => {
     </Fragment>
   );
 }
- 
+
 export default Dashboard;

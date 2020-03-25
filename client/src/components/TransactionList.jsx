@@ -36,7 +36,8 @@ const TransactionList = () => {
         {transFilters.map(transFilter => (
           <Button
             key={transFilter}
-            disableElevation
+            style={{ borderRadius: 0 }}
+            disableElevation disableFocusRipple disableRipple
             variant={selected === transFilter ? 'contained' : null}
             color={selected === transFilter ? 'primary' : null}
             onClick={() => setSelected(transFilter)}

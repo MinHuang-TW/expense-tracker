@@ -44,38 +44,26 @@ const Transition = React.forwardRef(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AntSwitch = withStyles(theme => ({
+const TransactionSwitch = withStyles(theme => ({
   root: {
-    width: 50,
-    height: 30,
-    padding: 0,
-    display: 'flex',
+    marginRight: -12,
   },
   switchBase: {
-    padding: 2,
-    color: theme.palette.common.white,
+    color: theme.palette.primary.main,
     '&$checked': {
-      transform: 'translateX(20px)',
-      color: theme.palette.common.white,
-      '& + $track': {
-        opacity: 1,
-        backgroundColor: theme.palette.secondary.main,
-        borderColor: theme.palette.secondary.main,
-      },
+      color: theme.palette.primary.main,
+    },
+    '&$checked + $track': {
+      backgroundColor: theme.palette.primary.main,
     },
   },
   thumb: {
-    width: 26,
-    height: 26,
-    boxShadow: 'none',
-  },
-  track: {
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: 30 / 2,
-    opacity: 1,
-    backgroundColor: theme.palette.primary.main,
+    boxShadow: 'none'
   },
   checked: {},
+  track: {
+    backgroundColor: theme.palette.primary.main,
+  },
 }))(Switch);
 
 const AddTransaction = () => {
@@ -92,7 +80,6 @@ const AddTransaction = () => {
   const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
-
 
   const handleClose = () => {
     setOpen(false);
@@ -142,10 +129,10 @@ const AddTransaction = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
-
-        <form onSubmit={onSubmit} className="new-form" noValidate autoComplete="off">
-          <div className='input-amount'>
-            <div style={{ marginRight: '10px' }}>
+        
+        <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
+          <form onSubmit={onSubmit} className="new-form" noValidate autoComplete="off">
+            <div className='input-amount'>
               <TextField
                 id="standard-full-width"
                 label="Amount" required autoFocus
@@ -166,48 +153,49 @@ const AddTransaction = () => {
                     ? setDisableBtn(false) : setDisableBtn(true);
                 }} 
               />
-            </div>
-            <div style={{ width: '50px' }}>
-              <AntSwitch tabIndex="-1" checked={minus} onChange={() => setMinus(!minus)} />
-            </div>
-          </div>
 
-          <TextField
-            id="standard-full-width"
-            label="Description" 
-            fullWidth required
-            error={errorText}
-            InputLabelProps={{ shrink: true }}
-            helperText={errorText && "Please describe the transaction"}
-            onChange={e => {
-              setText(e.target.value);
-              setErrorText(!e.target.value ? true : false);
-              e.target.value && !errorText 
-                ? setDisableBtn(false) : setDisableBtn(true);
-            }}
-          />
+              <TransactionSwitch
+                checked={minus}
+                onChange={() => setMinus(!minus)}
+                inputProps={{ 'aria-label': 'secondary checkbox' }}
+              />
+            </div>
 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
+            <TextField
+              id="standard-full-width"
+              label="Description" 
+              fullWidth required
+              error={errorText}
+              InputLabelProps={{ shrink: true }}
+              helperText={errorText && "Please describe the transaction"}
+              onChange={e => {
+                setText(e.target.value);
+                setErrorText(!e.target.value ? true : false);
+                e.target.value && !errorText 
+                  ? setDisableBtn(false) : setDisableBtn(true);
+              }}
+            />
+
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
                 id="date-picker-dialog" label="Date"
                 value={date} format="dd / MM / yyyy"
-                margin="normal" fullWidth
+                fullWidth
                 onChange={date => setDate(date)}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
               />
-            </ThemeProvider>
-          </MuiPickersUtilsProvider>
-          <button 
-            className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}
-            style={{ marginTop: '50px' }}
-            disabled={disableBtn ? true : false}
-          >
-            SAVE
-          </button>
-        </form>
+            </MuiPickersUtilsProvider>
+            <button 
+              className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}
+              style={{ marginTop: '50px' }}
+              disabled={disableBtn ? true : false}
+            >
+              SAVE
+            </button>
+          </form>
+        </ThemeProvider>
       </Dialog>
     </Fragment>
   );
