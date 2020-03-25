@@ -1,9 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import Transaction from './Transaction';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 
 const TransactionList = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
@@ -28,7 +26,7 @@ const TransactionList = () => {
   }, []);
 
   return (
-    <div>
+    <div className='container'>
       <ButtonGroup
         fullWidth disableRipple
         color='primary'

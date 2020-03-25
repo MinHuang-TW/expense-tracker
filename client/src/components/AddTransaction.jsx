@@ -1,23 +1,16 @@
 import React, { useState, useContext, Fragment } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { numberValid, numberCalc } from '../utils/format';
+import { datePickerExpense, defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import { ThemeProvider } from "@material-ui/styles";
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Fab, Switch } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
-import Fab from '@material-ui/core/Fab';
+import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -96,8 +89,10 @@ const AddTransaction = () => {
   const [errorAmount, setErrorAmount] = useState(false);
 
   const [minus, setMinus] = useState(true);
+  const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
+
 
   const handleClose = () => {
     setOpen(false);
@@ -105,6 +100,7 @@ const AddTransaction = () => {
     setErrorAmount(false);
     setDate(new Date());
     setMinus(true);
+    setDisableBtn(true);
   };
 
   const onSubmit = e => {
@@ -136,10 +132,10 @@ const AddTransaction = () => {
       </Fab>
       
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AppBar className={classes.appBar}>
+        <AppBar className={classes.appBar} color={minus ? 'secondary' : 'primary'}>
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              New Transaction
+              New {minus ? 'Expense' : 'Income'}
             </Typography>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
@@ -162,12 +158,12 @@ const AddTransaction = () => {
                   }}
                 error={errorAmount}
                 helperText={errorAmount 
-                  ? "Please enter a valid number" 
-                  : "Toggle Income / Expense"
-                }
+                  ? "Please enter a valid number" : "Toggle Income / Expense"}
                 onChange={e => {
                   setAmount(e.target.value);
-                  setErrorAmount(numberValid(e.target.value) ? false : true)
+                  setErrorAmount(numberValid(e.target.value) ? false : true);
+                  numberValid(e.target.value) && text 
+                    ? setDisableBtn(false) : setDisableBtn(true);
                 }} 
               />
             </div>
@@ -185,29 +181,29 @@ const AddTransaction = () => {
             helperText={errorText && "Please describe the transaction"}
             onChange={e => {
               setText(e.target.value);
-              setErrorText(!e.target.value ? true : false)
+              setErrorText(!e.target.value ? true : false);
+              e.target.value && !errorText 
+                ? setDisableBtn(false) : setDisableBtn(true);
             }}
           />
 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              id="date-picker-dialog"
-              label="Date"
-              value={date}
-              format="dd / MM / yyyy"
-              margin="normal"
-              fullWidth
-              onChange={date => setDate(date)}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
-            />
+            <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
+              <KeyboardDatePicker
+                id="date-picker-dialog" label="Date"
+                value={date} format="dd / MM / yyyy"
+                margin="normal" fullWidth
+                onChange={date => setDate(date)}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </ThemeProvider>
           </MuiPickersUtilsProvider>
-
           <button 
-            className='btn' 
+            className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}
             style={{ marginTop: '50px' }}
-            disabled={!text || !amount || errorAmount ? true : false}
+            disabled={disableBtn ? true : false}
           >
             SAVE
           </button>
