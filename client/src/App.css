@@ -228,8 +228,8 @@ body {
   }
 }
 
-@media only screen and (max-height: 670px) {
+/* @media only screen and (max-height: 670px) {
   .list-status {
     line-height: 20vh;
   }
-}
+} */

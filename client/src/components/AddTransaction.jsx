@@ -15,7 +15,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
-    top: 0,
     boxShadow: 'none',
   },
   title: {
@@ -95,6 +94,28 @@ const AddTransaction = () => {
     setDisableBtn(true);
   };
 
+  const handleAmount = e => {
+    if (numberValid(e.target.value)) {
+      setAmount(e.target.value);
+      setErrorAmount(false);
+      text ? setDisableBtn(false) : setDisableBtn(true);
+    } else {
+      setErrorAmount(true);
+      setDisableBtn(true)
+    }
+  }
+
+  const handleText = e => {
+    if (e.target.value) {
+      setText(e.target.value);
+      setErrorText(false);
+      !errorText ? setDisableBtn(false) : setDisableBtn(true);
+    } else {
+      setErrorText(true);
+      setDisableBtn(true)
+    }
+  }
+
   const onSubmit = e => {
     e.preventDefault();
 
@@ -108,9 +129,7 @@ const AddTransaction = () => {
 
     setAmount(null);
     setText('');
-    setDate(new Date());
-
-    setOpen(false);
+    handleClose();
   };
 
   return (
@@ -151,16 +170,11 @@ const AddTransaction = () => {
                 error={errorAmount}
                 helperText={errorAmount 
                   ? "Please enter a valid number" : "Toggle Income / Expense"}
-                onChange={e => {
-                  setAmount(e.target.value);
-                  setErrorAmount(numberValid(e.target.value) ? false : true);
-                  numberValid(e.target.value) && text 
-                    ? setDisableBtn(false) : setDisableBtn(true);
-                }} 
+                onChange={e => handleAmount(e)}
               />
 
               <TransactionSwitch
-                checked={minus}
+                checked={minus} tabIndex="-1"
                 onChange={() => setMinus(!minus)}
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
@@ -174,12 +188,7 @@ const AddTransaction = () => {
               InputLabelProps={{ shrink: true }}
               InputProps={{ className: classes.textColor }}
               helperText={errorText && "Please describe the transaction"}
-              onChange={e => {
-                setText(e.target.value);
-                setErrorText(!e.target.value ? true : false);
-                e.target.value && !errorText 
-                  ? setDisableBtn(false) : setDisableBtn(true);
-              }}
+              onChange={e => handleText(e)}
             />
 
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -189,9 +198,7 @@ const AddTransaction = () => {
                 fullWidth
                 onChange={date => setDate(date)}
                 InputProps={{ className: classes.textColor }}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
+                KeyboardButtonProps={{ 'aria-label': 'change date' }}
               />
             </MuiPickersUtilsProvider>
             <button 

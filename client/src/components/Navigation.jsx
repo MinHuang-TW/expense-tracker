@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, AppBar, Divider, Drawer, Hidden, IconButton, Toolbar, Typography} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -43,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar = props => {
+const Navigation = props => {
   const { container, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
@@ -77,55 +79,58 @@ const Navbar = props => {
     );
 
   return (
-    <div className={classes.root}>
+    <ThemeProvider theme={defaultMaterialTheme}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
-            Expense Tracker
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <div className={classes.root}>
 
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{ paper: classes.drawerPaper }}
-            ModalProps={{ keepMounted: true }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{ paper: classes.drawerPaper }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
+              Expense Tracker
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-      <main className={classes.content}>
-        {children}
-      </main>
-    </div>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{ paper: classes.drawerPaper }}
+              ModalProps={{ keepMounted: true }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{ paper: classes.drawerPaper }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+    
+        <main className={classes.content}>
+          {children}
+        </main>
+      </div>
+    </ThemeProvider>
   );
 };
 
-export default Navbar;
+export default Navigation;
