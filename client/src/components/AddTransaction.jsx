@@ -15,6 +15,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
+    top: 0,
     boxShadow: 'none',
   },
   title: {

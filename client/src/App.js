@@ -13,13 +13,13 @@ function App() {
     <GlobalProvider>
       <ThemeProvider theme={defaultMaterialTheme}>
         <CssBaseline />
-        <Navbar />
-        <main>
-          <Dashboard />
-          <AddTransaction />
-          {/* </Navbar> */}
-        </main>
-        
+          <Navbar />
+          <main>
+            <Dashboard />
+            <AddTransaction />
+            {/* </Navbar> */}
+          </main>
+      
       </ThemeProvider>
     </GlobalProvider>
   );
