@@ -4,6 +4,7 @@ import AppReducer from './AppReducer';
 
 const initialState = {
   transactions: [],
+  users: [],
   error: null,
   loading: true
 };
@@ -65,15 +66,84 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function addUser(user) {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    try {
+      const res = await axios.post('/api/users', user, config);
+      dispatch({
+        type: 'REGISTER_USER',
+        payload: res.data.newUser
+      });
+      // console.log(res.data.token);
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      });
+    }
+  }
+
+  async function authUser(user) {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    try {
+      const res = await axios.post('/api/auth', user, config);
+      dispatch({
+        type: 'AUTH_USER',
+        payload: res.data.user
+      });
+      // console.log(res.data.token);
+      config.headers['x-auth-token'] = res.data.token;
+      // console.log(config);
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      });
+    }
+  }
+
+  async function getUser(user) {
+    const config = {
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    try {
+      const res = await axios.get('/api/auth/user', user, config);
+      dispatch({
+        type: 'GET_USER',
+        payload: res.data.user
+      });
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      });
+    }
+  }
+
   return (
     <GlobalContext.Provider
       value={{
         transactions: state.transactions,
+        users: state.users,
         error: state.error,
         loading: state.loading,
         getTransactions,
         deleteTransaction,
-        addTransaction
+        addTransaction,
+        addUser,
+        authUser,
+        getUser,
       }}
     >
       {children}

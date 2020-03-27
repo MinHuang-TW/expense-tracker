@@ -23,6 +23,26 @@ export default (state, action) => {
         ...state,
         error: action.payload
       }
+
+    case 'REGISTER_USER':
+      return {
+        ...state,
+        users: action.payload,
+      }
+
+    case 'AUTH_USER':
+      return {
+        ...state,
+        users: action.payload,
+      }
+
+    case 'GET_USER':
+      return {
+        ...state,
+        loading: false,
+        users: action.payload,
+      }
+
     default:
       return state;
   }
