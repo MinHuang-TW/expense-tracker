@@ -3,8 +3,10 @@ import axios from 'axios';
 import AppReducer from './AppReducer';
 
 const initialState = {
-  transactions: [],
+  token: localStorage.getItem('token'),
+  isAuthenticated: null,
   users: [],
+  transactions: [],
   error: null,
   loading: true
 };
@@ -74,11 +76,12 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/users', user, config);
+      const res = await axios.post('/api/users', config);
       dispatch({
         type: 'REGISTER_USER',
-        payload: res.data.newUser
+        payload: res.data
       });
+      // localStorage.setItem('token', res.data.token);
       // console.log(res.data.token);
     } catch (err) {
       dispatch({
@@ -99,10 +102,11 @@ export const GlobalProvider = ({ children }) => {
       const res = await axios.post('/api/auth', user, config);
       dispatch({
         type: 'AUTH_USER',
-        payload: res.data.user
+        payload: res.data
       });
       // console.log(res.data.token);
-      config.headers['x-auth-token'] = res.data.token;
+      // config.headers['x-auth-token'] = res.data.token;
+      // localStorage.setItem('token', res.data.token);
       // console.log(config);
     } catch (err) {
       dispatch({
@@ -116,13 +120,20 @@ export const GlobalProvider = ({ children }) => {
     const config = {
       headers: { 'Content-Type': 'application/json' }
     };
+    const token = state.token;
+    // console.log(state.token)
+    if (state.token) {
+      config.headers["x-auth-token"] = state.token;
+    }
+    console.log(config.headers)
 
     try {
-      const res = await axios.get('/api/auth/user', user, config);
+      const res = await axios.get('/api/auth/user', config);
       dispatch({
         type: 'GET_USER',
         payload: res.data.user
       });
+      // console.log(res.data)
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',

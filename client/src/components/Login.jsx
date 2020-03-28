@@ -17,8 +17,8 @@ const Login = () => {
       email,
       password,
     };
-    // addUser(newUser);
-    authUser(newUser);
+    addUser(newUser);
+    // getUser(newUser);
     // console.log(newUser);
     
     setName('');
@@ -28,9 +28,17 @@ const Login = () => {
     // redirect to dashboard
   };
 
+  const handleLogin = e => {
+    e.preventDefault();
+    getUser({ email, password });
+
+    setEmail('');
+    setPassword('');
+  }
+
   return ( 
     <form 
-      onSubmit={e => handleSubmit(e)}
+      // onSubmit={e => handleSubmit(e)}
       style={{ width: '80vw', margin: '100px auto', textAlign: 'center' }}
       noValidate autoComplete="off"
     >
@@ -57,9 +65,17 @@ const Login = () => {
       />
 
       <button 
+        onClick={e => handleSubmit(e)} 
         style={{ marginTop: '50px', width: '100%', height: '30px' }}
       >
-        SAVE
+        sign up
+      </button>
+
+      <button 
+        onClick={e => handleLogin(e)} 
+        style={{ marginTop: '50px', width: '100%', height: '30px' }}
+      >
+        log in
       </button>
     </form>
   );
