@@ -28,7 +28,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
-        payload: err.response.data.error
+        payload: err.response.data
       });
     }
   }
@@ -85,7 +85,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'LOGIN_ERROR',
-        payload: err.response
+        payload: err.response.data
       });
     }
   }

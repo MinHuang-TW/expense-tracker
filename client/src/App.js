@@ -13,7 +13,6 @@ function App() {
         <Switch>
           <Route path='/register' component={Login} /> 
           <Route path='/user' component={Dashboard} />
-          <Route path='logout' />
           
           <Redirect from="/" exact to="/user" />
           <Redirect to="/not-found" />
