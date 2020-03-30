@@ -30,6 +30,7 @@ exports.registerUser = async (req, res, next) => {
       .header('access-control-expose-headers', 'x-auth-token')
       .json({
         success: true,
+        token,
         user: {
           id: user.id,
           name: user.name,
@@ -45,7 +46,7 @@ exports.registerUser = async (req, res, next) => {
 };
 
 // login user
-// POST /api/user/login
+// POST /api/auth
 // Public
 exports.loginUser = async (req, res, next) => {
 
@@ -56,7 +57,7 @@ exports.loginUser = async (req, res, next) => {
     if (error) return res.status(400).send(error.details[0].message);
   
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).send('User does not exist!');
+    if (!user) return res.status(400).send('User does not exist');
   
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).send('Invalid password')
@@ -89,4 +90,4 @@ exports.loginUser = async (req, res, next) => {
 exports.loadUser = async (req, res, next) => {
   const user = await User.findById(req.user.id).select('-password');
   return res.send(user);
-}
+};

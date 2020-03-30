@@ -8,12 +8,8 @@ const {
 } = require('../controllers/users');
 
 router
-  .route('/register')
+  .route('/')
   .post(registerUser);
-
-router
-  .route('/login')
-  .post(loginUser);
 
 router
   .route('/')

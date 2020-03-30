@@ -25,18 +25,12 @@ export default (state, action) => {
       }
 
     case 'REGISTER_USER':
-      // localStorage.setItem('token', action.payload.token);
-      // console.log(action.payload.token);
-      return {
-        ...state,
-        users: action.payload,
-      }
-
     case 'LOGIN_USER':
       localStorage.setItem('token', action.payload.token);
-      // console.log(action.payload.token);
+      window.location = '/';
       return {
         ...state,
+        // users: { success: , token: , user: { id: , name: , email: }}
         users: action.payload,
       }
 
@@ -50,6 +44,7 @@ export default (state, action) => {
 
     case 'LOGOUT_USER':
       localStorage.removeItem("token");
+      window.location = '/register';
       return {
         ...state,
         users: null,

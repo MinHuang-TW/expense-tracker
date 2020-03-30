@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = e => {
+  const handleRegister = (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -18,20 +18,17 @@ const Login = () => {
       password,
     };
     registerUser(newUser);
-    
-    setName('');
-    setEmail('');
-    setPassword('');
-
-    // redirect to dashboard
+    if (!error) window.location = '/user';
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     await loginUser({ email, password });
-    if (!error) window.location = '/user';
-
+    if (error) {
+      setEmail('')
+      setPassword('')
+    }
   }
 
   return ( 
@@ -40,7 +37,7 @@ const Login = () => {
       style={{ margin: '100px auto' }}
       noValidate autoComplete="off"
     >
-
+      {error && <p>{error}</p>}
       <TextField
         id="standard-full-width"
         label="Acount" fullWidth required autoFocus
@@ -63,7 +60,7 @@ const Login = () => {
       />
 
       <button 
-        onClick={e => handleSubmit(e)} 
+        onClick={e => handleRegister(e)} 
         className='btn plus-bg'
         style={{ marginTop: '50px' }}
       >

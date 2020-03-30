@@ -15,7 +15,7 @@ function App() {
           <Route path='/user' component={Dashboard} />
           <Route path='logout' />
           
-          <Redirect from="/" exact to="/register" />
+          <Redirect from="/" exact to="/user" />
           <Redirect to="/not-found" />
         </Switch>
       </Navigation>

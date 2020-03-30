@@ -64,6 +64,8 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
+        // err.response.status: 400
+        // err.response.data: { success: false, error: '...' }
         payload: err.response.data.error
       });
     }
@@ -75,7 +77,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/user/register', user, config);
+      const res = await axios.post('/api/users', user, config);
       dispatch({
         type: 'REGISTER_USER',
         payload: res.data
@@ -83,7 +85,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
-        payload: err.response.data.error
+        payload: err.response
       });
     }
   }
@@ -94,7 +96,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/user/login', user, config);
+      const res = await axios.post('/api/auth', user, config);
       dispatch({
         type: 'LOGIN_USER',
         // res.data = { success: , token: , user: { id: , name: , email: }}
@@ -103,7 +105,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
-        payload: err.response.data.error
+        payload: err.response.data
       });
     }
   }
@@ -120,7 +122,7 @@ export const GlobalProvider = ({ children }) => {
     // console.log(config.headers)
 
     try {
-      const res = await axios.get('/api/user', user, config);
+      const res = await axios.get('/api/users', user, config);
       dispatch({
         type: 'LOAD_USER',
         payload: res.data.user
@@ -129,7 +131,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
-        payload: err.response.data.error
+        payload: err.response
       });
     }
   }
