@@ -19,9 +19,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use('/api/v1/transactions', require('./routes/transactions'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/transactions', require('./routes/transactions'));
+app.use('/api/user', require('./routes/users'));
+// app.use('/api/auth', require('./routes/auth'));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

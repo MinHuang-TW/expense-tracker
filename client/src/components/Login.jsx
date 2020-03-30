@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
+import { Redirect } from "react-router-dom";
 import { GlobalContext } from '../context/GlobalState';
 import TextField from '@material-ui/core/TextField';
 
 const Login = () => {
-  const { addUser, getUser, authUser } = useContext(GlobalContext);
+  const { registerUser, loginUser, error } = useContext(GlobalContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,14 +13,11 @@ const Login = () => {
     e.preventDefault();
 
     const newUser = {
-      id: Math.floor(Math.random() * 100000000),
       name,
       email,
       password,
     };
-    addUser(newUser);
-    // getUser(newUser);
-    // console.log(newUser);
+    registerUser(newUser);
     
     setName('');
     setEmail('');
@@ -28,18 +26,18 @@ const Login = () => {
     // redirect to dashboard
   };
 
-  const handleLogin = e => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    getUser({ email, password });
 
-    setEmail('');
-    setPassword('');
+    await loginUser({ email, password });
+    if (!error) window.location = '/user';
+
   }
 
   return ( 
-    <form 
-      // onSubmit={e => handleSubmit(e)}
-      style={{ width: '80vw', margin: '100px auto', textAlign: 'center' }}
+    <form
+      className="new-form" 
+      style={{ margin: '100px auto' }}
       noValidate autoComplete="off"
     >
 
@@ -66,17 +64,19 @@ const Login = () => {
 
       <button 
         onClick={e => handleSubmit(e)} 
-        style={{ marginTop: '50px', width: '100%', height: '30px' }}
+        className='btn plus-bg'
+        style={{ marginTop: '50px' }}
       >
-        sign up
+        Sign up
       </button>
 
       <button 
         onClick={e => handleLogin(e)} 
-        style={{ marginTop: '50px', width: '100%', height: '30px' }}
+        className='btn plus-bg'
       >
-        log in
+        Log in
       </button>
+
     </form>
   );
 }

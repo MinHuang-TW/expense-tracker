@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 const {
   getTransactions,
   addTransactions,
@@ -8,8 +9,8 @@ const {
 
 router
   .route('/')
-  .get(getTransactions)
-  .post(addTransactions);
+  .get(auth, getTransactions)
+  .post(auth, addTransactions);
 
 router
   .route('/:id')

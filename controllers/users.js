@@ -1,53 +1,41 @@
-const User = require('../models/User');
+const { User } = require('../models/User');
 const bcrypt = require('bcryptjs');
-const config = require('config');
-const jwt = require('jsonwebtoken');
+const { registerValidation, loginValidation } = require('./validation');
+
 
 // register new user
-// POST /api/users
+// POST /api/user/register
 // Public
-exports.addUser = async (req, res, next) => {
+exports.registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ msg: 'Please enter all fields' });
-    }
-
-    const user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({
-        msg: 'User already exist!'
-      });
-    }
-
-    const newUser = await User.create(req.body);
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser.save();
-      })
-    })
     
-    jwt.sign(
-      { id: newUser.id },
-      config.get('jwtSecret'),
-      { expiresIn: 3600 },
-      (err, token) => {
-        if (err) throw err;
+    const { error } = registerValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+    
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).send('This email has already been used.');
+  
+    user = await User.create({ name, email, password });
 
-        return res.status(201).json({
-          success: true,
-          token,
-          newUser: {
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email
-          },
-        });
-      }
-    )
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    await user.save();
 
+    const token = user.generateAuthToken();
+
+    return res
+      .status(201)
+      .header('x-auth-token', token)
+      .header('access-control-expose-headers', 'x-auth-token')
+      .json({
+        success: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -56,46 +44,36 @@ exports.addUser = async (req, res, next) => {
   }
 };
 
-// Auth user
-// POST /api/auth
+// login user
+// POST /api/user/login
 // Public
-exports.authUser = (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
+
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ msg: 'Please enter all fields' });
-    }
+  
+    const { error } = loginValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+  
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).send('User does not exist!');
+  
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).send('Invalid password')
 
-    User.findOne({ email })
-      .then(user => {
-        if (!user) {
-          return res.status(400).json({ msg: 'User does not exist!' });
-        }
+    // const token = jwt.sign({ id: user.id }, config.get('jwtSecret'));
+    const token = user.generateAuthToken();
+    res.header('x-auth-token', token);
 
-        bcrypt.compare(password, user.password)
-          .then(isMatch => {
-            if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-
-            jwt.sign(
-              { id: user.id },
-              config.get('jwtSecret'),
-              { expiresIn: 3600 },
-              (err, token) => {
-                if (err) throw err;
-        
-                return res.status(201).json({
-                  success: true,
-                  token,
-                  user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email
-                  },
-                });
-              }
-            )
-          })
-      });
+    return res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      },
+    });
 
   } catch (err) {
     return res.status(500).json({
@@ -106,10 +84,9 @@ exports.authUser = (req, res, next) => {
 };
 
 // get user data
-// GET /api/auth/user
+// GET /api/user
 // Private
-exports.getUser = (req, res, next) => {
-  User.findById(req.user.id)
-    .select('-password')
-    .then(user => res.json(user));
+exports.loadUser = async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('-password');
+  return res.send(user);
 }

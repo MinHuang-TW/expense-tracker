@@ -1,15 +1,17 @@
 const Transaction = require('../models/Transaction');
+const { User } = require('../models/User');
 
 // get all transactions
-// GET /api/v1/transactions
+// GET /api/transactions
 // Public
 exports.getTransactions = async (req, res, next) => {
   try {
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find({ user: req.user.id });
+
     return res.status(200).json({
       success: true,
       count: transactions.length,
-      data: transactions
+      data: transactions,
     })
   } catch (err) {
     return res.status(500).json({
@@ -20,15 +22,22 @@ exports.getTransactions = async (req, res, next) => {
 };
 
 // add transaction
-// POST /api/v1/transactions
+// POST /api/transactions
 // Public
 exports.addTransactions = async (req, res, next) => {
   try {
     const { text, amount } = req.body;
     const transaction = await Transaction.create(req.body);
+    transaction.user = req.user.id;
+    transaction.save();
+
+    // const user = await User.findById(req.user.id);
+    // user.transactions.push(transaction);
+    // user.save();
+
     return res.status(201).json({
       success: true,
-      data: transaction
+      data: transaction,
     })
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -48,7 +57,7 @@ exports.addTransactions = async (req, res, next) => {
 };
 
 // delete transaction
-// DELETE /api/v1/transactions/:id
+// DELETE /api/transactions/:id
 // Public
 exports.deleteTransactions = async (req, res, next) => {
   try {

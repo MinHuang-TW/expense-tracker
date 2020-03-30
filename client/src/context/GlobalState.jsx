@@ -3,10 +3,9 @@ import axios from 'axios';
 import AppReducer from './AppReducer';
 
 const initialState = {
-  token: localStorage.getItem('token'),
-  isAuthenticated: null,
   users: [],
   transactions: [],
+  token: null,
   error: null,
   loading: true
 };
@@ -16,9 +15,11 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  axios.defaults.headers.common["x-auth-token"] = localStorage.getItem('token');
+
   async function getTransactions() {
     try {
-      const res = await axios.get('/api/v1/transactions');
+      const res = await axios.get('/api/transactions');
       // console.log(res)
       dispatch({
         type: 'GET_TRANSACTIONS',
@@ -34,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function deleteTransaction(id) {
     try {
-      await axios.delete(`/api/v1/transactions/${id}`);
+      await axios.delete(`/api/transactions/${id}`);
       dispatch({
         type: 'DELETE_TRANSACTION',
         payload: id
@@ -55,7 +56,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     try {
-      const res = await axios.post('/api/v1/transactions', transaction, config);
+      const res = await axios.post('/api/transactions', transaction, config);
       dispatch({
         type: 'ADD_TRANSACTION',
         payload: res.data.data
@@ -68,21 +69,17 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addUser(user) {
+  async function registerUser(user) {
     const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     }
 
     try {
-      const res = await axios.post('/api/users', config);
+      const res = await axios.post('/api/user/register', user, config);
       dispatch({
         type: 'REGISTER_USER',
         payload: res.data
       });
-      // localStorage.setItem('token', res.data.token);
-      // console.log(res.data.token);
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
@@ -91,23 +88,18 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function authUser(user) {
+  async function loginUser(user) {
     const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     }
 
     try {
-      const res = await axios.post('/api/auth', user, config);
+      const res = await axios.post('/api/user/login', user, config);
       dispatch({
-        type: 'AUTH_USER',
+        type: 'LOGIN_USER',
+        // res.data = { success: , token: , user: { id: , name: , email: }}
         payload: res.data
       });
-      // console.log(res.data.token);
-      // config.headers['x-auth-token'] = res.data.token;
-      // localStorage.setItem('token', res.data.token);
-      // console.log(config);
     } catch (err) {
       dispatch({
         type: 'TRANSACTION_ERROR',
@@ -116,21 +108,21 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function getUser(user) {
+  async function loadUser(user) {
     const config = {
       headers: { 'Content-Type': 'application/json' }
     };
-    const token = state.token;
+    // const token = state.token;
     // console.log(state.token)
-    if (state.token) {
-      config.headers["x-auth-token"] = state.token;
-    }
-    console.log(config.headers)
+    // if (state.token) {
+    //   config.headers["x-auth-token"] = state.token;
+    // }
+    // console.log(config.headers)
 
     try {
-      const res = await axios.get('/api/auth/user', config);
+      const res = await axios.get('/api/user', user, config);
       dispatch({
-        type: 'GET_USER',
+        type: 'LOAD_USER',
         payload: res.data.user
       });
       // console.log(res.data)
@@ -152,9 +144,9 @@ export const GlobalProvider = ({ children }) => {
         getTransactions,
         deleteTransaction,
         addTransaction,
-        addUser,
-        authUser,
-        getUser,
+        registerUser,
+        loginUser,
+        loadUser,
       }}
     >
       {children}

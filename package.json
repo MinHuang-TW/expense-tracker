@@ -13,6 +13,7 @@
   "author": "Min Huang",
   "license": "MIT",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "config": "^3.3.1",

@@ -25,6 +25,14 @@ export default (state, action) => {
       }
 
     case 'REGISTER_USER':
+      // localStorage.setItem('token', action.payload.token);
+      // console.log(action.payload.token);
+      return {
+        ...state,
+        users: action.payload,
+      }
+
+    case 'LOGIN_USER':
       localStorage.setItem('token', action.payload.token);
       // console.log(action.payload.token);
       return {
@@ -32,32 +40,19 @@ export default (state, action) => {
         users: action.payload,
       }
 
-    case 'AUTH_USER':
-      localStorage.setItem('token', action.payload.token);
-      // console.log(action.payload.token);
+    case 'LOAD_USER':
+      // const token = localStorage.getItem('token');
       return {
         ...state,
-        isAuthenticated: true,
-        users: action.payload,
-      }
-
-    case 'GET_USER':
-      const token = localStorage.getItem('token');
-      return {
-        ...state,
-        token,
-        isAuthenticated: true,
         loading: false,
         users: action.payload,
       }
 
-    case 'LOGOUT':
+    case 'LOGOUT_USER':
       localStorage.removeItem("token");
       return {
         ...state,
-        token: null,
         users: null,
-        isAuthenticated: false,
         loading: false,
       }
 
