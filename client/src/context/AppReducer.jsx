@@ -1,10 +1,11 @@
 export default (state, action) => {
   switch (action.type) {
     case 'GET_TRANSACTIONS':
+      
       return {
         ...state,
         loading: false,
-        transactions: action.payload
+        transactions: action.payload,
       }
     case 'DELETE_TRANSACTION':
       return {
@@ -30,6 +31,7 @@ export default (state, action) => {
       window.location = '/';
       return {
         ...state,
+        token: action.payload.token,
         // users: { success: , token: , user: { id: , name: , email: }}
         users: action.payload,
       }
@@ -47,9 +49,17 @@ export default (state, action) => {
       window.location = '/register';
       return {
         ...state,
+        token: null,
         users: null,
         loading: false,
       }
+
+      case 'LOGIN_ERROR':
+        // window.location = '/404';
+        return {
+          ...state,
+          error: action.payload
+        }
 
     default:
       return state;

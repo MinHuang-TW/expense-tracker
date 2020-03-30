@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, AppBar, Divider, Drawer, Hidden, IconButton, Toolbar, Typography} from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 // import MailIcon from '@material-ui/icons/Mail';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
-// import List from '@material-ui/core/List';
-// import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -46,9 +46,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Navigation = props => {
+  const { logoutUser } = useContext(GlobalContext);
   const { container, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
+
+  const token = localStorage.getItem('token');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -65,16 +68,13 @@ const Navigation = props => {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
+          <ListItem button onClick={logoutUser}>
+            <ListItemText primary='Logout' />
+          </ListItem>
+        </List>
       </div>
     );
 
@@ -85,7 +85,7 @@ const Navigation = props => {
 
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
-            <IconButton
+            {token && <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
@@ -93,14 +93,14 @@ const Navigation = props => {
               className={classes.menuButton}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton>}
             <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
               Expense Tracker
             </Typography>
           </Toolbar>
         </AppBar>
 
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        {token && <nav className={classes.drawer} aria-label="mailbox folders">
           <Hidden smUp implementation="css">
             <Drawer
               container={container}
@@ -123,7 +123,7 @@ const Navigation = props => {
               {drawer}
             </Drawer>
           </Hidden>
-        </nav>
+        </nav>}
     
         <main className={classes.content}>
           {children}

@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { Redirect } from "react-router-dom";
 import { GlobalContext } from '../context/GlobalState';
 import TextField from '@material-ui/core/TextField';
 
@@ -9,7 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -17,8 +16,12 @@ const Login = () => {
       email,
       password,
     };
-    registerUser(newUser);
-    if (!error) window.location = '/user';
+    await registerUser(newUser);
+    if (error) {
+      setName('');
+      setEmail('');
+      setPassword('');
+    }
   };
 
   const handleLogin = async (e) => {
@@ -26,8 +29,8 @@ const Login = () => {
 
     await loginUser({ email, password });
     if (error) {
-      setEmail('')
-      setPassword('')
+      setEmail('');
+      setPassword('');
     }
   }
 

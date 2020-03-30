@@ -84,7 +84,7 @@ export const GlobalProvider = ({ children }) => {
       });
     } catch (err) {
       dispatch({
-        type: 'TRANSACTION_ERROR',
+        type: 'LOGIN_ERROR',
         payload: err.response
       });
     }
@@ -104,7 +104,7 @@ export const GlobalProvider = ({ children }) => {
       });
     } catch (err) {
       dispatch({
-        type: 'TRANSACTION_ERROR',
+        type: 'LOGIN_ERROR',
         payload: err.response.data
       });
     }
@@ -130,10 +130,16 @@ export const GlobalProvider = ({ children }) => {
       // console.log(res.data)
     } catch (err) {
       dispatch({
-        type: 'TRANSACTION_ERROR',
+        type: 'LOGIN_ERROR',
         payload: err.response
       });
     }
+  }
+
+  function logoutUser() {
+    dispatch({
+      type: 'LOGOUT_USER',
+    });
   }
 
   return (
@@ -149,6 +155,7 @@ export const GlobalProvider = ({ children }) => {
         registerUser,
         loginUser,
         loadUser,
+        logoutUser,
       }}
     >
       {children}
