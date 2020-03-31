@@ -9,6 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 // import MailIcon from '@material-ui/icons/Mail';
 // import InboxIcon from '@material-ui/icons/MoveToInbox';
 
+const token = localStorage.getItem('token');
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -24,8 +25,8 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     boxShadow: 'none',
     [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
+      width: token && `calc(100% - ${drawerWidth}px)`,
+      marginLeft: token && drawerWidth,
     },
   },
   menuButton: {
@@ -51,11 +52,7 @@ const Navigation = props => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
 
-  const token = localStorage.getItem('token');
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  // const token = localStorage.getItem('token');
 
   const drawer = (
     <div>
@@ -89,7 +86,7 @@ const Navigation = props => {
               color="inherit"
               aria-label="open drawer"
               edge="start"
-              onClick={handleDrawerToggle}
+              onClick={() => setMobileOpen(!mobileOpen)}
               className={classes.menuButton}
             >
               <MenuIcon />
@@ -106,7 +103,7 @@ const Navigation = props => {
               container={container}
               variant="temporary"
               open={mobileOpen}
-              onClose={handleDrawerToggle}
+              onClose={() => setMobileOpen(!mobileOpen)}
               classes={{ paper: classes.drawerPaper }}
               ModalProps={{ keepMounted: true }}
             >

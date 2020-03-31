@@ -1,20 +1,26 @@
 import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { InputAdornment, TextField, IconButton } from '@material-ui/core';
+import PasswordIcon from '../components/common/PasswordIcon';
+import { TextField, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
+const useStyles = makeStyles(theme => ({
+  alert: {
     width: '100%',
   },
   input: {
     margin: '15px auto',
+    width: '100%',
   },
   button: {
-    marginTop: '30px',
+    marginTop: '30px'
+  },
+  link: {
+    display: 'inline',
+    cursor: 'pointer',
+    marginLeft: '10px'
   }
 }));
 
@@ -26,16 +32,34 @@ const Login = () => {
   const [showPassword, setShowpassword] = useState(false);
   const [disableBtn, setDisableBtn] = useState(true);
   const [showSignup, setShowSignup] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const classes = useStyles();
 
-  const handleRegister = async (e) => {
+  const ModeSwitch = ({ mode, children }) => {
+    return (
+      <div className={classes.button}>
+        <span style={{ color: '#232C2D', opacity: 0.8 }}>
+          { children }
+        </span>
+        <Typography
+          color='primary'
+          className={classes.link}
+          onClick={() => setShowSignup(!showSignup)}
+        >
+          { mode }
+        </Typography>
+      </div>
+    )
+  }
+
+  const handleRegister = async e => {
     e.preventDefault();
 
     const newUser = {
       name,
       email,
-      password,
+      password
     };
     await registerUser(newUser);
     if (error) {
@@ -45,7 +69,7 @@ const Login = () => {
     }
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async e => {
     e.preventDefault();
 
     await loginUser({ email, password });
@@ -53,91 +77,80 @@ const Login = () => {
       setEmail('');
       setPassword('');
     }
-  }
+  };
 
-  return ( 
+  return (
     <form
-      className="container" 
-      style={{ textAlign: 'center', marginTop: '100px' }}
-      noValidate autoComplete="off"
+      className='container login-form'
+      noValidate
+      autoComplete='off'
     >
-      {error && <Alert severity="error" className={classes.root}>{error}</Alert>}
-      {showSignup && <TextField
-        label="Name" fullWidth required autoFocus
+      {error && (
+        <Alert severity='error' className={classes.alert}>
+          {error}
+        </Alert>
+      )}
+
+      <TextField
+        label={showSignup ? 'Name' : ' '}
+        required={!showSignup? false : true}
+        disabled={showSignup? false : true}
         value={name}
         onChange={e => setName(e.target.value)}
         className={classes.input}
-      />}
+      />
 
       <TextField
-        label="Email" type="email" fullWidth required
+        label='Email'
+        type='email'
+        required
         value={email}
         onChange={e => setEmail(e.target.value)}
         className={classes.input}
       />
 
       <TextField
-        label="Password" fullWidth required
+        label='Password'
         type={showPassword ? 'text' : 'password'}
+        required
         value={password}
         onChange={e => setPassword(e.target.value)}
         className={classes.input}
         InputProps={{
-          endAdornment:
-            (<InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowpassword(!showPassword)}
-                onMouseDown={() => setShowpassword(!showPassword)}
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>)
+          endAdornment: (
+            <PasswordIcon
+              showPassword={showPassword}
+              setShowpassword={() => setShowpassword(!showPassword)}
+            />
+          )
         }}
       />
 
-      {showSignup 
-        ? <>
-            <button 
-              onClick={e => handleRegister(e)} 
-              className={`btn plus-bg ${classes.button}`}
-              // disabled={disableBtn ? true : false}
-            >
-              Sign up
-            </button>
-            <div className={classes.button}>
-              Do not have an account?
-              <b 
-                onClick={() => setShowSignup(!showSignup)} 
-                className='plus'
-                style={{ cursor: 'pointer', marginLeft: '10px' }}
-              >
-                Login
-              </b>
-            </div>
-          </>
-        : <>
-            <button 
-              onClick={e => handleLogin(e)} 
-              className={`btn plus-bg ${classes.button}`}
-              // disabled={disableBtn ? true : false}
-            >
-              Log in
-            </button>
-            <div className={classes.button}>
-              Do not have an account?
-              <b 
-                onClick={() => setShowSignup(!showSignup)} 
-                className='plus'
-                style={{ cursor: 'pointer', marginLeft: '10px' }}
-              >
-                Signup
-              </b>
-            </div>
-          </>
-      }
+      {showSignup ? (
+        <>
+          <button
+            onClick={e => handleRegister(e)}
+            className={`btn plus-bg ${classes.button}`}
+            // disabled={disableBtn ? true : false}
+          >
+            Sign up
+          </button>
+          <ModeSwitch mode='Login'>Already have an account?</ModeSwitch>
+        </>
+      ) : (
+        <>
+          <button
+            onClick={e => handleLogin(e)}
+            className={`btn plus-bg ${classes.button}`}
+            // disabled={disableBtn ? true : false}
+          >
+            Log in
+          </button>
+          <ModeSwitch mode='Signup'>Do not have an account?</ModeSwitch>
+        </>
+      )}
     </form>
   );
-}
+};
 
 export default Login;

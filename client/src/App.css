@@ -18,6 +18,13 @@ body {
   width: 350px;
 }
 
+/* ----- LOGIN ----- */
+
+.login-form {
+  margin-top: 130px;
+  text-align: center;
+}
+
 /* ----- HEADER ----- */
 
 .container-top {
@@ -228,8 +235,12 @@ body {
   }
 }
 
-/* @media only screen and (max-height: 670px) {
-  .list-status {
-    line-height: 20vh;
+@media only screen and (max-height: 570px) {
+  .login-form {
+    margin-top: 100px;
   }
-} */
+
+  /* .list-status {
+    line-height: 20vh;
+  } */
+}
