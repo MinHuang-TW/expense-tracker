@@ -1,14 +1,14 @@
 import React, { useState, useContext, Fragment } from 'react';
+import { NavLink } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeSharpIcon from '@material-ui/icons/HomeSharp';
+import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
 // import ListAltIcon from '@material-ui/icons/ListAlt';
-import { NavLink } from 'react-router-dom';
 
 const Navigation = props => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
@@ -52,7 +52,7 @@ const Navigation = props => {
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-      background: currentHours > 18 ? '#232c2d' : '#EAEBED',
+      background: currentHours < 18 ? '#EAEBED' : '#232c2d',
       // background: '#F3F5F4',
     },
     content: {
@@ -60,11 +60,12 @@ const Navigation = props => {
     },
     textColor: {
       opacity: 0.8,
-      color: currentHours > 18 ? 'white' : '#232c2d',
+      color: currentHours < 18 ? '#232c2d' : 'white',
       textDecoration: 'none',
     },
-    spacing: {
+    menuIcon: {
       marginRight: '15px',
+      opacity: 0.5,
     }
   }));
 
@@ -84,18 +85,18 @@ const Navigation = props => {
 
       <NavLink to='/user' className={classes.textColor}>
         <MenuItem>
-          <HomeIcon className={classes.spacing} />
+          <HomeSharpIcon className={classes.menuIcon} />
           Home
         </MenuItem>
       </NavLink>
       {/* <NavLink>
-        <ListAltIcon className={classes.spacing} />
+        <ListAltIcon className={classes.menuIcon} />
         Report
       </NavLink> */}
 
       <NavLink to='/logout' className={classes.textColor}>
         <MenuItem>
-          <ExitToAppIcon className={classes.spacing} />
+          <MeetingRoomSharpIcon className={classes.menuIcon} />
           Logout
         </MenuItem>
       </NavLink>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
 const Logout = () => {
