@@ -36,16 +36,17 @@ export default (state, action) => {
       }
 
     case 'LOAD_USER':
-      // const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       return {
         ...state,
+        token,
         loading: false,
         users: action.payload,
       }
 
     case 'LOGOUT_USER':
       localStorage.removeItem("token");
-      window.location = '/register';
+      window.location = '/login';
       return {
         ...state,
         token: null,

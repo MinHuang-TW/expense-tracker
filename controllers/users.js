@@ -4,7 +4,7 @@ const { registerValidation, loginValidation } = require('./validation');
 
 
 // register new user
-// POST /api/user/register
+// POST /api/user
 // Public
 exports.registerUser = async (req, res, next) => {
   try {

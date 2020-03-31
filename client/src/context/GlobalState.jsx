@@ -15,8 +15,13 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  axios.defaults.headers.common["x-auth-token"] = localStorage.getItem('token');
-
+  
+  const getToken = () => {
+    return localStorage.getItem('token');
+  }
+  
+  axios.defaults.headers.common["x-auth-token"] = getToken();
+  
   async function getTransactions() {
     try {
       const res = await axios.get('/api/transactions');
@@ -114,12 +119,6 @@ export const GlobalProvider = ({ children }) => {
     const config = {
       headers: { 'Content-Type': 'application/json' }
     };
-    // const token = state.token;
-    // console.log(state.token)
-    // if (state.token) {
-    //   config.headers["x-auth-token"] = state.token;
-    // }
-    // console.log(config.headers)
 
     try {
       const res = await axios.get('/api/users', user, config);
@@ -127,7 +126,6 @@ export const GlobalProvider = ({ children }) => {
         type: 'LOAD_USER',
         payload: res.data.user
       });
-      // console.log(res.data)
     } catch (err) {
       dispatch({
         type: 'LOGIN_ERROR',
@@ -145,6 +143,7 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
+        token: state.token,
         transactions: state.transactions,
         users: state.users,
         error: state.error,
@@ -156,6 +155,7 @@ export const GlobalProvider = ({ children }) => {
         loginUser,
         loadUser,
         logoutUser,
+        getToken,
       }}
     >
       {children}

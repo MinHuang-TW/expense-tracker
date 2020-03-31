@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
+import { Redirect } from 'react-router-dom' ;
 import { GlobalContext } from '../context/GlobalState';
 import PasswordIcon from '../components/common/PasswordIcon';
 import { TextField, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -25,16 +25,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Login = () => {
-  const { registerUser, loginUser, error } = useContext(GlobalContext);
+  const { getToken, registerUser, loginUser, error } = useContext(GlobalContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowpassword] = useState(false);
-  const [disableBtn, setDisableBtn] = useState(true);
   const [showSignup, setShowSignup] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  // const [showAlert, setShowAlert] = useState(false);
+  // const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
+
+  const ModeButton = ({ children, onClick }) => {
+    return (
+      <button
+        onClick={onClick}
+        className={`btn plus-bg ${classes.button}`}
+        // disabled={disableBtn ? true : false}
+      >
+        { children }
+      </button>
+    )
+  }
 
   const ModeSwitch = ({ mode, children }) => {
     return (
@@ -53,38 +65,22 @@ const Login = () => {
     )
   }
 
-  const handleRegister = async e => {
+  const handleRegister = e => {
     e.preventDefault();
-
-    const newUser = {
-      name,
-      email,
-      password
-    };
-    await registerUser(newUser);
-    if (error) {
-      setName('');
-      setEmail('');
-      setPassword('');
-    }
+    const newUser = { name, email, password };
+    registerUser(newUser);
   };
 
-  const handleLogin = async e => {
+  const handleLogin = e => {
     e.preventDefault();
-
-    await loginUser({ email, password });
-    if (error) {
-      setEmail('');
-      setPassword('');
-    }
+    loginUser({ email, password });
   };
+
+  if (getToken()) return <Redirect to='/' />
 
   return (
-    <form
-      className='container login-form'
-      noValidate
-      autoComplete='off'
-    >
+    <form className='container login-form' noValidate autoComplete='off'>
+
       {error && (
         <Alert severity='error' className={classes.alert}>
           {error}
@@ -128,24 +124,12 @@ const Login = () => {
 
       {showSignup ? (
         <>
-          <button
-            onClick={e => handleRegister(e)}
-            className={`btn plus-bg ${classes.button}`}
-            // disabled={disableBtn ? true : false}
-          >
-            Sign up
-          </button>
+          <ModeButton onClick={e => handleRegister(e)}>Sign up</ModeButton>
           <ModeSwitch mode='Login'>Already have an account?</ModeSwitch>
         </>
       ) : (
         <>
-          <button
-            onClick={e => handleLogin(e)}
-            className={`btn plus-bg ${classes.button}`}
-            // disabled={disableBtn ? true : false}
-          >
-            Log in
-          </button>
+          <ModeButton onClick={e => handleLogin(e)}>Log in</ModeButton>
           <ModeSwitch mode='Signup'>Do not have an account?</ModeSwitch>
         </>
       )}
