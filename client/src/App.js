@@ -1,10 +1,11 @@
 import React from 'react';
-import { Route, Redirect, Switch } from "react-router-dom";
+import { Route, Redirect, Switch } from 'react-router-dom';
 import { GlobalProvider } from './context/GlobalState.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login.jsx';
+import Logout from './components/Logout.jsx';
 import './App.css';
 
 function App() {
@@ -12,11 +13,12 @@ function App() {
     <GlobalProvider>
       <Navigation>
         <Switch>
-          <Route path='/login' component={Login} /> 
+          <Route path='/login' component={Login} />
+          <Route path='/logout' component={Logout} />
           <ProtectedRoute path='/user' component={Dashboard} />
-          
-          <Redirect from="/" exact to="/user" />
-          <Redirect to="/not-found" />
+
+          <Redirect from='/' exact to='/user' />
+          <Redirect to='/not-found' />
         </Switch>
       </Navigation>
     </GlobalProvider>

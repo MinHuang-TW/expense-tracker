@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import axios from 'axios';
+import jwtDecode from "jwt-decode";
 import AppReducer from './AppReducer';
 
 const initialState = {
@@ -15,9 +16,17 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  
   const getToken = () => {
     return localStorage.getItem('token');
+  }
+
+  const getCurrentUser = () => {
+    try {
+      const jwt = localStorage.getItem('token');
+      return jwtDecode(jwt);
+    } catch (ex) {
+      return null;
+    }
   }
   
   axios.defaults.headers.common["x-auth-token"] = getToken();
@@ -156,6 +165,7 @@ export const GlobalProvider = ({ children }) => {
         loadUser,
         logoutUser,
         getToken,
+        getCurrentUser,
       }}
     >
       {children}

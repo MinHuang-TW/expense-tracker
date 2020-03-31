@@ -9,18 +9,23 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   alert: {
     width: '100%',
+    textTransform: 'Uppercase',
+    textAlign: 'left',
   },
   input: {
     margin: '15px auto',
     width: '100%',
   },
   button: {
-    marginTop: '30px'
+    marginTop: '30px',
+    textTransform: 'Uppercase',
   },
   link: {
     display: 'inline',
     cursor: 'pointer',
-    marginLeft: '10px'
+    marginLeft: '10px',
+    textTransform: 'Uppercase',
+    fontWeight: 600,
   }
 }));
 
@@ -50,7 +55,7 @@ const Login = () => {
 
   const ModeSwitch = ({ mode, children }) => {
     return (
-      <div className={classes.button}>
+      <div style={{ marginTop: '30px' }}>
         <span style={{ color: '#232C2D', opacity: 0.8 }}>
           { children }
         </span>
@@ -82,8 +87,8 @@ const Login = () => {
     <form className='container login-form' noValidate autoComplete='off'>
 
       {error && (
-        <Alert severity='error' className={classes.alert}>
-          {error}
+        <Alert variant='outlined' severity='error' className={classes.alert}>
+          {error.replace(/"/g, "")}
         </Alert>
       )}
 
@@ -124,12 +129,12 @@ const Login = () => {
 
       {showSignup ? (
         <>
-          <ModeButton onClick={e => handleRegister(e)}>Sign up</ModeButton>
+          <ModeButton onClick={e => handleRegister(e)}>Signup</ModeButton>
           <ModeSwitch mode='Login'>Already have an account?</ModeSwitch>
         </>
       ) : (
         <>
-          <ModeButton onClick={e => handleLogin(e)}>Log in</ModeButton>
+          <ModeButton onClick={e => handleLogin(e)}>Login</ModeButton>
           <ModeSwitch mode='Signup'>Do not have an account?</ModeSwitch>
         </>
       )}

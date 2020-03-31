@@ -1,79 +1,106 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, AppBar, Divider, Drawer, Hidden, IconButton, Toolbar, Typography} from '@material-ui/core';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-// import MailIcon from '@material-ui/icons/Mail';
-// import InboxIcon from '@material-ui/icons/MoveToInbox';
-
-const token = localStorage.getItem('token');
-const drawerWidth = 240;
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    boxShadow: 'none',
-    [theme.breakpoints.up('sm')]: {
-      width: token && `calc(100% - ${drawerWidth}px)`,
-      marginLeft: token && drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-    background: '#EAEBED',
-    // background: '#F3F5F4',
-  },
-  content: {
-    flexGrow: 1,
-  },
-}));
+import HomeIcon from '@material-ui/icons/Home';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+// import ListAltIcon from '@material-ui/icons/ListAlt';
+import { NavLink } from 'react-router-dom';
 
 const Navigation = props => {
-  const { logoutUser } = useContext(GlobalContext);
+  const { getToken, getCurrentUser } = useContext(GlobalContext);
   const { container, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const token = getToken();
+  const drawerWidth = 240;
+
+  const currentHours = new Date().getHours();
+  const greeting = hour => {
+    if (hour < 13) return 'morning';
+    if (hour < 18) return 'afternoon';
+    if (hour < 23) return 'evening';
+    return 'day';
+  };
+  
+  const useStyles = makeStyles(theme => ({
+    root: {
+      display: 'flex',
+    },
+    drawer: {
+      [theme.breakpoints.up('sm')]: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+    },
+    appBar: {
+      boxShadow: 'none',
+      [theme.breakpoints.up('sm')]: {
+        width: token && `calc(100% - ${drawerWidth}px)`,
+        marginLeft: token && drawerWidth,
+      },
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth,
+      background: currentHours > 18 ? '#232c2d' : '#EAEBED',
+      // background: '#F3F5F4',
+    },
+    content: {
+      flexGrow: 1,
+    },
+    textColor: {
+      opacity: 0.8,
+      color: currentHours > 18 ? 'white' : '#232c2d',
+      textDecoration: 'none',
+    },
+    spacing: {
+      marginRight: '15px',
+    }
+  }));
+
   const classes = useStyles();
 
-  // const token = localStorage.getItem('token');
-
   const drawer = (
-    <div>
-        <div className={classes.toolbar} />
-        <Divider />
-        {/* <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
-        <Divider />
-        <List>
-          <ListItem button onClick={logoutUser}>
-            <ListItemText primary='Logout' />
-          </ListItem>
-        </List>
+    <Fragment>
+      {/* <div className={classes.toolbar} /> */}
+      <div style={{ margin: '48px 16px' }}>
+        <Typography variant='h5' gutterBottom className={classes.textColor}>
+          Good {greeting(currentHours)},
+        </Typography>
+        <Typography color='primary' variant='h4' style={{ textTransform: 'capitalize'}}>
+          {token && getCurrentUser().name}
+        </Typography>
       </div>
-    );
+
+      <NavLink to='/user' className={classes.textColor}>
+        <MenuItem>
+          <HomeIcon className={classes.spacing} />
+          Home
+        </MenuItem>
+      </NavLink>
+      {/* <NavLink>
+        <ListAltIcon className={classes.spacing} />
+        Report
+      </NavLink> */}
+
+      <NavLink to='/logout' className={classes.textColor}>
+        <MenuItem>
+          <ExitToAppIcon className={classes.spacing} />
+          Logout
+        </MenuItem>
+      </NavLink>
+    </Fragment>
+  );
 
   return (
     <ThemeProvider theme={defaultMaterialTheme}>
