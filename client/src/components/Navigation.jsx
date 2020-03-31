@@ -8,7 +8,7 @@ import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, M
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeSharpIcon from '@material-ui/icons/HomeSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
-// import ListAltIcon from '@material-ui/icons/ListAlt';
+import { DayIcon, NightIcon } from '../images/timeIcon';
 
 const Navigation = props => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
@@ -73,14 +73,16 @@ const Navigation = props => {
 
   const drawer = (
     <Fragment>
-      {/* <div className={classes.toolbar} /> */}
-      <div style={{ margin: '48px 16px' }}>
-        <Typography variant='h5' gutterBottom className={classes.textColor}>
+      <div style={{ margin: '50px 16px' }}>
+        <Typography variant='h6' gutterBottom className={classes.textColor}>
           Good {greeting(currentHours)},
         </Typography>
-        <Typography color='primary' variant='h4' style={{ textTransform: 'capitalize'}}>
+        <Typography color='primary' variant='h4' style={{ textTransform: 'capitalize', height: '82px'}}>
           {token && getCurrentUser().name}
         </Typography>
+        <div style={{ textAlign: 'right' }}>
+          {currentHours < 18 ? <DayIcon width='40%' /> : <NightIcon width='40%' />}
+        </div>
       </div>
 
       <NavLink to='/user' className={classes.textColor}>
@@ -107,7 +109,6 @@ const Navigation = props => {
     <ThemeProvider theme={defaultMaterialTheme}>
       <CssBaseline />
       <div className={classes.root}>
-
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             {token && <IconButton
