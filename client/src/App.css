@@ -18,6 +18,10 @@ body {
   width: 350px;
 }
 
+.MuiTypography-h6 {
+  opacity: 0.8;
+}
+
 /* ----- LOGIN ----- */
 
 .login-form {

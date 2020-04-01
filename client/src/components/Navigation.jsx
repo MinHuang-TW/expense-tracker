@@ -42,7 +42,7 @@ const Navigation = ({ container, children }) => {
       [theme.breakpoints.up('sm')]: {
         width: token && `calc(100% - ${drawerWidth}px)`,
         marginLeft: token && drawerWidth,
-        display: 'none',
+        display: token ? 'none' : 'default',
       },
     },
     menuButton: {
@@ -65,7 +65,6 @@ const Navigation = ({ container, children }) => {
       minHeight: '82px',
     },
     textColor: {
-      opacity: 0.8,
       color: dayTime ? '#232c2d' : 'white',
       textDecoration: 'none',
     },
@@ -74,7 +73,7 @@ const Navigation = ({ container, children }) => {
       opacity: 0.5,
       display: 'flex',
       justifyContent: 'center',
-    }
+    },
   }));
 
   const classes = useStyles();
@@ -127,9 +126,9 @@ const Navigation = ({ container, children }) => {
               <MenuIcon />
             </IconButton>}
 
-            {/* <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
+            {!token && <Typography variant="h6" noWrap>
               Expense Tracker
-            </Typography> */}
+            </Typography>}
           </Toolbar>
         </AppBar>
 

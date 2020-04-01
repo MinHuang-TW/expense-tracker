@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
-    opacity: 0.8,
   },
   textColor: {
     color: '#232C2D',

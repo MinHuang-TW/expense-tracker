@@ -41,7 +41,7 @@ const Login = () => {
 
   const classes = useStyles();
 
-  const ModeButton = ({ children, onClick }) => {
+  const SubmitButton = ({ children, onClick }) => {
     return (
       <button
         onClick={onClick}
@@ -129,12 +129,12 @@ const Login = () => {
 
       {showSignup ? (
         <>
-          <ModeButton onClick={e => handleRegister(e)}>Signup</ModeButton>
+          <SubmitButton onClick={e => handleRegister(e)}>Signup</SubmitButton>
           <ModeSwitch mode='Login'>Already have account?</ModeSwitch>
         </>
       ) : (
         <>
-          <ModeButton onClick={e => handleLogin(e)}>Login</ModeButton>
+          <SubmitButton onClick={e => handleLogin(e)}>Login</SubmitButton>
           <ModeSwitch mode='Signup'>No account?</ModeSwitch>
         </>
       )}
