@@ -30,7 +30,7 @@ body {
 .container-top {
   background: #65bcbf;
   /* width: 100vw; */
-  padding-top: calc(56px + 30px);
+  padding-top: calc(56px);
   text-align: center;
 }
 

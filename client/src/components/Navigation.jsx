@@ -1,31 +1,32 @@
 import React, { useState, useContext, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { defaultMaterialTheme } from '../utils/colorTheme';
-import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem } from '@material-ui/core';
+import { DayIcon, NightIcon } from '../images/daytimeIcon';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeSharpIcon from '@material-ui/icons/HomeSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
-import { DayIcon, NightIcon } from '../images/timeIcon';
+import { defaultMaterialTheme } from '../utils/colorTheme';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const Navigation = props => {
+const Navigation = ({ container, children }) => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
-  const { container, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const token = getToken();
   const drawerWidth = 240;
 
   const currentHours = new Date().getHours();
+  const dayTime = !currentHours < 4 && currentHours < 18;
   const greeting = hour => {
+    if (hour < 4) return 'night';
     if (hour < 13) return 'morning';
     if (hour < 18) return 'afternoon';
     if (hour < 23) return 'evening';
     return 'day';
   };
-  
+
   const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -41,6 +42,7 @@ const Navigation = props => {
       [theme.breakpoints.up('sm')]: {
         width: token && `calc(100% - ${drawerWidth}px)`,
         marginLeft: token && drawerWidth,
+        display: 'none',
       },
     },
     menuButton: {
@@ -48,19 +50,23 @@ const Navigation = props => {
       [theme.breakpoints.up('sm')]: {
         display: 'none',
       },
+      color: 'white',
     },
-    toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-      background: currentHours < 18 ? '#EAEBED' : '#232c2d',
+      background: dayTime ? '#EAEBED' : '#232c2d',
       // background: '#F3F5F4',
     },
     content: {
       flexGrow: 1,
     },
+    userName: {
+      textTransform: 'capitalize', 
+      minHeight: '82px',
+    },
     textColor: {
       opacity: 0.8,
-      color: currentHours < 18 ? '#232c2d' : 'white',
+      color: dayTime ? '#232c2d' : 'white',
       textDecoration: 'none',
     },
     menuIcon: {
@@ -71,37 +77,36 @@ const Navigation = props => {
 
   const classes = useStyles();
 
+  const drawerList = [
+    { name: 'Home', path: '/user', icon: <HomeSharpIcon /> },
+    { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon /> },
+  ]
+
   const drawer = (
     <Fragment>
       <div style={{ margin: '50px 16px' }}>
         <Typography variant='h6' gutterBottom className={classes.textColor}>
           Good {greeting(currentHours)},
         </Typography>
-        <Typography color='primary' variant='h4' style={{ textTransform: 'capitalize', height: '82px'}}>
+
+        <Typography color='primary' variant='h4' className={classes.userName}>
           {token && getCurrentUser().name}
         </Typography>
+
         <div style={{ textAlign: 'right' }}>
-          {currentHours < 18 ? <DayIcon width='40%' /> : <NightIcon width='40%' />}
+          {dayTime ? <DayIcon width='40%' /> : <NightIcon width='40%' />}
         </div>
       </div>
 
-      <NavLink to='/user' className={classes.textColor}>
-        <MenuItem>
-          <HomeSharpIcon className={classes.menuIcon} />
-          Home
-        </MenuItem>
-      </NavLink>
-      {/* <NavLink>
-        <ListAltIcon className={classes.menuIcon} />
-        Report
-      </NavLink> */}
+      {drawerList.map(list => 
+        (<NavLink key={list.name} to={list.path} className={classes.textColor}>
+          <MenuItem>
+            <div className={classes.menuIcon}>{list.icon}</div>
+            {list.name}
+          </MenuItem>
+        </NavLink>)
+      )}
 
-      <NavLink to='/logout' className={classes.textColor}>
-        <MenuItem>
-          <MeetingRoomSharpIcon className={classes.menuIcon} />
-          Logout
-        </MenuItem>
-      </NavLink>
     </Fragment>
   );
 
@@ -112,7 +117,6 @@ const Navigation = props => {
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             {token && <IconButton
-              color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -120,9 +124,10 @@ const Navigation = props => {
             >
               <MenuIcon />
             </IconButton>}
-            <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
+
+            {/* <Typography variant="h6" noWrap style={{ opacity: 0.8 }}>
               Expense Tracker
-            </Typography>
+            </Typography> */}
           </Toolbar>
         </AppBar>
 
