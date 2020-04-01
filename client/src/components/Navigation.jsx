@@ -72,6 +72,8 @@ const Navigation = ({ container, children }) => {
     menuIcon: {
       marginRight: '15px',
       opacity: 0.5,
+      display: 'flex',
+      justifyContent: 'center',
     }
   }));
 
