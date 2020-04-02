@@ -211,6 +211,12 @@ body {
 
 /* ----- RWD ----- */
 
+@media only screen and (max-width: 600px) {
+  .container-top {
+    padding-top: 0;
+  }
+}
+
 @media only screen and (max-width: 375px) {
   .container,
   .inc-exp-container {

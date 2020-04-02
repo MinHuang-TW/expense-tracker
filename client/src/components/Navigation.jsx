@@ -61,7 +61,7 @@ const Navigation = ({ container, children }) => {
     },
     content: {
       flexGrow: 1,
-      marginTop: '56px',
+      marginTop: '55px',
       [theme.breakpoints.up('sm')]: {
         marginTop: 0,
       },

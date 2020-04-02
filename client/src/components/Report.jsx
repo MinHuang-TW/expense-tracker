@@ -7,11 +7,12 @@ import Tab from '@material-ui/core/Tab';
 import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 
 const Report = () => {
-  const [value, setValue] = useState(3);
+  const [value, setValue] = useState(0);
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const [selected, setSelected] = useState('all');
   const [progress, setProgress] = useState(0);
 
+  const timeFilters = ['daily', 'weekly', 'monthly', 'yearly'];
   const date = checkDate(new Date());
   const dateArr = data => data.slice(0, 10).split('-');
 
@@ -40,10 +41,12 @@ const Report = () => {
         textColor="primary"
         aria-label="disabled tabs example"
       >
-        <Tab label="YEAR" onClick={() => setValue(0)} />
-        <Tab label="MONTH" onClick={() => setValue(1)} />
-        <Tab label="WEEK" onClick={() => setValue(2)} />
-        <Tab label="DAY" onClick={() => setValue(3)} />
+        {timeFilters.map((timeFilter, index) => 
+          <Tab 
+            key={timeFilter} 
+            label={timeFilter} 
+            onClick={() => setValue(index)} />
+        )}
       </Tabs>
 
       <div className='container'>
@@ -72,10 +75,10 @@ const Report = () => {
             {transactions
               .filter(transaction => {
                 const data = dateArr(transaction.date);
-                if (value === 3) return data[2] === date[2];
-                if (value === 2) return checkWeek(transaction.date);
+                if (value === 0) return data[2] === date[2];
                 if (value === 1) return data[1] === date[1];
-                if (value === 0) return data[0] === date[0];
+                if (value === 2) return checkWeek(transaction.date);
+                if (value === 3) return data[0] === date[0];
                 return transaction;
               })
               .filter(transaction => {
