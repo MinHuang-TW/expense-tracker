@@ -4,8 +4,9 @@ import { GlobalProvider } from './context/GlobalState.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
-import Login from './components/Login.jsx';
-import Logout from './components/Logout.jsx';
+import Report from './components/Report';
+import Login from './components/Login';
+import Logout from './components/Logout';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
           <ProtectedRoute path='/user' component={Dashboard} />
+          <ProtectedRoute path='/report' component={Report} />
 
           <Redirect from='/' exact to='/user' />
           <Redirect to='/not-found' />

@@ -5,6 +5,8 @@ import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, M
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeSharpIcon from '@material-ui/icons/HomeSharp';
+import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
+import EqualizerSharpIcon from '@material-ui/icons/EqualizerSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -59,6 +61,10 @@ const Navigation = ({ container, children }) => {
     },
     content: {
       flexGrow: 1,
+      marginTop: '56px',
+      [theme.breakpoints.up('sm')]: {
+        marginTop: 0,
+      },
     },
     userName: {
       textTransform: 'capitalize', 
@@ -80,6 +86,8 @@ const Navigation = ({ container, children }) => {
 
   const drawerList = [
     { name: 'Home', path: '/user', icon: <HomeSharpIcon /> },
+    { name: 'Report', path: '/report', icon: <LibraryBooksSharpIcon /> },
+    { name: 'Statistic', path: '/statistic', icon: <EqualizerSharpIcon /> },
     { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon /> },
   ]
 
