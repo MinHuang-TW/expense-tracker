@@ -1,27 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
+import { sortDateDsc } from '../utils/format';
 import Transaction from './Transaction';
 import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 
 const TransactionList = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const [selected, setSelected] = useState('all');
-  const [progress, setProgress] = useState(0);
 
   const transFilters = ['all', 'income', 'expense'];
   let counter = 0;
 
   useEffect(() => {
-    const tick = () => {
-      setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-    };
-    const timer = setInterval(tick, 20);
-
     getTransactions();
-
-    return () => {
-      clearInterval(timer);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,14 +51,7 @@ const TransactionList = () => {
                   return transaction;
               }
             })
-            .sort((a, b) => {
-              let dateA = new Date(a.date);
-              let dateB = new Date(b.date);
-              
-              if (dateA < dateB) return 1;
-              if (dateA > dateB) return -1;
-              return 0;
-            })
+            .sort((a, b) => sortDateDsc(a, b))
             .map(transaction => {
               counter++;
               return (
@@ -81,7 +65,7 @@ const TransactionList = () => {
       ) : (
         <div className='list-status'>
           {loading 
-            ? <CircularProgress variant='determinate' value={progress} color='secondary'/>
+            ? <CircularProgress color='primary'/>
             : 'No transaction'}
         </div>
       )}

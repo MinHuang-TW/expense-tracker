@@ -26,7 +26,7 @@ export function formatDate(date) {
   return [day, month, year].join('/');
 }
 
-export function checkDate(date) {
+export function newDateArr(date) {
   let d = new Date(date),
       month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
@@ -38,6 +38,10 @@ export function checkDate(date) {
       day = '0' + day;
 
   return [String(year), month, day];
+}
+
+export function dbDateArr(date) {
+  return date.slice(0, 10).split('-');
 }
 
 function getMondayOfCurrentWeek(d) {
@@ -58,4 +62,40 @@ export function checkWeek(data) {
 
   if (parsedData >= monday && parsedData <= sunday) return true;
   return false;
+}
+
+export function sortDateDsc(a, b) {
+  let dateA = new Date(a.date);
+  let dateB = new Date(b.date);
+  
+  if (dateA < dateB) return 1;
+  if (dateA > dateB) return -1;
+  return 0;
+}
+
+export function sortDateAsc(a, b) {
+  let dateA = new Date(a.date);
+  let dateB = new Date(b.date);
+  
+  if (dateA < dateB) return -1;
+  if (dateA > dateB) return 1;
+  return 0;
+}
+
+export function sortAmountDsc(a, b) {
+  let amountA = a.amount;
+  let amountB = b.amount;
+
+  if (amountA < amountB) return 1;
+  if (amountA > amountB) return -1;
+  return 0;
+}
+
+export function sortAmountAsc(a, b) {
+  let amountA = a.amount;
+  let amountB = b.amount;
+
+  if (amountA < amountB) return -1;
+  if (amountA > amountB) return 1;
+  return 0;
 }

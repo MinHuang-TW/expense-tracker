@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import { numberEuro } from '../utils/format';
+import React from 'react';
+// import { GlobalContext } from '../context/GlobalState';
+import { numberEuro } from '../../utils/format';
 
-const IncomeExpenses = () => {
-  const { transactions } = useContext(GlobalContext);
-  const amounts = transactions.map(transaction => transaction.amount);
+const IncomeExpenses = ({ amounts }) => {
+  // const { transactions } = useContext(GlobalContext);
+  // const amounts = transactions.map(transaction => transaction.amount);
   const income = amounts
     .filter(item => item > 0)
     .reduce((acc, item) => (acc += item), 0)

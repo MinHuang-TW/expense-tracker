@@ -209,6 +209,10 @@ body {
   text-transform: uppercase;
 }
 
+.MuiTabs-indicator {
+  color: 'white';
+}
+
 /* ----- RWD ----- */
 
 @media only screen and (max-width: 600px) {

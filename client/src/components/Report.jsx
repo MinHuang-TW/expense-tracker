@@ -1,87 +1,111 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { checkDate, checkWeek } from '../utils/format';
+import { newDateArr, dbDateArr, checkWeek, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/format';
+import { whiteTheme } from '../utils/colorTheme.js';
+import Total from './common/Total';
 import Transaction from './Transaction';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
+import { Typography, Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
+import { ThemeProvider } from "@material-ui/styles";
+import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
+import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
 const Report = () => {
-  const [value, setValue] = useState(0);
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
+  const [value, setValue] = useState(0);
   const [selected, setSelected] = useState('all');
-  const [progress, setProgress] = useState(0);
+  const [sortColumn, setSortColum] = useState('date');
+  const [sortLatest, setSortLatest] = useState(true);
+  const [sortDsc, setSortDsc] = useState(false);
 
-  const timeFilters = ['daily', 'weekly', 'monthly', 'yearly'];
-  const date = checkDate(new Date());
-  const dateArr = data => data.slice(0, 10).split('-');
-
+  const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
+  
+  const date = newDateArr(new Date());
+  const amounts = [];
   let counter = 0;
 
+  const timebar = { 
+    background: '#65bcbf', 
+    color: 'white',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+  }
+
+  const sortItem = { 
+    display: 'flex', 
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    cursor: 'pointer',
+    textTransform: 'uppercase',
+  }
+
   useEffect(() => {
-    const tick = () => {
-      setProgress(oldProgress => (oldProgress >= 100 ? 0 : oldProgress + 1));
-    };
-    const timer = setInterval(tick, 20);
-
     getTransactions();
-
-    return () => {
-      clearInterval(timer);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
 
   return (
     <Fragment>
-      <Tabs
-        value={value} variant='fullWidth'
-        indicatorColor="primary"
-        textColor="primary"
-        aria-label="disabled tabs example"
-      >
-        {timeFilters.map((timeFilter, index) => 
-          <Tab 
-            key={timeFilter} 
-            label={timeFilter} 
-            onClick={() => setValue(index)} />
-        )}
-      </Tabs>
-
-      <div className='container'>
+      <div style={timebar}>
+        <Tabs value={value} variant='fullWidth' aria-label="disabled tabs example">
+          {timeFilters.map((timeFilter, index) => 
+            <Tab 
+              key={timeFilter} label={timeFilter} 
+              onClick={() => setValue(index)} 
+              disableFocusRipple disableRipple
+            />
+          )}
+        </Tabs>
+      </div>
+      
+      <Total text={`${timeFilters[value]}ly balance`} amounts={amounts} />
+      
+      <ThemeProvider theme={whiteTheme}>
         <ButtonGroup
           fullWidth disableRipple
           color='primary'
-          aria-label='outlined primary button group'
-          style={{ marginBottom: '10px' }}
+          style={{ background: '#65BCBF', borderRadius: 0 }}
+          aria-label='transaction amount filters'
         >
           {transFilters.map(transFilter => (
             <Button
               key={transFilter}
+              variant={selected === transFilter ? 'contained' : null}
+              color={selected === transFilter ? 'primary' : 'secondary'}
+              onClick={() => setSelected(transFilter)}
               style={{ borderRadius: 0 }}
               disableElevation disableFocusRipple disableRipple
-              variant={selected === transFilter ? 'contained' : null}
-              color={selected === transFilter ? 'primary' : null}
-              onClick={() => setSelected(transFilter)}
             >
               {transFilter}
             </Button>
           ))}
         </ButtonGroup>
+      </ThemeProvider>
 
+      <div className='container'>
+          <div className='input-amount plus'>
+            <div  style={sortItem} onClick={() => {setSortLatest(!sortLatest); setSortColum('date')}}>
+              <Typography variant="body2">sort by Date</Typography>
+              {sortLatest ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
+            </div>
+            <div style={sortItem} onClick={() => {setSortDsc(!sortDsc); setSortColum('amount')}}>
+              <Typography variant="body2">Amount</Typography>
+              {sortDsc ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
+            </div>
+          </div>
         {transactions.length > 0 ? (
           <ul className='list'>
             {transactions
               .filter(transaction => {
-                const data = dateArr(transaction.date);
+                const data = dbDateArr(transaction.date);
                 if (value === 0) return data[2] === date[2];
-                if (value === 1) return data[1] === date[1];
-                if (value === 2) return checkWeek(transaction.date);
+                if (value === 1) return checkWeek(transaction.date);
+                if (value === 2) return data[1] === date[1];
                 if (value === 3) return data[0] === date[0];
                 return transaction;
               })
               .filter(transaction => {
+                amounts.push(transaction.amount);
                 switch (selected) {
                   case 'income':
                     return transaction.amount > 0;
@@ -92,12 +116,8 @@ const Report = () => {
                 }
               })
               .sort((a, b) => {
-                let dateA = new Date(a.date);
-                let dateB = new Date(b.date);
-                
-                if (dateA < dateB) return 1;
-                if (dateA > dateB) return -1;
-                return 0;
+                if (sortColumn === 'date') return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
+                return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
               })
               .map(transaction => {
                 counter++;
@@ -106,19 +126,20 @@ const Report = () => {
                 );
               })}
             {counter === 0 && (
-              <div className='list-status'>No {selected} transaction</div>
+              <div className='list-status'>
+                No {selected !== 'all' && selected} transaction
+                of the {timeFilters[value]}
+              </div>
             )}
           </ul>
         ) : (
           <div className='list-status'>
             {loading 
-              ? <CircularProgress variant='determinate' value={progress} color='secondary'/>
+              ? <CircularProgress color='primary'/>
               : 'No transaction'}
           </div>
         )}
       </div>
-
-
     </Fragment>
   );
 }
