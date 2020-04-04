@@ -11,8 +11,8 @@ import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [value, setValue] = useState(2);
-  const [selected, setSelected] = useState('income');
+  const [value, setValue] = useState(0);
+  const [selected, setSelected] = useState('all');
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
   const [sortDsc, setSortDsc] = useState(true);
