@@ -3,15 +3,14 @@ import { GlobalContext } from '../context/GlobalState';
 import { newDateArr, dbDateArr, checkWeek, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/format';
 import ReportOverview from './ReportOverview';
 import Transaction from './Transaction';
-import { Typography, Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
+import TransactionFilter from './common/TransactionFilter';
+import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
-import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
-import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
   const [selected, setSelected] = useState('all');
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
@@ -27,14 +26,6 @@ const Report = () => {
   const timebar = { 
     color: 'white',
     borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
-  }
-
-  const sortItem = { 
-    display: 'flex', 
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    cursor: 'pointer',
-    textTransform: 'uppercase',
   }
 
   useEffect(() => {
@@ -57,7 +48,12 @@ const Report = () => {
         </Tabs>
       </div>
 
-      <ReportOverview selected={selected} timeFilters={timeFilters} value={value} amounts={amounts} />
+      <ReportOverview 
+        selected={selected} 
+        timeFilters={timeFilters} 
+        value={value} 
+        amounts={amounts}
+      />
       
       <ThemeProvider theme={whiteTheme}>
         <ButtonGroup
@@ -82,22 +78,18 @@ const Report = () => {
       </ThemeProvider>
 
       <div className='container'>
-        <div className='input-amount plus'>
-          <div 
-            style={sortItem} 
-            onClick={() => {setSortLatest(!sortLatest); setSortColum('date')}}
-          >
-            <Typography variant="body2">sort by Date</Typography>
-            {sortLatest ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
-          </div>
-          <div 
-            style={sortItem} 
-            onClick={() => {setSortDsc(!sortDsc); setSortColum('amount')}}
-          >
-            <Typography variant="body2">Amount</Typography>
-            {sortDsc ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
-          </div>
-        </div>
+
+        <TransactionFilter
+          value={value}
+          sortLatest={sortLatest}
+          sortDsc={sortDsc}
+          handleSortDate={() => {
+            setSortLatest(!sortLatest); setSortColum('date')
+          }}
+          handleSortAmount={() => {
+            setSortDsc(!sortDsc); setSortColum('amount')
+          }}
+        />
 
         {transactions.length > 0 ? (
           <ul className='list'>
@@ -133,8 +125,8 @@ const Report = () => {
               })}
             {counter === 0 && (
               <div className='list-status'>
-                No {selected !== 'all' && selected} transaction
-                of the {timeFilters[value]}
+                No {selected !== 'all' && selected} transaction<br/>
+                of this {timeFilters[value]}
               </div>
             )}
           </ul>

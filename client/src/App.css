@@ -201,12 +201,15 @@ body {
 }
 
 .list-status {
+  height: 35vh;
+  line-height: 1.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   color: #232C2D;
   opacity: 0.8;
-  line-height: 30vh;
-  text-align: center;
-  margin: auto;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 /* ----- REPORT ----- */

@@ -1,14 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { sortDateDsc } from '../utils/format';
+import { sortAmountDsc, sortAmountAsc, dbDateArr, newDateArr } from '../utils/format';
+import TransactionFilter from './common/TransactionFilter';
 import Transaction from './Transaction';
-import { Button, ButtonGroup, CircularProgress, Typography } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 
 const TransactionList = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [selected, setSelected] = useState('all');
+  const [sortDsc, setSortDsc] = useState(true);
 
-  const transFilters = ['all', 'income', 'expense'];
+  const date = newDateArr(new Date());
   let counter = 0;
 
   useEffect(() => {
@@ -18,43 +19,24 @@ const TransactionList = () => {
 
   return (
     <div className='container'>
-      <div className='input-amount plus' style={{ textTransform: 'uppercase' }}>
-        <Typography variant="body2">Recent transactions</Typography>
-      </div>
-      {/* <ButtonGroup
-        fullWidth disableRipple
-        color='primary'
-        aria-label='outlined primary button group'
-        style={{ marginBottom: '10px' }}
-      >
-        {transFilters.map(transFilter => (
-          <Button
-            key={transFilter}
-            style={{ borderRadius: 0 }}
-            disableElevation disableFocusRipple disableRipple
-            variant={selected === transFilter ? 'contained' : null}
-            color={selected === transFilter ? 'primary' : null}
-            onClick={() => setSelected(transFilter)}
-          >
-            {transFilter}
-          </Button>
-        ))}
-      </ButtonGroup> */}
+      <TransactionFilter 
+        value={0} 
+        sortDsc={sortDsc} 
+        handleSortAmount={() => setSortDsc(!sortDsc)}
+        text="today's transaction"
+      />
 
       {transactions.length > 0 ? (
         <ul className='list'>
           {transactions
-            // .filter(transaction => {
-            //   switch (selected) {
-            //     case 'income':
-            //       return transaction.amount > 0;
-            //     case 'expense':
-            //       return transaction.amount < 0;
-            //     default:
-            //       return transaction;
-            //   }
-            // })
-            .sort((a, b) => sortDateDsc(a, b))
+            .filter(transaction => {
+                const data = dbDateArr(transaction.date);
+                return (data[2] === date[2] 
+                  && data[1] === date[1] 
+                  && data[0] === date[0]
+                );
+              })
+            .sort((a, b) => sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b))
             .map(transaction => {
               counter++;
               return (
@@ -62,14 +44,18 @@ const TransactionList = () => {
               );
             })}
           {counter === 0 && (
-            <div className='list-status'>No {selected} transaction</div>
+            <div className='list-status'>No transaction today</div>
           )}
         </ul>
       ) : (
         <div className='list-status'>
           {loading 
             ? <CircularProgress color='primary'/>
-            : 'No transaction'}
+            : <span>
+                Add your first transaction<br/>
+                by clicking the green plus button
+              </span>
+          }
         </div>
       )}
     </div>

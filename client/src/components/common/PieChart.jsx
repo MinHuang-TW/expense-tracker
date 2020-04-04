@@ -8,6 +8,7 @@ const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius
   const createPie = d3
     .pie()
     .value(d => d)
+    .sort(null);
   
     const createArc = d3
       .arc()
@@ -39,18 +40,14 @@ const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius
 
       const arcTween = (d, i) => {
         const interpolator = d3.interpolate(prevData[i], d);
-        // return t => createArc(interpolator(t));
-        return t => {
-          d = interpolator(t);
-          return createArc(d);
-        }
+        return t => createArc(interpolator(t));
       };
-
       path
         .attr('class', 'arc')
         .attr('d', createArc)
         .attr('fill', (d, i) => colors[i])
         .transition()
+        .duration(750)
         .attrTween('d', arcTween);
     // eslint-disable-next-line
     }, [originalData])
