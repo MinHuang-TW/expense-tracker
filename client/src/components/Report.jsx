@@ -57,12 +57,7 @@ const Report = () => {
         </Tabs>
       </div>
 
-      <ReportOverview 
-        selected={selected} 
-        timeFilters={timeFilters} 
-        value={value} 
-        amounts={amounts} 
-      />
+      <ReportOverview selected={selected} timeFilters={timeFilters} value={value} amounts={amounts} />
       
       <ThemeProvider theme={whiteTheme}>
         <ButtonGroup
@@ -87,16 +82,22 @@ const Report = () => {
       </ThemeProvider>
 
       <div className='container'>
-          <div className='input-amount plus'>
-            <div  style={sortItem} onClick={() => {setSortLatest(!sortLatest); setSortColum('date')}}>
-              <Typography variant="body2">sort by Date</Typography>
-              {sortLatest ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
-            </div>
-            <div style={sortItem} onClick={() => {setSortDsc(!sortDsc); setSortColum('amount')}}>
-              <Typography variant="body2">Amount</Typography>
-              {sortDsc ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
-            </div>
+        <div className='input-amount plus'>
+          <div 
+            style={sortItem} 
+            onClick={() => {setSortLatest(!sortLatest); setSortColum('date')}}
+          >
+            <Typography variant="body2">sort by Date</Typography>
+            {sortLatest ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
           </div>
+          <div 
+            style={sortItem} 
+            onClick={() => {setSortDsc(!sortDsc); setSortColum('amount')}}
+          >
+            <Typography variant="body2">Amount</Typography>
+            {sortDsc ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
+          </div>
+        </div>
 
         {transactions.length > 0 ? (
           <ul className='list'>

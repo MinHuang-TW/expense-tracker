@@ -39,7 +39,11 @@ const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius
 
       const arcTween = (d, i) => {
         const interpolator = d3.interpolate(prevData[i], d);
-        return t => createArc(interpolator(t));
+        // return t => createArc(interpolator(t));
+        return t => {
+          d = interpolator(t);
+          return createArc(d);
+        }
       };
 
       path

@@ -46,7 +46,7 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
               : null
             }
             {!noData 
-              ? <div className="vertical-align">
+              ? <div className="vertical-align" style={{ height: height }}>
                   <PieChart
                       data={data}
                       width={width}
