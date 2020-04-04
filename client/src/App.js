@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import Report from './components/Report';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import AddTransaction from './components/AddTransaction';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Redirect from='/' exact to='/user' />
           <Redirect to='/not-found' />
         </Switch>
+        <AddTransaction />
       </Navigation>
     </GlobalProvider>
   );

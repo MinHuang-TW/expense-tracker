@@ -209,8 +209,68 @@ body {
   text-transform: uppercase;
 }
 
+/* ----- REPORT ----- */
+
 .MuiTabs-indicator {
   color: 'white';
+}
+
+/* ----- REPORT > REPORT OVERVIEW ----- */
+
+.box {
+  position: relative;
+}
+
+.box-balance {
+  position: absolute;
+  width: 100%;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.box-incomeExpense {
+  display: flex; 
+  height: 100%;
+  margin: auto;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.block-chart {
+  position: relative;
+  height: 100%;
+}
+
+.block-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  text-align: right;
+  min-width: 150px;
+}
+
+.text-white-l {
+  font-size: 22px;
+  color: white;
+  text-transform: uppercase;
+}
+
+.text-white-s {
+  color: white;
+  opacity: 0.5;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.vertical-align {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
 }
 
 /* ----- RWD ----- */
@@ -218,6 +278,12 @@ body {
 @media only screen and (max-width: 600px) {
   .container-top {
     padding-top: 0;
+  }
+}
+
+@media (min-width: 600px) {
+  .MuiTab-root {
+    min-width: 0 !important;
   }
 }
 
@@ -254,7 +320,23 @@ body {
     margin-top: 100px;
   }
 
+  .box {
+    height: 30vh; 
+  }
+
   /* .list-status {
     line-height: 20vh;
   } */
+}
+
+@media only screen and (min-height: 570px) {
+  .box {
+    height: 25vh; 
+  }
+}
+
+@media only screen and (min-height: 850px) {
+  .box {
+    height: 20vh; 
+  }
 }

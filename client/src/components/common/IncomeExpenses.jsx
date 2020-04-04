@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 // import { GlobalContext } from '../context/GlobalState';
 import { numberEuro } from '../../utils/format';
 
@@ -9,13 +9,14 @@ const IncomeExpenses = ({ amounts }) => {
     .filter(item => item > 0)
     .reduce((acc, item) => (acc += item), 0)
     .toFixed(2);
+    
   const expense = (
     amounts.filter(item => item < 0).reduce((acc, item) => (acc += item), 0) *
     -1
   ).toFixed(2);
 
   return (
-    <div className='inc-exp-container'>
+    <Fragment>
       <div>
         <p className='sub-title'>Income</p>
         <p className='sub-amount'>+{numberEuro(income)}</p>
@@ -24,7 +25,7 @@ const IncomeExpenses = ({ amounts }) => {
         <p className='sub-title'>Expense</p>
         <p className='sub-amount'>-{numberEuro(expense)}</p>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

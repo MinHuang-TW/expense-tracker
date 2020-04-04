@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
 import TransactionList from './TransactionList';
-import AddTransaction from './AddTransaction';
+// import AddTransaction from './AddTransaction';
 
 const Dashboard = () => {
   const { transactions } = useContext(GlobalContext);
@@ -15,10 +15,12 @@ const Dashboard = () => {
       <div className="container-top">
         {/* <Balance /> */}
         <Total amounts={amounts} />
-        <IncomExpenses amounts={amounts} />
+        <div className="inc-exp-container">
+          <IncomExpenses amounts={amounts} />
+        </div>
       </div>
       <TransactionList />
-      <AddTransaction />
+      {/* <AddTransaction /> */}
     </Fragment>
   );
 }

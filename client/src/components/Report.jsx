@@ -1,21 +1,21 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { newDateArr, dbDateArr, checkWeek, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/format';
-import { whiteTheme } from '../utils/colorTheme.js';
-import Total from './common/Total';
+import ReportOverview from './ReportOverview';
 import Transaction from './Transaction';
 import { Typography, Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
+import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
 import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
 import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [value, setValue] = useState(0);
-  const [selected, setSelected] = useState('all');
+  const [value, setValue] = useState(2);
+  const [selected, setSelected] = useState('income');
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
-  const [sortDsc, setSortDsc] = useState(false);
+  const [sortDsc, setSortDsc] = useState(true);
 
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
@@ -25,7 +25,6 @@ const Report = () => {
   let counter = 0;
 
   const timebar = { 
-    background: '#65bcbf', 
     color: 'white',
     borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
   }
@@ -46,8 +45,8 @@ const Report = () => {
 
   return (
     <Fragment>
-      <div style={timebar}>
-        <Tabs value={value} variant='fullWidth' aria-label="disabled tabs example">
+      <div style={timebar} className='plus-bg'>
+        <Tabs value={value} variant="fullWidth" aria-label="time selectors">
           {timeFilters.map((timeFilter, index) => 
             <Tab 
               key={timeFilter} label={timeFilter} 
@@ -57,8 +56,13 @@ const Report = () => {
           )}
         </Tabs>
       </div>
-      
-      <Total text={`${timeFilters[value]}ly balance`} amounts={amounts} />
+
+      <ReportOverview 
+        selected={selected} 
+        timeFilters={timeFilters} 
+        value={value} 
+        amounts={amounts} 
+      />
       
       <ThemeProvider theme={whiteTheme}>
         <ButtonGroup
@@ -93,6 +97,7 @@ const Report = () => {
               {sortDsc ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
             </div>
           </div>
+
         {transactions.length > 0 ? (
           <ul className='list'>
             {transactions

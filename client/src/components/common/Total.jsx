@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { numberEuro } from '../../utils/format';
 
 const Total = ({ amounts, text = 'total balance' }) => {
@@ -6,12 +6,12 @@ const Total = ({ amounts, text = 'total balance' }) => {
   const sign = total === 0 ? null : total < 0 ? '-' : '+';
 
   return (
-    <div className='container-top' style={{ padding: '30px 0' }}>
+    <Fragment>
       <p className='main-title'>{text}</p>
       <p className='main-amount'>
         {sign}€{numberEuro(Math.abs(total))}
       </p>
-    </div>
+    </Fragment>
   );
 };
 
