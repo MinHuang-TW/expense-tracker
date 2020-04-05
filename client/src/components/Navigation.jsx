@@ -109,7 +109,7 @@ const Navigation = ({ container, children }) => {
 
       {drawerList.map(list => 
         (<NavLink key={list.name} to={list.path} className={classes.textColor}>
-          <MenuItem style={{ textTransform: 'uppercase' }}>
+          <MenuItem style={{ textTransform: 'uppercase', opacity: 0.8 }}>
             <div className={classes.menuIcon}>{list.icon}</div>
             {list.name}
           </MenuItem>

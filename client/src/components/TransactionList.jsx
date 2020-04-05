@@ -23,7 +23,8 @@ const TransactionList = () => {
         value={0} 
         sortDsc={sortDsc} 
         handleSortAmount={() => setSortDsc(!sortDsc)}
-        text="today's transaction"
+        text="Today's record"
+        // text={`today ${formatDate(new Date())}`}
       />
 
       {transactions.length > 0 ? (

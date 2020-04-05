@@ -70,7 +70,7 @@ body {
 .inc-exp-container {
   width: 350px;
   margin: 20px auto;
-  padding: 20px 0;
+  /* padding: 20px 0; */
   display: flex;
   justify-content: space-between;
 }
@@ -294,6 +294,10 @@ body {
   .container,
   .inc-exp-container {
     width: 90vw;
+  }
+
+  .container {
+    margin: 15px auto;
   }
 
   .new-form {

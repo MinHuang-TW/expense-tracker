@@ -10,7 +10,7 @@ import { ThemeProvider } from "@material-ui/styles";
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const [selected, setSelected] = useState('all');
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
@@ -81,6 +81,7 @@ const Report = () => {
 
         <TransactionFilter
           value={value}
+          text="list of today"
           sortLatest={sortLatest}
           sortDsc={sortDsc}
           handleSortDate={() => {
@@ -121,7 +122,11 @@ const Report = () => {
               .map(transaction => {
                 counter++;
                 return (
-                  <Transaction key={transaction._id} transaction={transaction} />
+                  <Transaction 
+                    key={transaction._id} 
+                    transaction={transaction}
+                    date
+                  />
                 );
               })}
             {counter === 0 && (

@@ -16,7 +16,7 @@ const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius
       .innerRadius(innerRadius);
 
     const colors = [
-      'rgba(255, 255, 255, 1)', 
+      'rgba(255, 255, 255, 1)',
       'rgba(255, 255, 255, 0.3)'
     ];
     // const format = d3.format('.2f');
@@ -54,7 +54,10 @@ const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius
     
   return ( 
     <svg width={width} height={height}>
-      <g ref={ref} transform={`translate(${outerRadius} ${outerRadius})`} />
+      <g 
+        ref={ref} 
+        transform={`translate(${outerRadius} ${outerRadius})`} 
+      />
     </svg>
   );
 }
