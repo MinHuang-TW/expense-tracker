@@ -264,7 +264,7 @@ body {
 .text-white-s {
   color: white;
   opacity: 0.5;
-  font-size: 16px;
+  font-size: 14px;
   text-transform: uppercase;
 }
 
@@ -324,7 +324,7 @@ body {
   }
 
   .box {
-    height: 30vh; 
+    height: 32vh; 
   }
 
   /* .list-status {
@@ -334,11 +334,17 @@ body {
 
 @media only screen and (min-height: 570px) {
   .box {
-    height: 25vh; 
+    height: 28vh; 
   }
 }
 
-@media only screen and (min-height: 850px) {
+@media only screen and (min-height: 800px) {
+  .box {
+    height: 24vh; 
+  }
+}
+
+@media only screen and (min-height: 900px) {
   .box {
     height: 20vh; 
   }
