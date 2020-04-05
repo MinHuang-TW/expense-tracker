@@ -20,7 +20,7 @@ const Navigation = ({ container, children }) => {
   const drawerWidth = 240;
 
   const currentHours = new Date().getHours();
-  const dayTime = !currentHours < 4 && currentHours < 18;
+  const dayTime = currentHours > 3 && currentHours < 18;
   const greeting = hour => {
     if (hour < 4) return 'night';
     if (hour < 13) return 'morning';

@@ -44,23 +44,45 @@ export function dbDateArr(date) {
   return date.slice(0, 10).split('-');
 }
 
-function getMondayOfCurrentWeek(d) {
+// eslint-disable-next-line
+function getMonOfCurrentWeek(d) {
   var day = d.getDay();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day === 0 ? -6 : 1) - day);
+  return (new Date(
+    d.getFullYear(), 
+    d.getMonth(), 
+    d.getDate() + 
+    (day === 0 ? -6 : 1) - day
+  ));
 }
 
-function getSundayOfCurrentWeek(d) {
+function getSunOfCurrentWeek(d) {
     var day = d.getDay();
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day === 0 ? 0 : 7) - day);
+    return (new Date(
+      d.getFullYear(), 
+      d.getMonth(), 
+      d.getDate() + 
+      (day === 0 ? 0 : 7) - day
+    ));
+}
+
+function getSatOfCurrentWeek(d) {
+  var day = d.getDay();
+  const sun = (day === 0 ? 0 : 7) - day;
+  return (new Date(
+    d.getFullYear(), 
+    d.getMonth(), 
+    d.getDate() + 
+    sun + 6
+  ));
 }
 
 export function checkWeek(data) {
   const parsedData = Date.parse(data);
   const today = new Date();
-  const monday = getMondayOfCurrentWeek(today);
-  const sunday = getSundayOfCurrentWeek(today);
+  const sunday = getSunOfCurrentWeek(today);
+  const saturday = getSatOfCurrentWeek(today);
 
-  if (parsedData >= monday && parsedData <= sunday) return true;
+  if (parsedData <= saturday && parsedData >= sunday) return true;
   return false;
 }
 

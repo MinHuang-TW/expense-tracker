@@ -96,6 +96,7 @@ const Report = () => {
             {transactions
               .filter(transaction => {
                 const data = dbDateArr(transaction.date);
+                // console.log(data)
                 if (value === 0) return data[2] === date[2];
                 if (value === 1) return checkWeek(transaction.date);
                 if (value === 2) return data[1] === date[1];

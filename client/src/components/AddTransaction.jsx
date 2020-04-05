@@ -123,10 +123,9 @@ const AddTransaction = () => {
       // id: Math.floor(Math.random() * 100000000),
       text,
       amount: minus ? -numberCalc(amount) : numberCalc(amount),
-      date
+      date,
     };
     addTransaction(newTransaction);
-
     setAmount(null);
     setText('');
     handleClose();

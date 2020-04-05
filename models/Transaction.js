@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const timeZone = require('mongoose-timezone');
 const Schema = mongoose.Schema;
 
 const TransactionSchema = new Schema({
@@ -24,4 +25,5 @@ const TransactionSchema = new Schema({
   }
 });
 
+TransactionSchema.plugin(timeZone);
 module.exports = mongoose.model('Transaction', TransactionSchema);
