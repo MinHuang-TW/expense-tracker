@@ -68,7 +68,7 @@ const Report = () => {
               variant={selected === transFilter ? 'contained' : null}
               color={selected === transFilter ? 'primary' : 'secondary'}
               onClick={() => setSelected(transFilter)}
-              style={{ borderRadius: 0 }}
+              style={{ borderRadius: 0, border: '1px solid rgba(255, 255, 255, 0.3)' }}
               disableElevation disableFocusRipple disableRipple
             >
               {transFilter}
