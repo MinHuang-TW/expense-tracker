@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   return ( 
     <Fragment>
-      <div className="container-top" style={{ padding: '20px 0' }}>
+      <div className="container-top">
         {/* <Balance /> */}
         <Total amounts={amounts} />
         <div className="inc-exp-container" style={{ marginBottom: 0 }}>

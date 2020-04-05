@@ -98,10 +98,21 @@ const Report = () => {
               .filter(transaction => {
                 const data = dbDateArr(transaction.date);
                 // console.log(data)
-                if (value === 0) return data[2] === date[2];
-                if (value === 1) return checkWeek(transaction.date);
-                if (value === 2) return data[1] === date[1];
-                if (value === 3) return data[0] === date[0];
+                if (value === 0) {
+                  return data[2] === date[2] 
+                    && data[1] === date[1] 
+                    && data[0] === date[0];
+                }
+                if (value === 1) {
+                  return checkWeek(transaction.date);
+                }
+                if (value === 2) {
+                  return data[1] === date[1] 
+                    && data[0] === date[0];
+                }
+                if (value === 3) {
+                  return data[0] === date[0];
+                }
                 return transaction;
               })
               .filter(transaction => {
@@ -116,7 +127,9 @@ const Report = () => {
                 }
               })
               .sort((a, b) => {
-                if (sortColumn === 'date') return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
+                if (sortColumn === 'date') {
+                  return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
+                }
                 return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
               })
               .map(transaction => {

@@ -28,8 +28,6 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
   const outerRadius = width / 2;
   const innerRadius = outerRadius - 6;
 
-  const chartBlock = { width: width };
-
   return (
     <div className='plus-bg box'>
       {selected === 'all' ? (
@@ -38,11 +36,12 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
         </div>
       ) : (
         <div className='container box-incomeExpense'>
-          <div className='block-chart' style={chartBlock}>
+          <div className='block-chart'>
             {!noData 
-              ? <p className='text-white-l vertical-align'>
-                  {ratio}%
-                </p> 
+              ? <div className='vertical-align block-ratio'>
+                  <p className='main-amount'>{ratio}</p>
+                  <p className='text-white-m'>%</p>
+                </div> 
               : null
             }
             {!noData 
