@@ -7,6 +7,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Fab, Switch } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import format from "date-fns/format";
 import 'date-fns';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
@@ -42,6 +43,13 @@ const useStyles = makeStyles(theme => ({
     boxShadow: 'none',
   },
 }));
+
+const dateFormat = "d MMM, yyyy";
+class LocalizedUtils extends DateFnsUtils {
+  getDatePickerHeaderText(date) {
+    return format(date, dateFormat, { locale: this.locale });
+  }
+}
 
 const Transition = React.forwardRef(
   function Transition(props, ref) {
@@ -191,14 +199,15 @@ const AddTransaction = () => {
               onChange={e => handleText(e)}
             />
 
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider utils={LocalizedUtils}>
               <KeyboardDatePicker
                 id="date-picker-dialog" label="Date"
-                value={date} format="dd / MM / yyyy"
-                fullWidth
+                value={date} 
+                format={dateFormat}
                 onChange={date => setDate(date)}
                 InputProps={{ className: classes.textColor }}
                 KeyboardButtonProps={{ 'aria-label': 'change date' }}
+                fullWidth
               />
             </MuiPickersUtilsProvider>
             <button 

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { numberEuro, formatDate } from '../utils/format';
+import { numberEuro } from '../utils/format';
+import moment from 'moment';
 // import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 
@@ -18,7 +19,7 @@ const Transaction = ({ transaction, date }) => {
       <div style={{ marginLeft: '35px' }}>
         <p>{transaction.text}</p>
         {date && <p className='list-date'>
-          {formatDate(transaction.date)}
+          {moment(transaction.date).format('D MMM, YYYY')}
         </p>}
       </div> 
       <span 

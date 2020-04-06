@@ -1,5 +1,6 @@
 import React, { useState, useContext, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
+// import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
 import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem } from '@material-ui/core';
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
@@ -87,7 +88,7 @@ const Navigation = ({ container, children }) => {
   const drawerList = [
     { name: 'Home', path: '/user', icon: <HomeSharpIcon /> },
     { name: 'Report', path: '/report', icon: <LibraryBooksSharpIcon /> },
-    { name: 'Statistic', path: '/statistic', icon: <EqualizerSharpIcon /> },
+    { name: 'Statistics', path: '/statistics', icon: <EqualizerSharpIcon /> },
     { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon /> },
   ]
 
@@ -95,6 +96,7 @@ const Navigation = ({ container, children }) => {
     <Fragment>
       <div style={{ margin: '50px 16px' }}>
         <Typography variant='h6' gutterBottom className={classes.textColor}>
+          {/* {moment().format('D MMM, YYYY')}<br/> */}
           Good {greeting(currentHours)},
         </Typography>
 

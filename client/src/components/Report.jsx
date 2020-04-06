@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { newDateArr, dbDateArr, checkWeek, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/format';
+import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
 import Transaction from './Transaction';
 import TransactionFilter from './common/TransactionFilter';
@@ -19,7 +19,6 @@ const Report = () => {
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
   
-  const date = newDateArr(new Date());
   const amounts = [];
   let counter = 0;
 
@@ -96,23 +95,11 @@ const Report = () => {
           <ul className='list'>
             {transactions
               .filter(transaction => {
-                const data = dbDateArr(transaction.date);
-                // console.log(data)
-                if (value === 0) {
-                  return data[2] === date[2] 
-                    && data[1] === date[1] 
-                    && data[0] === date[0];
-                }
-                if (value === 1) {
-                  return checkWeek(transaction.date);
-                }
-                if (value === 2) {
-                  return data[1] === date[1] 
-                    && data[0] === date[0];
-                }
-                if (value === 3) {
-                  return data[0] === date[0];
-                }
+                const date = transaction.date;
+                if (value === 0) return checkDay(date);
+                if (value === 1) return checkWeek(date);
+                if (value === 2) return checkMonth(date);
+                if (value === 3) return checkYear(date);
                 return transaction;
               })
               .filter(transaction => {
