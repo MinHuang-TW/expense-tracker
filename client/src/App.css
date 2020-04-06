@@ -46,7 +46,7 @@ body {
 /* ----- LOGIN ----- */
 
 .login-form {
-  margin-top: 130px;
+  margin-top: 100px;
   text-align: center;
 }
 
@@ -357,9 +357,9 @@ body {
   }
 }
 
-@media only screen and (max-height: 570px) {
+@media only screen and (max-height: 650px) {
   .login-form {
-    margin-top: 100px;
+    margin-top: 20px;
   }
 
   .box {

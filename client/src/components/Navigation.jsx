@@ -72,11 +72,12 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
   const classes = useStyles();
 
+  const iconSize = { fontSize: '20px' };
   const drawerList = [
-    { name: 'Home', path: '/user', icon: <HomeSharpIcon /> },
-    { name: 'Report', path: '/report', icon: <LibraryBooksSharpIcon /> },
-    { name: 'Statistics', path: '/statistics', icon: <EqualizerSharpIcon /> },
-    { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon /> },
+    { name: 'Home', path: '/user', icon: <HomeSharpIcon style={iconSize} /> },
+    { name: 'Report', path: '/report', icon: <LibraryBooksSharpIcon style={iconSize} /> },
+    { name: 'Statistics', path: '/statistics', icon: <EqualizerSharpIcon style={iconSize} /> },
+    { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon style={iconSize} /> },
   ]
 
   const getCurrentTitle = pathname => {
@@ -105,7 +106,10 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       <MenuList id='menu'>
       {drawerList.map(list => (
         <MenuItem key={list.name} to={list.path} component={ NavLink } selected={list.path === pathname}>
-          <ListItemIcon className={list.path === pathname ? classes.selectedColor : classes.textColor}>
+          <ListItemIcon
+            style={{ minWidth: '35px' }}
+            className={list.path === pathname ? classes.selectedColor : classes.textColor}
+          >
             {list.icon}
           </ListItemIcon>
           <p 
@@ -138,7 +142,10 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
             {!token 
               ? <Typography variant="h6">Expense Tracker</Typography>
-              : <Typography variant="h6" style={{ margin: 'auto', transform: 'translateX(-50%)' }}>
+              : <Typography 
+                  variant="h6" 
+                  style={{ margin: 'auto', transform: 'translateX(-50%)', fontSize: '18px' }}
+                >
                   {getCurrentTitle(pathname)}
                 </Typography>
             }

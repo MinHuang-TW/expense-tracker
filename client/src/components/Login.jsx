@@ -129,13 +129,13 @@ const Login = () => {
 
       {showSignup ? (
         <>
-          <SubmitButton onClick={e => handleRegister(e)}>Signup</SubmitButton>
+          <SubmitButton onClick={e => handleRegister(e)}>Sign up</SubmitButton>
           <ModeSwitch mode='Login'>Already have account?</ModeSwitch>
         </>
       ) : (
         <>
           <SubmitButton onClick={e => handleLogin(e)}>Login</SubmitButton>
-          <ModeSwitch mode='Signup'>No account?</ModeSwitch>
+          <ModeSwitch mode='Sign up'>No account?</ModeSwitch>
         </>
       )}
     </form>
