@@ -1,9 +1,10 @@
 import React, { useState, useContext, Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
-// import moment from 'moment';
+import { NavLink, withRouter } from 'react-router-dom';
+import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
-import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem } from '@material-ui/core';
+import { checkDayTime, getGreeting } from '../utils/calculation.js'
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
+import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeSharpIcon from '@material-ui/icons/HomeSharp';
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
@@ -13,22 +14,15 @@ import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 
-const Navigation = ({ container, children }) => {
+const Navigation = ({ container, children, location: { pathname } }) => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const token = getToken();
   const drawerWidth = 240;
 
-  const currentHours = new Date().getHours();
-  const dayTime = currentHours > 3 && currentHours < 18;
-  const greeting = hour => {
-    if (hour < 4) return 'night';
-    if (hour < 13) return 'morning';
-    if (hour < 18) return 'afternoon';
-    if (hour < 23) return 'evening';
-    return 'day';
-  };
+  const now = new Date();
+  const dayTime = checkDayTime(now);
 
   const useStyles = makeStyles(theme => ({
     root: {
@@ -58,7 +52,6 @@ const Navigation = ({ container, children }) => {
     drawerPaper: {
       width: drawerWidth,
       background: dayTime ? '#EAEBED' : '#232c2d',
-      // background: '#F3F5F4',
     },
     content: {
       flexGrow: 1,
@@ -67,20 +60,14 @@ const Navigation = ({ container, children }) => {
         marginTop: 0,
       },
     },
-    userName: {
-      textTransform: 'capitalize', 
-      minHeight: '82px',
-    },
     textColor: {
       color: dayTime ? '#232c2d' : 'white',
-      textDecoration: 'none',
+      opacity: 0.8,
     },
-    menuIcon: {
-      marginRight: '15px',
-      opacity: 0.5,
-      display: 'flex',
-      justifyContent: 'center',
-    },
+    selectedColor: {
+      color: '#65bcbf',
+      fontWeight: 800,
+    }
   }));
 
   const classes = useStyles();
@@ -92,15 +79,21 @@ const Navigation = ({ container, children }) => {
     { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon /> },
   ]
 
+  const getCurrentTitle = pathname => {
+    for (let i = 0; i < drawerList.length; i++) {
+      if (drawerList[i]['path'] === pathname) return drawerList[i]['name'];
+    }
+  }
+
   const drawer = (
     <Fragment>
-      <div style={{ margin: '50px 16px' }}>
-        <Typography variant='h6' gutterBottom className={classes.textColor}>
-          {/* {moment().format('D MMM, YYYY')}<br/> */}
-          Good {greeting(currentHours)},
+      <div className='block-greeting'>
+        <Typography variant='h6' className={classes.textColor} gutterBottom>
+          <p style={{ opacity: 0.3 }}>{moment().format('ddd, DD MMM')}</p>
+          Good {getGreeting(now)},
         </Typography>
 
-        <Typography color='primary' variant='h4' className={classes.userName}>
+        <Typography color='primary' variant='h4' className='username'>
           {token && getCurrentUser().name}
         </Typography>
 
@@ -109,15 +102,21 @@ const Navigation = ({ container, children }) => {
         </div>
       </div>
 
-      {drawerList.map(list => 
-        (<NavLink key={list.name} to={list.path} className={classes.textColor}>
-          <MenuItem style={{ textTransform: 'uppercase', opacity: 0.8 }}>
-            <div className={classes.menuIcon}>{list.icon}</div>
-            <p style={{ fontSize: '14px' }}>{list.name}</p>
-          </MenuItem>
-        </NavLink>)
-      )}
-
+      <MenuList id='menu'>
+      {drawerList.map(list => (
+        <MenuItem key={list.name} to={list.path} component={ NavLink } selected={list.path === pathname}>
+          <ListItemIcon className={list.path === pathname ? classes.selectedColor : classes.textColor}>
+            {list.icon}
+          </ListItemIcon>
+          <p 
+            style={{ fontSize: '14px' }}
+            className={list.path === pathname  ? classes.selectedColor : classes.textColor}
+          >
+            {list.name}
+          </p>
+        </MenuItem>
+      ))}
+      </MenuList>
     </Fragment>
   );
 
@@ -127,22 +126,26 @@ const Navigation = ({ container, children }) => {
       <div className={classes.root}>
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
-            {token && <IconButton
-              aria-label="open drawer"
-              edge="start"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>}
+            {token && 
+              <IconButton
+                aria-label="open drawer"
+                edge="start"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className={classes.menuButton}
+              >
+                <MenuIcon />
+              </IconButton>}
 
-            {!token && <Typography variant="h6" noWrap>
-              Expense Tracker
-            </Typography>}
+            {!token 
+              ? <Typography variant="h6">Expense Tracker</Typography>
+              : <Typography variant="h6" style={{ margin: 'auto', transform: 'translateX(-50%)' }}>
+                  {getCurrentTitle(pathname)}
+                </Typography>
+            }
           </Toolbar>
         </AppBar>
 
-        {token && <nav className={classes.drawer} aria-label="mailbox folders">
+        {token && <nav className={classes.drawer} aria-label="navigation">
           <Hidden smUp implementation="css">
             <Drawer
               container={container}
@@ -157,11 +160,7 @@ const Navigation = ({ container, children }) => {
           </Hidden>
           
           <Hidden xsDown implementation="css">
-            <Drawer
-              classes={{ paper: classes.drawerPaper }}
-              variant="permanent"
-              open
-            >
+            <Drawer classes={{ paper: classes.drawerPaper }} variant="permanent" open>
               {drawer}
             </Drawer>
           </Hidden>
@@ -175,4 +174,4 @@ const Navigation = ({ container, children }) => {
   );
 };
 
-export default Navigation;
+export default withRouter(Navigation);

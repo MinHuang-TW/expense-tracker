@@ -3,43 +3,58 @@ import { extendMoment } from 'moment-range';
 
 const moment = extendMoment(Moment);
 
+export function getGreeting(d) {
+  const hour = moment(d).hour();
+  if (hour < 4) return 'night';
+  if (hour < 13) return 'morning';
+  if (hour < 18) return 'afternoon';
+  if (hour < 24) return 'evening';
+  return 'day';
+}
+
+export function checkDayTime(d) {
+  const hour = moment(d).hour();
+  if (hour > 3 && hour < 18) return true;
+  return false;
+}
+
 export function checkDay(d) {
   const start = moment().startOf('day');
   const end = moment().endOf('day');
-  const today = moment(d);
+  const date = moment(d);
   const range = moment().range(start, end);
 
-  if (today.within(range)) return true;
+  if (date.within(range)) return true;
   return false;
 }
 
 export function checkWeek(d) {
   const sunday = moment().startOf('week');
   const saturday = moment().endOf('week');
-  const today = moment(d);
+  const date = moment(d);
   const range = moment().range(sunday, saturday);
 
-  if (today.within(range)) return true;
+  if (date.within(range)) return true;
   return false;
 }
 
 export function checkMonth(d) {
   const fistday = moment().startOf('month');
   const lastday = moment().endOf('month');
-  const today = moment(d);
+  const date = moment(d);
   const range = moment().range(fistday, lastday);
 
-  if (today.within(range)) return true;
+  if (date.within(range)) return true;
   return false;
 }
 
 export function checkYear(d) {
   const fistday = moment().startOf('year');
   const lastday = moment().endOf('year');
-  const today = moment(d);
+  const date = moment(d);
   const range = moment().range(fistday, lastday);
 
-  if (today.within(range)) return true;
+  if (date.within(range)) return true;
   return false;
 }
 

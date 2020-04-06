@@ -22,6 +22,27 @@ body {
   opacity: 0.8;
 }
 
+/* ----- NAVIGATION ----- */
+
+.block-greeting {
+  height: 280px;
+  margin: 0 16px;
+  padding-top: 30px;
+}
+
+.username {
+  text-transform: capitalize;
+  min-height: 100px;
+}
+
+#menu {
+  text-transform: uppercase;
+}
+
+#menu > .Mui-selected {
+  background: transparent !important;
+}
+
 /* ----- LOGIN ----- */
 
 .login-form {
@@ -293,7 +314,7 @@ body {
 
 @media only screen and (max-width: 600px) {
   .container-top {
-    padding: 20px 0;
+    padding: 28px 0;
   }
 }
 
