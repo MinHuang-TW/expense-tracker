@@ -67,7 +67,15 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     selectedColor: {
       color: '#65bcbf',
       fontWeight: 800,
-    }
+    },
+    appbarTitle: {
+      position: 'absolute',
+      left: '50%',
+      transform: 'translate(-50%)',
+      margin: '0 auto',
+      fontSize: '16px', 
+      textTransform: 'uppercase',
+    },
   }));
 
   const classes = useStyles();
@@ -142,10 +150,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
             {!token 
               ? <Typography variant="h6">Expense Tracker</Typography>
-              : <Typography 
-                  variant="h6" 
-                  style={{ margin: 'auto', transform: 'translateX(-50%)', fontSize: '18px' }}
-                >
+              : <Typography variant="h6" className={classes.appbarTitle}>
                   {getCurrentTitle(pathname)}
                 </Typography>
             }

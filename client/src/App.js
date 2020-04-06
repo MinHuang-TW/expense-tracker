@@ -5,6 +5,7 @@ import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import Report from './components/Report';
+import Statistics from './components/Statistics';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import AddTransaction from './components/AddTransaction';
@@ -19,6 +20,7 @@ function App() {
           <Route path='/logout' component={Logout} />
           <ProtectedRoute path='/user' component={Dashboard} />
           <ProtectedRoute path='/report' component={Report} />
+          <ProtectedRoute path='/statistics' component={Statistics} />
 
           <Redirect from='/' exact to='/user' />
           <Redirect to='/not-found' />

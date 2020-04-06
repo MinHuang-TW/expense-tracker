@@ -125,11 +125,7 @@ const Report = () => {
               .map(transaction => {
                 counter++;
                 return (
-                  <Transaction 
-                    key={transaction._id} 
-                    transaction={transaction}
-                    date
-                  />
+                  <Transaction key={transaction._id} transaction={transaction} date />
                 );
               })}
             {counter === 0 && (
