@@ -13,6 +13,10 @@ body {
   font-family: Roboto, sans-serif;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .container {
   margin: 20px auto;
   width: 350px;
@@ -239,6 +243,11 @@ body {
   color: white;
 }
 
+.time-bar {
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 /* ----- REPORT > REPORT OVERVIEW ----- */
 
 .box {
@@ -366,9 +375,9 @@ body {
     height: 32vh; 
   }
 
-  /* .list-status {
-    line-height: 20vh;
-  } */
+  .list-status {
+    height: 30vh;
+  }
 }
 
 @media only screen and (min-height: 570px) {

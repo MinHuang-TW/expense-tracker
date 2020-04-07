@@ -157,7 +157,8 @@ const Navigation = ({ container, children, location: { pathname } }) => {
           </Toolbar>
         </AppBar>
 
-        {token && <nav className={classes.drawer} aria-label="navigation">
+        {token && 
+        <nav className={classes.drawer} aria-label="navigation">
           <Hidden smUp implementation="css">
             <Drawer
               container={container}

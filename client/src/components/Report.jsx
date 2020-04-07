@@ -22,11 +22,6 @@ const Report = () => {
   const amounts = [];
   let counter = 0;
 
-  const timebar = { 
-    color: 'white',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
-  }
-
   useEffect(() => {
     getTransactions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,7 +30,7 @@ const Report = () => {
 
   return (
     <Fragment>
-      <div style={timebar} className='plus-bg'>
+      <div className='plus-bg time-bar'>
         <Tabs value={value} variant="fullWidth" aria-label="time selectors">
           {timeFilters.map((timeFilter, index) => 
             <Tab 
