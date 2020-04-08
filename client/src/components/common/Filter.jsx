@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
 import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
-const TransactionFilter = ({
+const Filter = ({
   value,
   sortLatest,
   sortDsc,
@@ -47,4 +47,4 @@ const TransactionFilter = ({
   );
 };
 
-export default TransactionFilter;
+export default Filter;

@@ -77,19 +77,13 @@ export function sortDateAsc(a, b) {
 }
 
 export function sortAmountDsc(a, b) {
-  let amountA = a.amount;
-  let amountB = b.amount;
-
-  if (amountA < amountB) return 1;
-  if (amountA > amountB) return -1;
+  if (a.amount < b.amount) return 1;
+  if (a.amount > b.amount) return -1;
   return 0;
 }
 
 export function sortAmountAsc(a, b) {
-  let amountA = a.amount;
-  let amountB = b.amount;
-
-  if (amountA < amountB) return -1;
-  if (amountA > amountB) return 1;
+  if (a.amount < b.amount) return -1;
+  if (a.amount > b.amount) return 1;
   return 0;
 }

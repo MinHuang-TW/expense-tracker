@@ -47,12 +47,12 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
             {!noData 
               ? <div className="vertical-align" style={{ height: height }}>
                   <PieChart
-                      data={data}
-                      width={width}
-                      height={height}
-                      outerRadius={outerRadius}
-                      innerRadius={innerRadius}
-                    />
+                    data={data}
+                    width={width}
+                    height={height}
+                    outerRadius={outerRadius}
+                    innerRadius={innerRadius}
+                  />
                 </div>
               : <p className='text-white-s vertical-align'>
                   No transaction

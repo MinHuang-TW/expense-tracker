@@ -1,13 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { checkDay, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
-import TransactionFilter from './common/TransactionFilter';
+import { sortAmountDsc, sortAmountAsc } from '../utils/calculation';
+import Filter from './common/Filter';
 import Transaction from './Transaction';
+import moment from 'moment';
 import { CircularProgress } from '@material-ui/core';
 
 const TransactionList = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const [sortDsc, setSortDsc] = useState(true);
+  const today = moment();
   let counter = 0;
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const TransactionList = () => {
 
   return (
     <div className='container'>
-      <TransactionFilter 
+      <Filter 
         value={0} 
         sortDsc={sortDsc} 
         handleSortAmount={() => setSortDsc(!sortDsc)}
@@ -28,12 +30,16 @@ const TransactionList = () => {
       {transactions.length > 0 ? (
         <ul className='list'>
           {transactions
-            .filter(transaction => checkDay(transaction.date))
+            .filter(transaction => moment(transaction.date).isSame(today, 'day'))
             .sort((a, b) => sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b))
             .map(transaction => {
               counter++;
               return (
-                <Transaction key={transaction._id} transaction={transaction} />
+                <Transaction 
+                  key={transaction._id} 
+                  transaction={transaction} 
+                  deleteButton 
+                />
               );
             })}
           {counter === 0 && (

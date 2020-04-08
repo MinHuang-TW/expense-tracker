@@ -3,7 +3,7 @@ import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
 import Transaction from './Transaction';
-import TransactionFilter from './common/TransactionFilter';
+import Filter from './common/Filter';
 import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
@@ -18,7 +18,6 @@ const Report = () => {
 
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
-  
   const amounts = [];
   let counter = 0;
 
@@ -76,7 +75,7 @@ const Report = () => {
 
       <div className='container'>
 
-        <TransactionFilter
+        <Filter
           value={value}
           text="list of today"
           sortLatest={sortLatest}
@@ -120,7 +119,12 @@ const Report = () => {
               .map(transaction => {
                 counter++;
                 return (
-                  <Transaction key={transaction._id} transaction={transaction} date />
+                  <Transaction 
+                    key={transaction._id} 
+                    transaction={transaction} 
+                    date
+                    deleteButton
+                  />
                 );
               })}
             {counter === 0 && (

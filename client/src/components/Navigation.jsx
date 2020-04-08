@@ -113,7 +113,12 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
       <MenuList id='menu'>
       {drawerList.map(list => (
-        <MenuItem key={list.name} to={list.path} component={ NavLink } selected={list.path === pathname}>
+        <MenuItem 
+          key={list.name} 
+          to={list.path} component={ NavLink } 
+          selected={list.path === pathname} 
+          style={{ minHeight: '48px' }}
+        >
           <ListItemIcon
             style={{ minWidth: '35px' }}
             className={list.path === pathname ? classes.selectedColor : classes.textColor}
