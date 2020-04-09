@@ -7,7 +7,7 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 
 const Transaction = ({ transaction, date, deleteButton }) => {
   const { deleteTransaction } = useContext(GlobalContext);
-  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ?'-' : '+';
+  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
 
   return (
     <li>
@@ -17,12 +17,14 @@ const Transaction = ({ transaction, date, deleteButton }) => {
           style={{ fontSize: '20px' }} 
           onClick={() => deleteTransaction(transaction._id)}
         />}
+
       <div style={{ marginLeft: deleteButton ? '35px' : 0 }}>
         <p>{transaction.text}</p>
         {date && <p className='list-date'>
           {moment(transaction.date).format('D MMM, YYYY')}
         </p>}
       </div> 
+
       <span 
         className={`list-amount ${transaction.amount === 0 
           ? null : transaction.amount > 0 
