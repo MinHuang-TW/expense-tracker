@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
 import Transaction from './Transaction';
+import BarChart from '../components/common/BarChart';
 import { Tabs, Tab, CircularProgress } from '@material-ui/core';
 
 const Statistics = () => {
@@ -13,33 +14,37 @@ const Statistics = () => {
         expenseLists = [],
         combinedLists = [];
   const lists = [
-    { type: 'income', array: incomeLists },
-    { type: 'expense', array: expenseLists },
+    { type: 'income', container: incomeLists },
+    { type: 'expense', container: expenseLists },
   ];
 
-  const sortDate = (type, time) => {
+  // const filterAmount = type => {
+  //   return transactions
+  //     .filter(transaction => {
+  //       if (type === 'expense') return transaction.amount < 0;
+  //       if (type === 'income') return transaction.amount > 0;
+  //       return transaction.amount;
+  //     })
+  // }
+
+  const filterDate = (type, time) => {
     return transactions
-      .filter((transaction) => moment(transaction.date).isSame(today, time))
-      .filter((transaction) => {
+      .filter(transaction => moment(transaction.date).isSame(today, time))
+      .filter(transaction => {
         if (type === 'expense') return transaction.amount < 0;
         if (type === 'income') return transaction.amount > 0;
-        if (type === 'all') return transaction.amount;
         return transaction.amount;
       });
   };
 
   const sumAmount = (type, time, filter, order) => {
     return Object.values(
-      sortDate(type, time).reduce((result, { date, amount }) => {
+      filterDate(type, time).reduce((result, { date, amount }) => {
         const index = (date) => moment(date).format(order);
         const format = (date) => moment(date).format(filter);
 
         !result[format(date)]
-          ? (result[format(date)] = {
-              index: +index(date),
-              text: format(date),
-              amount,
-            })
+          ? (result[format(date)] = { index: +index(date), text: format(date), amount })
           : (result[format(date)].amount += amount);
 
         return result;
@@ -49,7 +54,7 @@ const Statistics = () => {
 
   if (value === 0) {
     lists.map((list) =>
-      list['array'].push(...sumAmount(list.type, 'week', 'dddd', 'e'))
+      list['container'].push(...sumAmount(list.type, 'week', 'dddd', 'e'))
     );
     combinedLists.push(...incomeLists, ...expenseLists);
 
@@ -60,14 +65,14 @@ const Statistics = () => {
     const formatWeek = weekNum => `${sunday(weekNum)} - ${saturday(weekNum)}`;
 
     lists.map((list) =>
-      list['array'].push(...sumAmount(list.type, 'month', 'w', 'w'))
+      list['container'].push(...sumAmount(list.type, 'month', 'w', 'w'))
     );
     combinedLists.push(...incomeLists, ...expenseLists);
     combinedLists.forEach(list => list['text'] = formatWeek(list.index));
 
   } else if (value === 2) {
     lists.map((list) =>
-      list['array'].push(...sumAmount(list.type, 'year', 'MMMM', 'MM'))
+      list['container'].push(...sumAmount(list.type, 'year', 'MMMM', 'MM'))
     );
     combinedLists.push(...incomeLists, ...expenseLists);
   }
@@ -94,7 +99,9 @@ const Statistics = () => {
       </div>
 
       <div className='plus-bg box'>
-        <div className='container box-incomeExpense'></div>
+        <div className='container box-incomeExpense'>
+          <BarChart data={combinedLists} width='300' height='120' />
+        </div>
       </div>
 
       <div className='container'>

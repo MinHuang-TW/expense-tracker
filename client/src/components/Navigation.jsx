@@ -98,7 +98,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     <Fragment>
       <div className='block-greeting'>
         <Typography variant='h6' className={classes.textColor} gutterBottom>
-          <p style={{ opacity: 0.3 }}>{moment().format('ddd, DD MMM')}</p>
+          <p style={{ opacity: 0.3 }}>{moment().format('dddd, D MMMM')}</p>
           Good {getGreeting(now)},
         </Typography>
 
