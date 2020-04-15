@@ -59,7 +59,7 @@ const Statistics = () => {
     combinedLists.push(...incomeLists, ...expenseLists);
 
   } else if (value === 1) {
-    const filter = 'D MMMM';
+    const filter = 'D MMM';
     const sunday = weekNum => moment().day(0).week(weekNum).format(filter);
     const saturday = weekNum => moment().day(6).week(weekNum).format(filter);
     const formatWeek = weekNum => `${sunday(weekNum)} - ${saturday(weekNum)}`;
@@ -99,8 +99,8 @@ const Statistics = () => {
       </div>
 
       <div className='plus-bg box'>
-        <div className='container box-incomeExpense'>
-          <BarChart data={combinedLists} width='300' height='120' />
+        <div className='box-incomeExpense'>
+          <BarChart data={combinedLists} select={value} width='350' height='145' />
         </div>
       </div>
 
