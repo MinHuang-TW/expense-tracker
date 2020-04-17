@@ -43,13 +43,8 @@ const Statistics = () => {
   if (value === 0) {
     combinedLists.push(...sumAmount('week', 'dddd', 'e'));
   } else if (value === 1) {
-    const filter = 'D MMM';
-    const sunday = (weekNum) => moment().day(0).week(weekNum).format(filter);
-    const saturday = (weekNum) => moment().day(6).week(weekNum).format(filter);
-    const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
-
     combinedLists.push(...sumAmount('month', 'w', 'w'));
-    combinedLists.forEach((list) => (list['text'] = formatWeek(list.index)));
+    combinedLists.forEach((list) => (list['text'] = 'Week ' + list['text']));
   } else if (value === 2) {
     combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
   }
@@ -75,19 +70,19 @@ const Statistics = () => {
         </Tabs>
       </div>
 
-      <div className='plus-bg box'>
+      <div className='plus-bg box' style={{ height: '250px' }}>
         <div className='box-incomeExpense'>
           <BarChart
             data={combinedLists}
             keys={allKeys}
             select={value}
-            width='350'
-            height='145'
+            width={window.innerWidth > 320 ? 350 : 288}
+            height='180'
           />
         </div>
       </div>
 
-      <div className='container'>
+      <div className='container' style={{ marginTop: 0 }}>
         {transactions.length > 0 ? (
           <ul className='list'>
             {combinedLists

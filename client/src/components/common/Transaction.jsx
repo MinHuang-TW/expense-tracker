@@ -8,7 +8,9 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 const Transaction = ({ transaction, date, deleteButton }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
-  const text = transaction.text.split('-');
+  const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
+  const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
+  const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
 
   return (
     <li>
@@ -19,9 +21,12 @@ const Transaction = ({ transaction, date, deleteButton }) => {
           onClick={() => deleteTransaction(transaction._id)}
         />}
 
-      <div style={{ marginLeft: deleteButton ? '35px' : 0, minWidth: '60px' }}>
-        <p>{text[0]}</p>
-        {text.length > 1 && <p>{'- ' + text[1]}</p>}
+      <div style={{ marginLeft: deleteButton ? '35px' : 0, minWidth: '80px' }}>
+        <p>{transaction.text}</p>
+        {transaction.text.startsWith('Week') && 
+        <p className='list-date' style={{ fontSize: '12px' }}>
+          {formatWeek(transaction.index)}
+        </p>}
         {date && <p className='list-date'>
           {moment(transaction.date).format('D MMM, YYYY')}
         </p>}
