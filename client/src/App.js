@@ -18,11 +18,11 @@ function App() {
         <Switch>
           <Route path='/login' component={Login} />
           <Route path='/logout' component={Logout} />
-          <ProtectedRoute path='/user' component={Dashboard} />
-          <ProtectedRoute path='/report' component={Report} />
+          <ProtectedRoute path='/dashboard' component={Dashboard} />
+          <ProtectedRoute path='/transactions' component={Report} />
           <ProtectedRoute path='/statistics' component={Statistics} />
 
-          <Redirect from='/' exact to='/user' />
+          <Redirect from='/' exact to='/dashboard' />
           <Redirect to='/not-found' />
         </Switch>
         <AddTransaction />

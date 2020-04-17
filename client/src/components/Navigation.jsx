@@ -6,7 +6,8 @@ import { checkDayTime, getGreeting } from '../utils/calculation.js'
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
 import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import HomeSharpIcon from '@material-ui/icons/HomeSharp';
+// import HomeSharpIcon from '@material-ui/icons/HomeSharp';
+import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 import EqualizerSharpIcon from '@material-ui/icons/EqualizerSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
@@ -82,8 +83,8 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
   const iconSize = { fontSize: '20px' };
   const drawerList = [
-    { name: 'Home', path: '/user', icon: <HomeSharpIcon style={iconSize} /> },
-    { name: 'Report', path: '/report', icon: <LibraryBooksSharpIcon style={iconSize} /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <DashboardSharpIcon style={iconSize} /> },
+    { name: 'Transactions', path: '/transactions', icon: <LibraryBooksSharpIcon style={iconSize} /> },
     { name: 'Statistics', path: '/statistics', icon: <EqualizerSharpIcon style={iconSize} /> },
     { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon style={iconSize} /> },
   ]
