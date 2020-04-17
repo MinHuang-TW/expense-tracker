@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import { numberEuro } from '../utils/format';
+import { GlobalContext } from '../../context/GlobalState';
+import { numberEuro } from '../../utils/format';
 import moment from 'moment';
-// import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
+// import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 const Transaction = ({ transaction, date, deleteButton }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
+  const text = transaction.text.split('-');
 
   return (
     <li>
@@ -18,8 +19,9 @@ const Transaction = ({ transaction, date, deleteButton }) => {
           onClick={() => deleteTransaction(transaction._id)}
         />}
 
-      <div style={{ marginLeft: deleteButton ? '35px' : 0 }}>
-        <p>{transaction.text}</p>
+      <div style={{ marginLeft: deleteButton ? '35px' : 0, minWidth: '60px' }}>
+        <p>{text[0]}</p>
+        {text.length > 1 && <p>{'- ' + text[1]}</p>}
         {date && <p className='list-date'>
           {moment(transaction.date).format('D MMM, YYYY')}
         </p>}
@@ -34,10 +36,10 @@ const Transaction = ({ transaction, date, deleteButton }) => {
             {sign}{numberEuro(Math.abs(transaction.amount))}
           </span>
         : <div className='list-amount' style={{ width: '300px', textAlign: 'right' }}>
-            <span className='plus' style={{ display: 'inline-block' }}>
+            <span className='plus block'>
               {transaction.income === 0 ? '-' : '+' + numberEuro(transaction.income)}
             </span>
-            <span className='minus' style={{ display: 'inline-block', width: '150px' }}>
+            <span className='minus block expense-amount'>
               {transaction.expense === 0 ? '-' : numberEuro(transaction.expense)}
             </span>
           </div>

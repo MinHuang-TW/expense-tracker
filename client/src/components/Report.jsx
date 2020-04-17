@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
-import Transaction from './Transaction';
+import Transaction from './common/Transaction';
 import Filter from './common/Filter';
 import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';

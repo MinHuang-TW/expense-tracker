@@ -7,14 +7,10 @@ const BarChart = ({ data, keys, select, width, height }) => {
   const ref = useRef(null);
   const weekList = moment.weekdays();
   const monthList = moment.months();
-  const colorList = {
-    income: '#fff',
-    expense: '#f8777d',
-  };
+  const colorList = { income: '#fff', expense: '#f8777d' };
 
   useEffect(() => {
     const group = d3.select(ref.current);
-    // const labels = data.map(d => d.text);
     const labels =
       select === 0
         ? weekList
@@ -29,7 +25,6 @@ const BarChart = ({ data, keys, select, width, height }) => {
       0,
       d3.max(layers, (layer) => d3.max(layer, (seq) => Math.abs(seq[1]))),
     ];
-    // const maxAmount = d3.max(data, (d) => Math.abs(d.amount));
 
     const yScale = d3
       .scaleLinear()
@@ -75,29 +70,14 @@ const BarChart = ({ data, keys, select, width, height }) => {
       .selectAll('rect')
       .data((layer) => layer)
       .join('rect')
-      // .style('transform', 'scale(1, -1)')
       .attr('x', (seq) => xScale.bandwidth() / 2 - 3 + xScale(seq.data.text))
-      .attr('y', (seq) => yScale(seq[1]))
       .attr('width', 6)
-      // .attr('height', 0)
-      // .transition()
-      // .duration(1000)
+      .attr('y', height - 15)
+      .attr('height', 0)
+      .transition()
+      .duration(1000)
+      .attr('y', (seq) => yScale(seq[1]))
       .attr('height', (seq) => yScale(seq[0]) - yScale(seq[1]));
-
-    // group
-    //   .selectAll('.bar')
-    //   .data(data)
-    //   .join('rect')
-    //   .attr('class', 'bar')
-    //   .style('transform', 'scale(1, -1)')
-    //   .attr('x', (d) => xScale.bandwidth() / 2 - 3 + xScale(d.text))
-    //   .attr('y', -height + 15)
-    //   .attr('width', 6)
-    //   .attr('height', 0)
-    //   .attr('fill', (d) => (d.amount < 0 ? colorList[0] : colorList[1]))
-    //   .transition()
-    //   .duration(1000)
-    //   .attr('height', (d) => yScale(Math.abs(d.amount)));
 
     // eslint-disable-next-line
   }, [data]);

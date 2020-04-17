@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
-import Transaction from './Transaction';
+import Transaction from './common/Transaction';
 import BarChart from '../components/common/BarChart';
 import { Tabs, Tab, CircularProgress } from '@material-ui/core';
 

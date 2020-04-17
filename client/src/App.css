@@ -109,6 +109,16 @@ body::-webkit-scrollbar {
   border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* ----- TRANSACTION ----- */
+
+.block {
+  display: inline-block;
+}
+
+.expense-amount {
+  width: 150px;
+}
+
 /* ----- ADD TRANSACTION ----- */
 
 .new-form {
@@ -364,6 +374,10 @@ body::-webkit-scrollbar {
   .text-white-l {
     font-size: 18px;
   }
+
+  .expense-amount {
+    width: 120px;
+  }  
 }
 
 @media only screen and (max-height: 650px) {

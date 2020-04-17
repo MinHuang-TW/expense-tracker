@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import Filter from './common/Filter';
-import Transaction from './Transaction';
+import Transaction from './common/Transaction';
 import moment from 'moment';
 import { CircularProgress } from '@material-ui/core';
 
