@@ -34,7 +34,7 @@ const Report = () => {
           {timeFilters.map((timeFilter, index) => 
             <Tab 
               key={timeFilter} label={timeFilter} 
-              onClick={() => setValue(index)} 
+              onClick={() => { setValue(index); setSelected('all') }} 
               disableFocusRipple disableRipple
             />
           )}

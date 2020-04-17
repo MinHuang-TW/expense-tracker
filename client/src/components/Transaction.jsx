@@ -25,13 +25,23 @@ const Transaction = ({ transaction, date, deleteButton }) => {
         </p>}
       </div> 
 
-      <span 
-        className={`list-amount ${transaction.amount === 0 
-          ? null : transaction.amount > 0 
-          ? 'plus' : 'minus'}`}
-      >
-        {sign}{numberEuro(Math.abs(transaction.amount))}
-      </span>
+      {transaction.amount
+        ? <span 
+            className={`list-amount ${transaction.amount === 0 
+              ? null : transaction.amount > 0 
+              ? 'plus' : 'minus'}`}
+          >
+            {sign}{numberEuro(Math.abs(transaction.amount))}
+          </span>
+        : <div className='list-amount' style={{ width: '300px', textAlign: 'right' }}>
+            <span className='plus' style={{ display: 'inline-block' }}>
+              {transaction.income === 0 ? '-' : '+' + numberEuro(transaction.income)}
+            </span>
+            <span className='minus' style={{ display: 'inline-block', width: '150px' }}>
+              {transaction.expense === 0 ? '-' : numberEuro(transaction.expense)}
+            </span>
+          </div>
+      }
     </li>
   );
 };

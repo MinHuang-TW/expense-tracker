@@ -10,71 +10,48 @@ const Statistics = () => {
   const [value, setValue] = useState(0);
   const today = moment();
   const timeFilters = ['week', 'month', 'year'];
-  const incomeLists = [],
-        expenseLists = [],
-        combinedLists = [];
-  const lists = [
-    { type: 'income', container: incomeLists },
-    { type: 'expense', container: expenseLists },
-  ];
+  const allKeys = ['income', 'expense'];
+  const combinedLists = [];
 
-  // const filterAmount = type => {
-  //   return transactions
-  //     .filter(transaction => {
-  //       if (type === 'expense') return transaction.amount < 0;
-  //       if (type === 'income') return transaction.amount > 0;
-  //       return transaction.amount;
-  //     })
-  // }
-
-  const filterDate = (type, time) => {
-    return transactions
-      .filter(transaction => moment(transaction.date).isSame(today, time))
-      .filter(transaction => {
-        if (type === 'expense') return transaction.amount < 0;
-        if (type === 'income') return transaction.amount > 0;
-        return transaction.amount;
-      });
+  const filterDate = (time) => {
+    return transactions.filter((transaction) =>
+      moment(transaction.date).isSame(today, time)
+    );
   };
 
-  const sumAmount = (type, time, filter, order) => {
+  const sumAmount = (time, filter, order) => {
     return Object.values(
-      filterDate(type, time).reduce((result, { date, amount }) => {
+      filterDate(time).reduce((result, { date, amount }) => {
         const index = (date) => moment(date).format(order);
         const format = (date) => moment(date).format(filter);
 
         !result[format(date)]
-          ? (result[format(date)] = { index: +index(date), text: format(date), amount })
-          : (result[format(date)].amount += amount);
-
+          ? (result[format(date)] = {
+              index: +index(date),
+              text: format(date),
+              income: amount > 0 ? amount : 0,
+              expense: amount < 0 ? amount : 0,
+            })
+          : amount > 0
+          ? (result[format(date)].income += amount)
+          : (result[format(date)].expense += amount);
         return result;
       }, {})
     );
   };
 
   if (value === 0) {
-    lists.map((list) =>
-      list['container'].push(...sumAmount(list.type, 'week', 'dddd', 'e'))
-    );
-    combinedLists.push(...incomeLists, ...expenseLists);
-
+    combinedLists.push(...sumAmount('week', 'dddd', 'e'));
   } else if (value === 1) {
     const filter = 'D MMM';
-    const sunday = weekNum => moment().day(0).week(weekNum).format(filter);
-    const saturday = weekNum => moment().day(6).week(weekNum).format(filter);
-    const formatWeek = weekNum => `${sunday(weekNum)} - ${saturday(weekNum)}`;
+    const sunday = (weekNum) => moment().day(0).week(weekNum).format(filter);
+    const saturday = (weekNum) => moment().day(6).week(weekNum).format(filter);
+    const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
 
-    lists.map((list) =>
-      list['container'].push(...sumAmount(list.type, 'month', 'w', 'w'))
-    );
-    combinedLists.push(...incomeLists, ...expenseLists);
-    combinedLists.forEach(list => list['text'] = formatWeek(list.index));
-
+    combinedLists.push(...sumAmount('month', 'w', 'w'));
+    combinedLists.forEach((list) => (list['text'] = formatWeek(list.index)));
   } else if (value === 2) {
-    lists.map((list) =>
-      list['container'].push(...sumAmount(list.type, 'year', 'MMMM', 'MM'))
-    );
-    combinedLists.push(...incomeLists, ...expenseLists);
+    combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
   }
 
   useEffect(() => {
@@ -100,7 +77,13 @@ const Statistics = () => {
 
       <div className='plus-bg box'>
         <div className='box-incomeExpense'>
-          <BarChart data={combinedLists} select={value} width='350' height='145' />
+          <BarChart
+            data={combinedLists}
+            keys={allKeys}
+            select={value}
+            width='350'
+            height='145'
+          />
         </div>
       </div>
 
@@ -114,7 +97,7 @@ const Statistics = () => {
               ))}
             {combinedLists.length === 0 && (
               <div className='list-status'>
-                No expense transaction<br />of the {timeFilters[value]}
+                No transaction of the {timeFilters[value]}
               </div>
             )}
           </ul>
