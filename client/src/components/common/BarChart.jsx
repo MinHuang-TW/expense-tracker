@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
 import moment from 'moment';
-import { stackOrderAscending } from 'd3';
+import * as d3 from 'd3';
 
 const BarChart = ({ data, keys, select, width, height }) => {
   const ref = useRef(null);
@@ -18,13 +17,12 @@ const BarChart = ({ data, keys, select, width, height }) => {
       weekList.push('Week ' + mday.week());
     }
   }
+  data.forEach((data) => (data['expense'] = Math.abs(data['expense'])));
 
   useEffect(() => {
     const group = d3.select(ref.current);
     const labels = select === 0 ? dayList : select === 1 ? weekList : monthList;
-
-    data.forEach((data) => (data['expense'] = Math.abs(data['expense'])));
-    const stackGenerator = d3.stack().keys(keys).order(stackOrderAscending);
+    const stackGenerator = d3.stack().keys(keys).order(d3.stackOrderReverse);
     const layers = stackGenerator(data);
     const extent = [
       0,
@@ -33,7 +31,10 @@ const BarChart = ({ data, keys, select, width, height }) => {
 
     const yScale = d3.scaleLinear().domain(extent).range([height, 0]);
     const xScale = d3.scaleBand().domain(labels).range([0, width]);
-    const xAxis = d3.axisBottom(xScale).tickSize(0);
+    const xAxis = d3
+      .axisBottom(xScale)
+      .tickFormat((d) => (select === 1 ? d : d.slice(0, 3)))
+      .tickSize(0);
 
     group
       .select('.x-axis')
@@ -42,16 +43,7 @@ const BarChart = ({ data, keys, select, width, height }) => {
       .call(xAxis)
       .call((g) => g.select('.domain').remove())
       .selectAll('.x-axis .tick text')
-      .call((t) =>
-        t.each(function (d) {
-          const self = d3.select(this);
-          self.text('');
-          self
-            .append('tspan')
-            .attr('dy', '1em')
-            .text(select === 1 ? d : d.slice(0, 3));
-        })
-      );
+      .attr('dy', '1em');
 
     group
       .selectAll('.layer')

@@ -76,8 +76,8 @@ const Statistics = () => {
             data={combinedLists}
             keys={allKeys}
             select={value}
-            width={window.innerWidth > 320 ? 350 : 288}
             height='180'
+            width={window.innerWidth > 320 ? 350 : 288}
           />
         </div>
       </div>
