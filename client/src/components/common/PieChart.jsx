@@ -1,65 +1,48 @@
 import React, { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import { select, arc, pie, interpolate } from 'd3';
 
-const PieChart = ({ data : originalData, width, height, outerRadius, innerRadius }) => {
+const PieChart = ({ data, width, height, outerRadius, innerRadius }) => {
   const ref = useRef(null);
-  const cache = useRef(originalData);
-
-  const createPie = d3
-    .pie()
-    .value(d => d)
-    .sort(null);
-  
-  const createArc = d3
-    .arc()
-    .outerRadius(outerRadius)
-    .innerRadius(innerRadius);
-
-  const colors = [
-    'rgba(255, 255, 255, 1)',
-    'rgba(255, 255, 255, 0.3)'
-  ];
-  // const format = d3.format('.2f');
+  const colorList = ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0.3)'];
 
   useEffect(() => {
-    const data = createPie(originalData);
-    const prevData = createPie(cache.current);
-    const group = d3.select(ref.current);
-    const groupWithData = group.selectAll('g.arc').data(data);
+    const svg = select(ref.current);
 
-    groupWithData.exit().remove();
-
-    const groupWithUpdate = groupWithData
-      .enter()
-      .append('g')
-      .attr('class', 'arc');
-
-    const path = groupWithUpdate
-      .append('path')
-      .merge(groupWithData.select('path.arc'));
-
-    const arcTween = (d, i) => {
-      const interpolator = d3.interpolate(prevData[i], d);
-      return t => createArc(interpolator(t));
-    };
-    path
-      .attr('class', 'arc')
-      .attr('d', createArc)
-      .attr('fill', (d, i) => colors[i])
-      .transition()
-      .duration(750)
-      .attrTween('d', arcTween);
-  // eslint-disable-next-line
-  }, [originalData])
+    const createArc = arc()
+      .outerRadius(outerRadius)
+      .innerRadius(innerRadius);
     
-  return ( 
+    const createPie = pie()
+      .value((d) => d)
+      .sort(null);
+    
+    const instructions = createPie(data);
+
+    function arcTween(next, index) {
+      const initial = createPie([0, 1])[index];
+      const interpolator = interpolate(this.last || initial, next);
+      this.last = interpolator(1);
+      return (t) => createArc(interpolator(t));
+    }
+
+    svg
+      .selectAll('.slice')
+      .data(instructions)
+      .join('path')
+      .attr('class', 'slice')
+      .attr('fill', (d, i) => colorList[i])
+      .transition()
+      .duration(1000)
+      .attrTween('d', arcTween);
+
+    // eslint-disable-next-line
+  }, [data]);
+
+  return (
     <svg width={width} height={height}>
-      <g 
-        ref={ref} 
-        transform={`translate(${outerRadius} ${outerRadius})`} 
-      />
+      <g ref={ref} transform={`translate(${outerRadius} ${outerRadius})`} />
     </svg>
   );
-}
+};
 
 export default PieChart;

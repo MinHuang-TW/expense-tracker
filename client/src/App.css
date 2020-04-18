@@ -329,6 +329,13 @@ body::-webkit-scrollbar {
   margin: 0;
 }
 
+/* ----- BAR CHART ----- */
+
+.center-align {
+  margin: auto;
+  overflow: visible;
+}
+
 /* ----- RWD ----- */
 
 @media only screen and (max-width: 600px) {

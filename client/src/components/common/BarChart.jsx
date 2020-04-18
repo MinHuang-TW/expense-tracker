@@ -69,12 +69,7 @@ const BarChart = ({ data, keys, select, width, height }) => {
   }, [data]);
 
   return (
-    <svg
-      width={width}
-      height={height}
-      ref={ref}
-      style={{ margin: 'auto', overflow: 'visible' }}
-    >
+    <svg width={width} height={height} ref={ref} className='center-align'>
       <g className='x-axis' />
     </svg>
   );
