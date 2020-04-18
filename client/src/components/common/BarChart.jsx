@@ -4,7 +4,9 @@ import * as d3 from 'd3';
 
 const BarChart = ({ data, keys, select, width, height }) => {
   const ref = useRef(null);
+  const barWidth = 6;
   const colorList = { income: '#fff', expense: '#f8777d' };
+  
   const dayList = moment.weekdays();
   const monthList = moment.months();
   const weekList = [];
@@ -31,6 +33,7 @@ const BarChart = ({ data, keys, select, width, height }) => {
 
     const yScale = d3.scaleLinear().domain(extent).range([height, 0]);
     const xScale = d3.scaleBand().domain(labels).range([0, width]);
+    const paddingLeft = (xScale.bandwidth() - barWidth) / 2;
     const xAxis = d3
       .axisBottom(xScale)
       .tickFormat((d) => (select === 1 ? d : d.slice(0, 3)))
@@ -54,8 +57,8 @@ const BarChart = ({ data, keys, select, width, height }) => {
       .selectAll('rect')
       .data((layer) => layer)
       .join('rect')
-      .attr('x', (seq) => xScale.bandwidth() / 2 - 3 + xScale(seq.data.text))
-      .attr('width', 6)
+      .attr('x', (seq) => paddingLeft + xScale(seq.data.text))
+      .attr('width', barWidth)
       .attr('y', height)
       .attr('height', 0)
       .transition()
