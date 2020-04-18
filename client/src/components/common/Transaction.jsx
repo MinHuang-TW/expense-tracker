@@ -7,7 +7,7 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 
 const Transaction = ({ transaction, date, deleteButton }) => {
   const { deleteTransaction } = useContext(GlobalContext);
-  const sign = (amount) => (amount === 0 ? null : amount < 0 ? '-' : '+');
+  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
   const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
   const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
   const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
@@ -46,7 +46,7 @@ const Transaction = ({ transaction, date, deleteButton }) => {
               : 'minus'
           }`}
         >
-          {sign(transaction.amount)}
+          {sign}
           {numberEuro(Math.abs(transaction.amount))}
         </span>
       ) : (
@@ -57,14 +57,12 @@ const Transaction = ({ transaction, date, deleteButton }) => {
           <span className='plus block'>
             {transaction.income === 0
               ? '-'
-              : sign(transaction.income) +
-                numberEuro(Math.abs(transaction.income))}
+              : '+' + numberEuro(transaction.income)}
           </span>
           <span className='minus block expense-amount'>
             {transaction.expense === 0
               ? '-'
-              : sign(transaction.expense) +
-                numberEuro(Math.abs(transaction.expense))}
+              : '-' + numberEuro(transaction.expense)}
           </span>
         </div>
       )}

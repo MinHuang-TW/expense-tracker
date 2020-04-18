@@ -33,8 +33,8 @@ const Statistics = () => {
               expense: amount < 0 ? amount : 0,
             })
           : amount > 0
-          ? (result[format(date)].income += amount)
-          : (result[format(date)].expense += amount);
+          ? (result[format(date)].income += amount).toFixed(2)
+          : (result[format(date)].expense += amount).toFixed(2);
         return result;
       }, {})
     );
