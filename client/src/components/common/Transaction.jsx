@@ -8,9 +8,18 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 const Transaction = ({ transaction, date, deleteButton }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
+
   const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
   const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
   const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
+
+  const formatAmount = (amount) => Math.abs(amount.toFixed(2));
+  const income = formatAmount(transaction.income);
+  const expense = formatAmount(transaction.expense);
+  const amounts = [
+    { name: income, sign: '+' },
+    { name: expense, sign: '-' },
+  ];
 
   return (
     <li>
@@ -39,31 +48,25 @@ const Transaction = ({ transaction, date, deleteButton }) => {
       {transaction.amount ? (
         <span
           className={`list-amount ${
-            transaction.amount === 0
-              ? null
-              : transaction.amount > 0
-              ? 'plus'
-              : 'minus'
+            transaction.amount === 0 ? null 
+              : transaction.amount > 0 ? 'plus' : 'minus'
           }`}
         >
           {sign}
           {numberEuro(Math.abs(transaction.amount))}
         </span>
       ) : (
-        <div
-          className='list-amount'
-          style={{ width: '300px', textAlign: 'right' }}
-        >
-          <span className='plus block'>
-            {transaction.income === 0
-              ? '-'
-              : '+' + numberEuro(transaction.income)}
-          </span>
-          <span className='minus block expense-amount'>
-            {transaction.expense === 0
-              ? '-'
-              : '-' + numberEuro(transaction.expense)}
-          </span>
+        <div className='list-amount block-amount'>
+          {amounts.map(({ name, sign }, index) => (
+            <span
+              key={name + index}
+              className={`block ${
+                name === income ? 'plus' : 'minus expense-amount'
+              }`}
+            >
+              {name === 0 ? '-' : sign + numberEuro(name)}
+            </span>
+          ))}
         </div>
       )}
     </li>

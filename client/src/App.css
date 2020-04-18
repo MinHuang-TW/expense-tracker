@@ -115,6 +115,11 @@ body::-webkit-scrollbar {
   display: inline-block;
 }
 
+.block-amount {
+  width: 300px;
+  text-align: right;
+}
+
 .expense-amount {
   width: 140px;
 }

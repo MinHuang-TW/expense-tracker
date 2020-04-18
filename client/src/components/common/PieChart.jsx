@@ -3,7 +3,7 @@ import { select, arc, pie, interpolate } from 'd3';
 
 const PieChart = ({ data, width, height, outerRadius, innerRadius }) => {
   const ref = useRef(null);
-  const colorList = ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0.3)'];
+  const colorList = ['#fff', 'rgba(255, 255, 255, 0.3)'];
 
   useEffect(() => {
     const svg = select(ref.current);
