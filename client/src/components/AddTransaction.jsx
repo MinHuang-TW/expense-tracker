@@ -121,7 +121,11 @@ const AddTransaction = () => {
     if (numberValid(e.target.value)) {
       setAmount(e.target.value);
       setErrorAmount(false);
-      text ? setDisableBtn(false) : setDisableBtn(true);
+      !text 
+        ? setDisableBtn(true)
+        : errorText
+        ? setDisableBtn(true)
+        : setDisableBtn(false);
     } else {
       setErrorAmount(true);
       setDisableBtn(true);
