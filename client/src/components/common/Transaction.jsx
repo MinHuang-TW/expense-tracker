@@ -13,7 +13,7 @@ const Transaction = ({ transaction, date, deleteButton }) => {
   const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
   const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
 
-  const formatAmount = (amount) => Math.abs(amount.toFixed(2));
+  const formatAmount = (amount) => amount && Math.abs(amount.toFixed(2));
   const income = formatAmount(transaction.income);
   const expense = formatAmount(transaction.expense);
   const amounts = [
