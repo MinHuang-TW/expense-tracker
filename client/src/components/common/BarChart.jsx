@@ -6,14 +6,14 @@ const BarChart = ({ data, keys, select, width, height }) => {
   const ref = useRef(null);
   const barWidth = 6;
   const colorList = { income: '#fff', expense: '#f8777d' };
-  
+
   const dayList = moment.weekdays();
   const monthList = moment.months();
   const weekList = [];
-  const monthRange = moment.range(
-    moment().startOf('month'),
-    moment().endOf('month')
-  );
+
+  const firstDay = moment().startOf('month');
+  const lastDay = moment().endOf('month');
+  const monthRange = moment.range(firstDay, lastDay);
   for (let mday of monthRange.by('days')) {
     if (weekList.indexOf(mday.week()) === -1) {
       weekList.push('Week ' + mday.week());
@@ -22,15 +22,14 @@ const BarChart = ({ data, keys, select, width, height }) => {
   data.forEach((data) => (data['expense'] = Math.abs(data['expense'])));
 
   useEffect(() => {
-    const group = d3.select(ref.current);
+    const svg = d3.select(ref.current);
     const labels = select === 0 ? dayList : select === 1 ? weekList : monthList;
     const stackGenerator = d3.stack().keys(keys).order(d3.stackOrderReverse);
     const layers = stackGenerator(data);
-    const extent = [
-      0,
-      d3.max(layers, (layer) => d3.max(layer, (seq) => Math.abs(seq[1]))),
-    ];
-
+    const maxAmount = d3.max(layers, (layer) =>
+      d3.max(layer, (seq) => Math.abs(seq[1]))
+    );
+    const extent = [0, maxAmount];
     const yScale = d3.scaleLinear().domain(extent).range([height, 0]);
     const xScale = d3.scaleBand().domain(labels).range([0, width]);
     const paddingLeft = (xScale.bandwidth() - barWidth) / 2;
@@ -39,7 +38,7 @@ const BarChart = ({ data, keys, select, width, height }) => {
       .tickFormat((d) => (select === 1 ? d : d.slice(0, 3)))
       .tickSize(0);
 
-    group
+    svg
       .select('.x-axis')
       .style('transform', `translateY(${height}px)`)
       .style('color', 'white')
@@ -48,7 +47,7 @@ const BarChart = ({ data, keys, select, width, height }) => {
       .selectAll('.x-axis .tick text')
       .attr('dy', '1em');
 
-    group
+    svg
       .selectAll('.layer')
       .data(layers)
       .join('g')
