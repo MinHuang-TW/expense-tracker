@@ -8,9 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   alert: {
-    width: '100%',
-    textTransform: 'Uppercase',
     textAlign: 'left',
+    '&::first-letter': {
+      textTransform: 'Uppercase',
+    },
   },
   input: {
     margin: '15px auto',
@@ -62,7 +63,10 @@ const Login = () => {
         <Typography
           color='primary'
           className={classes.link}
-          onClick={() => setShowSignup(!showSignup)}
+          onClick={() => {
+            setShowSignup(!showSignup); 
+            setName('');
+          }}
         >
           { mode }
         </Typography>
@@ -87,8 +91,8 @@ const Login = () => {
     <form className='container login-form' noValidate autoComplete='off'>
 
       {error && (
-        <Alert variant='outlined' severity='error' className={classes.alert}>
-          {error.replace(/"/g, "")}
+        <Alert variant='outlined' severity='error'>
+          <p className={classes.alert}>{error.replace(/"/g, "")}</p>
         </Alert>
       )}
 
