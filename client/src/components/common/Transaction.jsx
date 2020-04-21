@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import { numberEuro } from '../../utils/format';
 import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
-// import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
+// import EditSharpIcon from '@material-ui/icons/EditSharp';
 
-const Transaction = ({ transaction, date, deleteButton }) => {
+const Transaction = ({ transaction, date, menu }) => {
   const { deleteTransaction } = useContext(GlobalContext);
-  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
+  const [showMenu, setshowMenu] = useState(false);
+  const sign =
+    transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
 
   const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
   const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
@@ -17,24 +19,67 @@ const Transaction = ({ transaction, date, deleteButton }) => {
   const income = formatAmount(transaction.income);
   const expense = formatAmount(transaction.expense);
   const amounts = [
-    { name: income, sign: '+' },
-    { name: expense, sign: '-' },
+    { type: income, sign: '+' },
+    { type: expense, sign: '-' },
   ];
 
+  const buttonWidth = 70;
+  const paddingLeft = 15;
+
+  const listBlock = {
+    cursor: menu && 'pointer',
+    transform: menu && showMenu 
+      ? `translateX(${paddingLeft + buttonWidth}px)` 
+      : 'translateX(0)',
+    transition: 'transform .3s ease',
+  };
+
+  const menuBtn = {
+    position: 'absolute',
+    width: buttonWidth,
+    height: '100%',
+    cursor: 'pointer',
+  }
+
+  const deleteBtn = {
+    background: '#f8777d',
+    left: `-${paddingLeft + buttonWidth}px`,
+    ...menuBtn,
+  }
+  
+  // const editBtn = {
+  //   background: '#232c2d9f',
+  //   left: `-${paddingLeft + buttonWidth}px`,
+  //   ...menuBtn,
+  // }
+  
+  const listText = { minWidth: '80px' };
+  const listSubText = { fontSize: '12px' };
+
+  const handleShowMenu = useCallback(() => {
+    setshowMenu(!showMenu);
+  }, [showMenu])
+
   return (
-    <li>
-      {deleteButton && (
-        <DeleteSharpIcon
-          className='delete-btn'
-          style={{ fontSize: '20px' }}
-          onClick={() => deleteTransaction(transaction._id)}
-        />
+    <li style={listBlock} onClick={handleShowMenu}>
+      {menu && (
+        <>
+          <div 
+            style={deleteBtn} 
+            onClick={() => deleteTransaction(transaction._id)}
+          >
+            <DeleteSharpIcon className='menu-icon' />
+          </div>
+          {/* <div style={editBtn}>
+            <EditSharpIcon className='menu-icon' />
+          </div> */}
+        </>
       )}
 
-      <div style={{ marginLeft: deleteButton ? '35px' : 0, minWidth: '80px' }}>
+      <div style={listText}>
         <p>{transaction.text}</p>
         {transaction.text.startsWith('Week') && (
-          <p className='list-date' style={{ fontSize: '12px' }}>
+          <p className='list-date' style={listSubText}>
             {formatWeek(transaction.index)}
           </p>
         )}
@@ -48,8 +93,11 @@ const Transaction = ({ transaction, date, deleteButton }) => {
       {transaction.amount ? (
         <span
           className={`list-amount ${
-            transaction.amount === 0 ? null 
-              : transaction.amount > 0 ? 'plus' : 'minus'
+            transaction.amount === 0
+              ? null
+              : transaction.amount > 0
+              ? 'plus'
+              : 'minus'
           }`}
         >
           {sign}
@@ -57,14 +105,14 @@ const Transaction = ({ transaction, date, deleteButton }) => {
         </span>
       ) : (
         <div className='list-amount block-amount'>
-          {amounts.map(({ name, sign }, index) => (
+          {amounts.map(({ type, sign }, index) => (
             <span
-              key={name + index}
+              key={type + index}
               className={`block ${
-                name === income ? 'plus' : 'minus expense-amount'
+                type === income ? 'plus' : 'minus expense-amount'
               }`}
             >
-              {name === 0 ? '-' : sign + numberEuro(name)}
+              {type === 0 ? '-' : sign + numberEuro(type)}
             </span>
           ))}
         </div>

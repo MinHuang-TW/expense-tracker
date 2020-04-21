@@ -12,6 +12,12 @@ const Filter = ({
   text,
 }) => {
 
+  const textItem = {
+    display: 'flex',
+    flexDirection: 'row',
+    textTransform: 'uppercase',
+  };
+
   const sortItem = {
     display: 'flex',
     flexDirection: 'row',
@@ -24,9 +30,9 @@ const Filter = ({
   };
 
   return (
-    <div className='input-amount plus' style={{ height: '30px' }}>
+    <div className='input-amount plus' style={{ margin: '15px 0' }}>
       {value === 0 ? (
-        <div style={sortItem}>
+        <div style={textItem}>
           <Typography variant='body2'>{text}</Typography>
         </div>
       ) : (

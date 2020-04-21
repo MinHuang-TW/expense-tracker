@@ -33,21 +33,26 @@ const Statistics = () => {
               expense: amount < 0 ? amount : 0,
             })
           : amount > 0
-          ? (result[format(date)].income += amount)
-          : (result[format(date)].expense += amount);
+            ? (result[format(date)].income += amount)
+            : (result[format(date)].expense += amount);
         
         return result;
       }, {})
     );
   };
 
-  if (value === 0) {
-    combinedLists.push(...sumAmount('week', 'dddd', 'e'));
-  } else if (value === 1) {
-    combinedLists.push(...sumAmount('month', 'w', 'w'));
-    combinedLists.forEach((list) => (list['text'] = 'Week ' + list['text']));
-  } else if (value === 2) {
-    combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
+  // eslint-disable-next-line
+  switch (value) {
+    case 0:
+      combinedLists.push(...sumAmount('week', 'dddd', 'e'));
+      break;
+    case 1:
+      combinedLists.push(...sumAmount('month', 'w', 'w'));
+      combinedLists.forEach(list => (list['text'] = 'Week ' + list['text']));
+      break;
+    case 2:
+      combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
+      break;
   }
 
   useEffect(() => {
@@ -73,13 +78,18 @@ const Statistics = () => {
 
       <div className='plus-bg box' style={{ height: '250px' }}>
         <div className='box-incomeExpense'>
-          <BarChart
-            data={combinedLists}
-            keys={allKeys}
-            select={value}
-            height='180'
-            width={window.innerWidth > 320 ? 350 : 288}
-          />
+          {combinedLists.length > 0 
+            ? <BarChart
+                data={combinedLists}
+                keys={allKeys}
+                select={value}
+                height='180'
+                width={window.innerWidth > 320 ? 350 : 288}
+              /> 
+            : <p className='text-white-s vertical-align'>
+                No transaction
+              </p>
+          }
         </div>
       </div>
 

@@ -77,7 +77,7 @@ const Report = () => {
 
         <Filter
           value={value}
-          text="list of today"
+          text="today"
           sortLatest={sortLatest}
           sortDsc={sortDsc}
           handleSortDate={() => {
@@ -123,14 +123,14 @@ const Report = () => {
                     key={transaction._id} 
                     transaction={transaction} 
                     date
-                    deleteButton
+                    menu
                   />
                 );
               })}
             {counter === 0 && (
               <div className='list-status'>
                 No {selected !== 'all' && selected} transaction<br/>
-                of this {timeFilters[value]}
+                of the {timeFilters[value]}
               </div>
             )}
           </ul>

@@ -4,22 +4,8 @@ import { numberValid, numberCalc } from '../utils/format';
 import { datePickerExpense, defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import {
-  Dialog,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Slide,
-  TextField,
-  InputAdornment,
-  Fab,
-  Switch,
-} from '@material-ui/core';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Fab, Switch } from '@material-ui/core';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import format from 'date-fns/format';
 import 'date-fns';
@@ -36,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
     opacity: 0.8,
+    fontSize: '16px',
+    textTransform: 'uppercase',
   },
   textColor: {
     color: '#232C2D',
@@ -151,7 +139,6 @@ const AddTransaction = () => {
     e.preventDefault();
 
     const newTransaction = {
-      // id: Math.floor(Math.random() * 100000000),
       text,
       amount: minus ? -numberCalc(amount) : numberCalc(amount),
       date,

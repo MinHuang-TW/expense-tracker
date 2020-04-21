@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  /* font-family: Avenir !important; */
 }
 
 body {
@@ -192,9 +193,10 @@ body::-webkit-scrollbar {
 .list {
   list-style-type: none;
   padding: 0;
-  color: #232C2D;
+  color: #232c2d;
   opacity: 0.8;
   margin-bottom: 90px;
+  overflow: hidden;
 }
 
 .list li {
@@ -228,16 +230,13 @@ body::-webkit-scrollbar {
   color: #f8777d;
 }
 
-.delete-btn {
-  cursor: pointer;
-  border: 0;
-  left: 0;
-  transform: scaleX(-1);
+.menu-icon {
+  color: #fff;
   position: absolute;
-  opacity: 0.5;
-  /* top: 50%;
-  transform: translate(-100%, -50%);
-  transition: opacity 0.3s ease; */
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .list-status {
@@ -247,9 +246,8 @@ body::-webkit-scrollbar {
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: #232C2D;
+  color: #232c2d;
   opacity: 0.8;
-  text-transform: capitalize;
 }
 
 /* ----- REPORT ----- */
@@ -272,14 +270,14 @@ body::-webkit-scrollbar {
 .box-balance {
   position: absolute;
   width: 100%;
-  top: 50%; 
-  left: 50%; 
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
 }
 
 .box-incomeExpense {
-  display: flex; 
+  display: flex;
   height: 100%;
   margin: auto;
   text-align: center;
@@ -389,7 +387,7 @@ body::-webkit-scrollbar {
 
   .expense-amount {
     width: 120px;
-  }  
+  }
 }
 
 @media only screen and (max-height: 650px) {
@@ -398,7 +396,7 @@ body::-webkit-scrollbar {
   }
 
   .box {
-    height: 32vh; 
+    height: 32vh;
   }
 
   .list-status {
@@ -408,18 +406,18 @@ body::-webkit-scrollbar {
 
 @media only screen and (min-height: 570px) {
   .box {
-    height: 28vh; 
+    height: 28vh;
   }
 }
 
 @media only screen and (min-height: 800px) {
   .box {
-    height: 24vh; 
+    height: 24vh;
   }
 }
 
 @media only screen and (min-height: 900px) {
   .box {
-    height: 20vh; 
+    height: 20vh;
   }
 }
