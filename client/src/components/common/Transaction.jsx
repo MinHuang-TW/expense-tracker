@@ -4,7 +4,6 @@ import { numberEuro, formatAmount } from '../../utils/format';
 import { getWeekDate } from '../../utils/calculation';
 import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
-// import EditSharpIcon from '@material-ui/icons/EditSharp';
 
 const Transaction = ({ transaction, date, menu }) => {
   const { deleteTransaction } = useContext(GlobalContext);
