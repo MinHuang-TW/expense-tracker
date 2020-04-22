@@ -144,8 +144,6 @@ const AddTransaction = () => {
       date,
     };
     addTransaction(newTransaction);
-    setAmount(null);
-    setText('');
     handleClose();
   };
 

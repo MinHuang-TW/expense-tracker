@@ -1,6 +1,7 @@
 import React, { useState, useContext, useCallback } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
-import { numberEuro } from '../../utils/format';
+import { numberEuro, formatAmount } from '../../utils/format';
+import { getWeekDate } from '../../utils/calculation';
 import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 // import EditSharpIcon from '@material-ui/icons/EditSharp';
@@ -8,23 +9,11 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 const Transaction = ({ transaction, date, menu }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const [showMenu, setshowMenu] = useState(false);
-  const sign =
-    transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
-
-  const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
-  const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
-  const formatWeek = (weekNum) => `${sunday(weekNum)} - ${saturday(weekNum)}`;
-
-  const formatAmount = (amount) => amount && Math.abs(amount.toFixed(2));
+  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
   const income = formatAmount(transaction.income);
   const expense = formatAmount(transaction.expense);
-  const amounts = [
-    { type: income, sign: '+' },
-    { type: expense, sign: '-' },
-  ];
-
-  const buttonWidth = 70;
-  const paddingLeft = 15;
+  const amounts = [{ type: income, sign: '+' }, { type: expense, sign: '-' }];
+  const buttonWidth = 70, paddingLeft = 15;
 
   const listBlock = {
     cursor: menu && 'pointer',
@@ -80,7 +69,7 @@ const Transaction = ({ transaction, date, menu }) => {
         <p>{transaction.text}</p>
         {transaction.text.startsWith('Week') && (
           <p className='list-date' style={listSubText}>
-            {formatWeek(transaction.index)}
+            {getWeekDate(transaction.index)}
           </p>
         )}
         {date && (
@@ -100,17 +89,14 @@ const Transaction = ({ transaction, date, menu }) => {
               : 'minus'
           }`}
         >
-          {sign}
-          {numberEuro(Math.abs(transaction.amount))}
+          {sign}{numberEuro(Math.abs(transaction.amount))}
         </span>
       ) : (
         <div className='list-amount block-amount'>
           {amounts.map(({ type, sign }, index) => (
             <span
               key={type + index}
-              className={`block ${
-                type === income ? 'plus' : 'minus expense-amount'
-              }`}
+              className={`block ${type === income ? 'plus' : 'minus expense-amount'}`}
             >
               {type === 0 ? '-' : sign + numberEuro(type)}
             </span>

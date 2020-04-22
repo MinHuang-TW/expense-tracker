@@ -38,6 +38,12 @@ export function checkWeek(d) {
   return false;
 }
 
+export function getWeekDate(weekNum) {
+  const sunday = (weekNum) => moment().day(0).week(weekNum).format('D');
+  const saturday = (weekNum) => moment().day(6).week(weekNum).format('D MMM');
+  return `${sunday(weekNum)} - ${saturday(weekNum)}`;
+}
+
 export function checkMonth(d) {
   const fistday = moment().startOf('month');
   const lastday = moment().endOf('month');

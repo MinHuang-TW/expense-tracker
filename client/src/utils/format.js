@@ -4,6 +4,10 @@ export function numberEuro(x) {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+export function formatAmount (x) {
+  return x && Math.abs(x.toFixed(2));
+} 
+
 export function numberValid(x) {
   return /^(\d+|\d{1,3}(\.\d{3})*)(,\d{1,2})?$/.test(x);
 }

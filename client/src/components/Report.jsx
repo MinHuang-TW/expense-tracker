@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
+import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
@@ -7,6 +8,59 @@ import Filter from './common/Filter';
 import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
+
+const Switch = ({ types, value, setValue }) => {
+  return (
+    <div className='plus-bg time-bar'>
+      <Tabs value={value} variant="fullWidth" aria-label="switch">
+        {types.map((type, index) => 
+          <Tab
+            key={type} label={type} 
+            onClick={() => setValue(index)} 
+            disableFocusRipple disableRipple
+          />
+        )}
+      </Tabs>
+    </div>
+  );
+};
+
+const Selector = ({ types, selected, setSelected }) => {
+  const style = {
+    buttonGroup : { 
+      background: '#65BCBF', 
+      borderRadius: 0 
+    },
+    button: { 
+      borderRadius: 0, 
+      border: '1px solid rgba(255, 255, 255, 0.3)'
+    },
+  };
+
+  return (
+    <ThemeProvider theme={whiteTheme}>
+      <ButtonGroup
+        color='primary'
+        style={style.buttonGroup}
+        aria-label='selectors'
+        fullWidth disableRipple
+      >
+        {types.map(type => (
+          <Button
+            key={type}
+            variant={selected === type ? 'contained' : null}
+            color={selected === type ? 'primary' : 'secondary'}
+            onClick={() => setSelected(type)}
+            style={style.button}
+            disableElevation disableFocusRipple disableRipple
+          >
+            {type}
+          </Button>
+        ))}
+      </ButtonGroup>
+    </ThemeProvider>
+  );
+};
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
@@ -19,27 +73,66 @@ const Report = () => {
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
   const amounts = [];
-  let counter = 0;
+
+  //#region 
+  const lists = transactions
+    .filter(transaction => {
+      const date = transaction.date;
+      if (value === 0) return checkDay(date);
+      if (value === 1) return checkWeek(date);
+      if (value === 2) return checkMonth(date);
+      if (value === 3) return checkYear(date);
+      return transaction;
+    })
+    .filter(transaction => {
+      amounts.push(transaction.amount);
+      switch (selected) {
+        case 'income':
+          return transaction.amount > 0;
+        case 'expense':
+          return transaction.amount < 0;
+        default:
+          return transaction;
+      }
+    })
+    .sort((a, b) => {
+      if (sortColumn === 'date') {
+        return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
+      }
+      return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
+    });
+    //#endregion
+
+  const transition = useTransition(lists, list => list._id, {
+    from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
+    enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
+    leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
+    trail: 200,
+  });
+
+  const handleSortDate = useCallback(() => {
+    setSortLatest(!sortLatest); 
+    setSortColum('date');
+  }, [sortLatest]);
+
+  const handleSortAmount = useCallback(() => {
+    setSortDsc(!sortDsc); 
+    setSortColum('amount');
+  }, [sortDsc])
 
   useEffect(() => {
     getTransactions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
   
 
   return (
     <Fragment>
-      <div className='plus-bg time-bar'>
-        <Tabs value={value} variant="fullWidth" aria-label="time selectors">
-          {timeFilters.map((timeFilter, index) => 
-            <Tab 
-              key={timeFilter} label={timeFilter} 
-              onClick={() => setValue(index)} 
-              disableFocusRipple disableRipple
-            />
-          )}
-        </Tabs>
-      </div>
+      <Switch 
+        types={timeFilters} 
+        value={value} 
+        setValue={setValue} 
+      />
 
       <ReportOverview 
         selected={selected} 
@@ -48,30 +141,11 @@ const Report = () => {
         amounts={amounts}
       />
       
-      <ThemeProvider theme={whiteTheme}>
-        <ButtonGroup
-          fullWidth disableRipple
-          color='primary'
-          style={{ background: '#65BCBF', borderRadius: 0 }}
-          aria-label='transaction amount filters'
-        >
-          {transFilters.map(transFilter => (
-            <Button
-              key={transFilter}
-              variant={selected === transFilter ? 'contained' : null}
-              color={selected === transFilter ? 'primary' : 'secondary'}
-              onClick={() => setSelected(transFilter)}
-              style={{ 
-                borderRadius: 0, 
-                border: '1px solid rgba(255, 255, 255, 0.3)'
-              }}
-              disableElevation disableFocusRipple disableRipple
-            >
-              {transFilter}
-            </Button>
-          ))}
-        </ButtonGroup>
-      </ThemeProvider>
+      <Selector 
+        types={transFilters} 
+        selected={selected} 
+        setSelected={setSelected} 
+      />
 
       <div className='container'>
 
@@ -80,54 +154,21 @@ const Report = () => {
           text="today"
           sortLatest={sortLatest}
           sortDsc={sortDsc}
-          handleSortDate={() => {
-            setSortLatest(!sortLatest); setSortColum('date')
-          }}
-          handleSortAmount={() => {
-            setSortDsc(!sortDsc); setSortColum('amount')
-          }}
+          handleSortDate={handleSortDate}
+          handleSortAmount={handleSortAmount}
         />
 
-        {transactions.length > 0 ? (
+        {lists.length > 0 ? (
           <ul className='list'>
-            {transactions
-              .filter(transaction => {
-                const date = transaction.date;
-                if (value === 0) return checkDay(date);
-                if (value === 1) return checkWeek(date);
-                if (value === 2) return checkMonth(date);
-                if (value === 3) return checkYear(date);
-                return transaction;
-              })
-              .filter(transaction => {
-                amounts.push(transaction.amount);
-                switch (selected) {
-                  case 'income':
-                    return transaction.amount > 0;
-                  case 'expense':
-                    return transaction.amount < 0;
-                  default:
-                    return transaction;
-                }
-              })
-              .sort((a, b) => {
-                if (sortColumn === 'date') {
-                  return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
-                }
-                return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
-              })
-              .map(transaction => {
-                counter++;
+            {transition
+              .map(({ item, props, key }) => {
                 return (
-                  <Transaction 
-                    key={transaction._id} 
-                    transaction={transaction} 
-                    date
-                    menu
-                  />
+                  <animated.div key={key} style={props}>
+                    <Transaction transaction={item} date menu />
+                  </animated.div>
                 );
               })}
-            {counter === 0 && (
+            {lists.length === 0 && (
               <div className='list-status'>
                 No {selected !== 'all' && selected} transaction<br/>
                 of the {timeFilters[value]}
