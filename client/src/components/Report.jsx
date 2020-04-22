@@ -173,18 +173,13 @@ const Report = () => {
                 <Transaction transaction={item} date menu />
               </animated.div>
             ))}
-            {lists.length === 0 && (
-              <div className='list-status'>
-                No {selected !== 'all' && selected} transaction<br/>
-                of the {timeFilters[value]}
-              </div>
-            )}
           </ul>
         ) : (
           <div className='list-status'>
             {loading 
-              ? <CircularProgress color='primary'/>
-              : 'No transaction'}
+              ? (<CircularProgress color='primary'/>)
+              : (`No ${selected !== 'all' && selected} transaction`)
+            }
           </div>
         )}
       </div>
