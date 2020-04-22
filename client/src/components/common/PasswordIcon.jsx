@@ -3,8 +3,7 @@ import { InputAdornment, IconButton } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-const PasswordIcon = ({ showPassword, setShowpassword }) => {
-  return (
+const PasswordIcon = ({ showPassword, setShowpassword }) => (
     <InputAdornment position='end'>
       <IconButton
         aria-label='toggle password visibility'
@@ -15,6 +14,5 @@ const PasswordIcon = ({ showPassword, setShowpassword }) => {
       </IconButton>
     </InputAdornment>
   );
-};
 
 export default PasswordIcon;
