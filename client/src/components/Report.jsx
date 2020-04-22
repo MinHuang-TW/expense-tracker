@@ -10,16 +10,20 @@ import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
 
 const Switch = ({ types, value, setValue }) => {
+  const handleSwitch = useCallback((index) => (event) => {
+    setValue(index);
+  }, [setValue]);
+
   return (
     <div className='plus-bg time-bar'>
       <Tabs value={value} variant="fullWidth" aria-label="switch">
-        {types.map((type, index) => 
+        {types.map((type, index) => (
           <Tab
             key={type} label={type} 
-            onClick={() => setValue(index)} 
+            onClick={handleSwitch(index)} 
             disableFocusRipple disableRipple
           />
-        )}
+        ))}
       </Tabs>
     </div>
   );
@@ -37,6 +41,10 @@ const Selector = ({ types, selected, setSelected }) => {
     },
   };
 
+  const handleSelect = useCallback((type) => (event) => {
+    setSelected(type);
+  }, [setSelected]);
+
   return (
     <ThemeProvider theme={whiteTheme}>
       <ButtonGroup
@@ -50,7 +58,7 @@ const Selector = ({ types, selected, setSelected }) => {
             key={type}
             variant={selected === type ? 'contained' : null}
             color={selected === type ? 'primary' : 'secondary'}
-            onClick={() => setSelected(type)}
+            onClick={handleSelect(type)}
             style={style.button}
             disableElevation disableFocusRipple disableRipple
           >
@@ -107,7 +115,7 @@ const Report = () => {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
     leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
-    trail: 200,
+    trail: 100,
   });
 
   const handleSortDate = useCallback(() => {
@@ -160,14 +168,11 @@ const Report = () => {
 
         {lists.length > 0 ? (
           <ul className='list'>
-            {transition
-              .map(({ item, props, key }) => {
-                return (
-                  <animated.div key={key} style={props}>
-                    <Transaction transaction={item} date menu />
-                  </animated.div>
-                );
-              })}
+            {transition.map(({ item, props, key }) => (
+              <animated.div key={key} style={props}>
+                <Transaction transaction={item} date menu />
+              </animated.div>
+            ))}
             {lists.length === 0 && (
               <div className='list-status'>
                 No {selected !== 'all' && selected} transaction<br/>

@@ -22,7 +22,7 @@ const TransactionList = () => {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
     leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
-    trail: 200,
+    trail: 100,
   });
 
   const handleSortAmount = useCallback(() => {
