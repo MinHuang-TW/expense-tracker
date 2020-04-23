@@ -53,18 +53,12 @@ const TransactionList = () => {
                 </animated.div>
               );
             })}
-          {lists.length === 0 && (
-            <div className='list-status'>No transaction today</div>
-          )}
         </ul>
       ) : (
         <div className='list-status'>
           {loading 
-            ? <CircularProgress color='primary'/>
-            : <span>
-                Add your first transaction<br/>
-                by clicking the green plus button
-              </span>
+            ? (<CircularProgress color='primary'/>)
+            : (<p>No transaction today</p>)
           }
         </div>
       )}
