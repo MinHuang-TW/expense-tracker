@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
-// import { useTransition, animated } from 'react-spring';
+import { Transition, animated } from 'react-spring';
 import moment from 'moment';
 import { v4 as id } from 'uuid';
 import { GlobalContext } from '../context/GlobalState';
@@ -44,8 +44,8 @@ const Statistics = () => {
     );
   };
 
-  // eslint-disable-next-line
   switch (value) {
+    default:
     case 0:
       combinedLists.push(...sumAmount('week', 'dddd', 'e'));
       break;
@@ -57,15 +57,6 @@ const Statistics = () => {
       combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
       break;
   }
-
-  // const lists = combinedLists.sort((a, b) => sortAmountAsc(a.index, b.index));
-  // console.log(lists)
-  // const transition = useTransition(lists, list => list.id, {
-  //   from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-  //   enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
-  //   leave: { height: 0, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-  //   config: config.default,
-  // });
 
   const handleSwitch = useCallback((index) => (event) => {
     setValue(index);
@@ -108,23 +99,23 @@ const Statistics = () => {
         </div>
       </div>
 
-      <div className='container' style={{ marginTop: 0 }}>
+      <div className='container' style={{ marginTop: 10 }}>
         {combinedLists.length > 0 ? (
           <ul className='list'>
-            {combinedLists
-              .sort((a, b) => sortAmountAsc(a.index, b.index))
-              .map((list) => (
-                <Transaction key={list.id} transaction={list} />
-              ))}
+            <Transition
+              items={combinedLists.sort((a, b) => sortAmountAsc(a.index, b.index))} 
+              keys={item => item.id}
+              from={{ height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 }}
+              enter={{ height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 }}
+              leave={{ display: 'none' }}
+              trail={150}
+            >
+              {item => props => <animated.div style={props}>
+                <Transaction style={props} transaction={item} />
+              </animated.div>}
+            </Transition>
           </ul>
         ) : (
-          // <ul className='list'>
-          //   {transition.map(({ item, props, key }) => (
-          //     <animated.div key={key} style={props}>
-          //       <Transaction transaction={item} />
-          //     </animated.div>
-          //   ))}
-          // </ul>
           <div className='list-status'>
             {loading 
               ? (<CircularProgress color='primary' />) 
