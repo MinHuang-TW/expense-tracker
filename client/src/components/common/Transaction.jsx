@@ -23,7 +23,6 @@ const Transaction = ({ transaction, date, menu }) => {
       ? `translateX(${paddingLeft + buttonWidth}px)` 
       : 'translateX(0)',
     transition: 'transform .3s ease',
-    height: !transaction.amount && 75,
   };
 
   const menuBtn = {

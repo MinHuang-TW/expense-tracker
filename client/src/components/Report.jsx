@@ -2,32 +2,13 @@ import React, { Fragment, useState, useEffect, useContext, useCallback } from 'r
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
+import NewTabs from './common/NewTabs';
 import ReportOverview from './ReportOverview';
 import Transaction from './common/Transaction';
 import Filter from './common/Filter';
-import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/core';
+import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
-
-const Switch = ({ types, value, setValue }) => {
-  const handleSwitch = useCallback((index) => (event) => {
-    setValue(index);
-  }, [setValue]);
-
-  return (
-    <div className='plus-bg time-bar'>
-      <Tabs value={value} variant="fullWidth" aria-label="switch">
-        {types.map((type, index) => (
-          <Tab
-            key={type} label={type} 
-            onClick={handleSwitch(index)} 
-            disableFocusRipple disableRipple
-          />
-        ))}
-      </Tabs>
-    </div>
-  );
-};
 
 const Selector = ({ types, selected, setSelected }) => {
   const style = {
@@ -140,7 +121,7 @@ const Report = () => {
 
   return (
     <Fragment>
-      <Switch 
+      <NewTabs 
         types={timeFilters} 
         value={value} 
         setValue={setValue} 

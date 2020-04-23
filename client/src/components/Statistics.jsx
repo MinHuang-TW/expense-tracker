@@ -1,12 +1,13 @@
-import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Transition, animated } from 'react-spring';
 import moment from 'moment';
 import { v4 as id } from 'uuid';
 import { GlobalContext } from '../context/GlobalState';
 import { sortAmountAsc } from '../utils/calculation';
+import NewTabs from './common/NewTabs';
 import Transaction from './common/Transaction';
 import BarChart from '../components/common/BarChart';
-import { Tabs, Tab, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 
 const Statistics = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
@@ -58,10 +59,6 @@ const Statistics = () => {
       break;
   }
 
-  const handleSwitch = useCallback((index) => (event) => {
-    setValue(index);
-  }, [setValue]);
-
   useEffect(() => {
     getTransactions();
     // eslint-disable-next-line
@@ -69,19 +66,7 @@ const Statistics = () => {
 
   return (
     <Fragment>
-      <div className='plus-bg time-bar'>
-        <Tabs value={value} variant='fullWidth' aria-label='time selectors'>
-          {timeFilters.map((timeFilter, index) => (
-            <Tab
-              key={timeFilter}
-              label={timeFilter}
-              onClick={handleSwitch(index)}
-              disableFocusRipple
-              disableRipple
-            />
-          ))}
-        </Tabs>
-      </div>
+      <NewTabs types={timeFilters} value={value} setValue={setValue} />
 
       <div className='plus-bg box' style={{ height: '250px' }}>
         <div className='box-incomeExpense'>
@@ -105,14 +90,16 @@ const Statistics = () => {
             <Transition
               items={combinedLists.sort((a, b) => sortAmountAsc(a.index, b.index))} 
               keys={item => item.id}
-              from={{ height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 }}
-              enter={{ height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 }}
+              from={{ transform: 'translate3d(-5%,0,0)', opacity: 0 }}
+              enter={{ transform: 'translate3d(0%,0,0)', opacity: 1 }}
               leave={{ display: 'none' }}
               trail={150}
             >
-              {item => props => <animated.div style={props}>
-                <Transaction style={props} transaction={item} />
-              </animated.div>}
+              {item => props => (
+                <animated.div style={props}>
+                  <Transaction style={props} transaction={item} />
+                </animated.div>)
+              }
             </Transition>
           </ul>
         ) : (
