@@ -154,7 +154,7 @@ const Report = () => {
         {lists.length > 0 ? (
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
-              <animated.div native='true' key={key} style={props}>
+              <animated.div key={key} style={props}>
                 <Transaction transaction={item} date menu />
               </animated.div>
             ))}
