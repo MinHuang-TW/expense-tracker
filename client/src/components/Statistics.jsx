@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
 // import { useTransition, animated, config } from 'react-spring';
 import moment from 'moment';
 import { v4 as id } from 'uuid';
@@ -16,11 +16,10 @@ const Statistics = () => {
   const allKeys = ['income', 'expense'];
   const combinedLists = [];
 
-  const filterDate = (time) => {
-    return transactions.filter((transaction) =>
+  const filterDate = (time) =>
+    transactions.filter((transaction) =>
       moment(transaction.date).isSame(today, time)
     );
-  };
 
   const sumAmount = (time, filter, order) => {
     return Object.values(
@@ -37,9 +36,9 @@ const Statistics = () => {
               expense: amount < 0 ? amount : 0,
             })
           : amount > 0
-            ? (result[format(date)].income += amount)
-            : (result[format(date)].expense += amount);
-        
+          ? (result[format(date)].income += amount)
+          : (result[format(date)].expense += amount);
+
         return result;
       }, {})
     );
@@ -52,7 +51,7 @@ const Statistics = () => {
       break;
     case 1:
       combinedLists.push(...sumAmount('month', 'w', 'w'));
-      combinedLists.forEach(list => (list['text'] = 'Week ' + list['text']));
+      combinedLists.forEach((list) => (list['text'] = 'Week ' + list['text']));
       break;
     case 2:
       combinedLists.push(...sumAmount('year', 'MMMM', 'MM'));
@@ -68,6 +67,10 @@ const Statistics = () => {
   //   config: config.default,
   // });
 
+  const handleSwitch = useCallback((index) => (event) => {
+    setValue(index);
+  }, [setValue]);
+
   useEffect(() => {
     getTransactions();
     // eslint-disable-next-line
@@ -81,8 +84,9 @@ const Statistics = () => {
             <Tab
               key={timeFilter}
               label={timeFilter}
-              onClick={() => setValue(index)}
-              disableFocusRipple disableRipple
+              onClick={handleSwitch(index)}
+              disableFocusRipple
+              disableRipple
             />
           ))}
         </Tabs>
@@ -90,18 +94,17 @@ const Statistics = () => {
 
       <div className='plus-bg box' style={{ height: '250px' }}>
         <div className='box-incomeExpense'>
-          {combinedLists.length > 0 
-            ? <BarChart
-                data={combinedLists}
-                keys={allKeys}
-                select={value}
-                height='180'
-                width={window.innerWidth > 320 ? 350 : 288}
-              /> 
-            : <p className='text-white-s vertical-align'>
-                No transaction
-              </p>
-          }
+          {combinedLists.length > 0 ? (
+            <BarChart
+              data={combinedLists}
+              keys={allKeys}
+              select={value}
+              height='180'
+              width={window.innerWidth > 320 ? 350 : 288}
+            />
+          ) : (
+            <p className='text-white-s vertical-align'>No transaction</p>
+          )}
         </div>
       </div>
 
@@ -110,10 +113,11 @@ const Statistics = () => {
           <ul className='list'>
             {combinedLists
               .sort((a, b) => sortAmountAsc(a.index, b.index))
-              .map(list => (
+              .map((list) => (
                 <Transaction key={list.id} transaction={list} />
               ))}
           </ul>
+        ) : (
           // <ul className='list'>
           //   {transition.map(({ item, props, key }) => (
           //     <animated.div key={key} style={props}>
@@ -121,7 +125,6 @@ const Statistics = () => {
           //     </animated.div>
           //   ))}
           // </ul>
-        ) : (
           <div className='list-status'>
             {loading 
               ? (<CircularProgress color='primary' />) 

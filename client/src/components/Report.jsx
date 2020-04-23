@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
-import { useTransition, animated, config } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
@@ -9,19 +9,25 @@ import { Tabs, Tab, Button, ButtonGroup, CircularProgress } from '@material-ui/c
 import { whiteTheme } from '../utils/colorTheme.js';
 import { ThemeProvider } from "@material-ui/styles";
 
-const Switch = ({ types, value, setValue }) => (
-  <div className='plus-bg time-bar'>
-    <Tabs value={value} variant="fullWidth" aria-label="switch">
-      {types.map((type, index) => (
-        <Tab
-          key={type} label={type} 
-          onClick={() => setValue(index)} 
-          disableFocusRipple disableRipple
-        />
-      ))}
-    </Tabs>
-  </div>
-);
+const Switch = ({ types, value, setValue }) => {
+  const handleSwitch = useCallback((index) => (event) => {
+    setValue(index);
+  }, [setValue]);
+
+  return (
+    <div className='plus-bg time-bar'>
+      <Tabs value={value} variant="fullWidth" aria-label="switch">
+        {types.map((type, index) => (
+          <Tab
+            key={type} label={type} 
+            onClick={handleSwitch(index)} 
+            disableFocusRipple disableRipple
+          />
+        ))}
+      </Tabs>
+    </div>
+  );
+};
 
 const Selector = ({ types, selected, setSelected }) => {
   const style = {
@@ -34,6 +40,10 @@ const Selector = ({ types, selected, setSelected }) => {
       border: '1px solid rgba(255, 255, 255, 0.3)'
     },
   };
+
+  const handleSelect = useCallback((type) => (event) => {
+    setSelected(type);
+  }, [setSelected]);
 
   return (
     <ThemeProvider theme={whiteTheme}>
@@ -48,7 +58,7 @@ const Selector = ({ types, selected, setSelected }) => {
             key={type}
             variant={selected === type ? 'contained' : null}
             color={selected === type ? 'primary' : 'secondary'}
-            onClick={() => setSelected(type)}
+            onClick={handleSelect(type)}
             style={style.button}
             disableElevation disableFocusRipple disableRipple
           >
@@ -95,7 +105,9 @@ const Report = () => {
     })
     .sort((a, b) => {
       if (sortColumn === 'date') {
-        return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
+        return sortLatest 
+          ? sortDateDsc(a, b) 
+          : sortDateAsc(a, b);
       }
       return sortDsc 
         ? sortAmountDsc(a.amount, b.amount) 
@@ -106,9 +118,8 @@ const Report = () => {
   const transition = useTransition(lists, list => list._id, {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-50%,0,0)', opacity: 0 },
-    // trail: 100,
-    config: config.default,
+    leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
+    trail: 100,
   });
 
   const handleSortDate = useCallback(() => {
