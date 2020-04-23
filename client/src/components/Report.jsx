@@ -99,7 +99,8 @@ const Report = () => {
   const transition = useTransition(lists, list => list._id, {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-50%,0,0)', opacity: 0 },
+    // leave: { height: 0, transform: 'translate3d(-50%,0,0)', opacity: 0 },
+    leave: { display: 'none' },
     trail: 100,
   });
 
