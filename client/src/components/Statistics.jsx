@@ -88,6 +88,7 @@ const Statistics = () => {
         {combinedLists.length > 0 ? (
           <ul className='list'>
             <Transition
+              native
               items={combinedLists.sort((a, b) => sortAmountAsc(a.index, b.index))} 
               keys={item => item.id}
               from={{ transform: 'translate3d(-5%,0,0)', opacity: 0 }}
@@ -97,7 +98,7 @@ const Statistics = () => {
             >
               {item => props => (
                 <animated.div style={props}>
-                  <Transaction style={props} transaction={item} />
+                  <Transaction transaction={item} />
                 </animated.div>)
               }
             </Transition>

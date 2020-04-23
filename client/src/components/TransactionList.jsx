@@ -59,7 +59,7 @@ const TransactionList = () => {
       {lists.length > 0 ? (
         <ul className='list'>
           {transition.map(({ item, props, key }) => (
-            <animated.div key={key} style={props}>
+            <animated.div key={key} style={props} native='true'>
               <Transaction transaction={item} menu date />
             </animated.div>
           ))}
