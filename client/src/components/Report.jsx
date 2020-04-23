@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
-import { useTransition, animated } from 'react-spring';
+import { useTransition, animated, config } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import ReportOverview from './ReportOverview';
@@ -97,15 +97,18 @@ const Report = () => {
       if (sortColumn === 'date') {
         return sortLatest ? sortDateDsc(a, b) : sortDateAsc(a, b);
       }
-      return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
+      return sortDsc 
+        ? sortAmountDsc(a.amount, b.amount) 
+        : sortAmountAsc(a.amount, b.amount);
     });
     //#endregion
 
   const transition = useTransition(lists, list => list._id, {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
-    trail: 100,
+    leave: { height: 0, transform: 'translate3d(-50%,0,0)', opacity: 0 },
+    // trail: 100,
+    config: config.default,
   });
 
   const handleSortDate = useCallback(() => {

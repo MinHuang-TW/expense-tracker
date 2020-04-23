@@ -1,6 +1,9 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
+// import { useTransition, animated, config } from 'react-spring';
 import moment from 'moment';
+import { v4 as id } from 'uuid';
 import { GlobalContext } from '../context/GlobalState';
+import { sortAmountAsc } from '../utils/calculation';
 import Transaction from './common/Transaction';
 import BarChart from '../components/common/BarChart';
 import { Tabs, Tab, CircularProgress } from '@material-ui/core';
@@ -27,6 +30,7 @@ const Statistics = () => {
 
         !result[format(date)]
           ? (result[format(date)] = {
+              id: id(),
               index: +index(date),
               text: format(date),
               income: amount > 0 ? amount : 0,
@@ -55,6 +59,15 @@ const Statistics = () => {
       break;
   }
 
+  // const lists = combinedLists.sort((a, b) => sortAmountAsc(a.index, b.index));
+  // console.log(lists)
+  // const transition = useTransition(lists, list => list.id, {
+  //   from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
+  //   enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
+  //   leave: { height: 0, transform: 'translate3d(-5%,0,0)', opacity: 0 },
+  //   config: config.default,
+  // });
+
   useEffect(() => {
     getTransactions();
     // eslint-disable-next-line
@@ -69,8 +82,7 @@ const Statistics = () => {
               key={timeFilter}
               label={timeFilter}
               onClick={() => setValue(index)}
-              disableFocusRipple
-              disableRipple
+              disableFocusRipple disableRipple
             />
           ))}
         </Tabs>
@@ -94,22 +106,27 @@ const Statistics = () => {
       </div>
 
       <div className='container' style={{ marginTop: 0 }}>
-        {transactions.length > 0 ? (
+        {combinedLists.length > 0 ? (
           <ul className='list'>
             {combinedLists
-              .sort((a, b) => (a.index < b.index ? -1 : 1))
-              .map((list, index) => (
-                <Transaction key={index} transaction={list} />
+              .sort((a, b) => sortAmountAsc(a.index, b.index))
+              .map(list => (
+                <Transaction key={list.id} transaction={list} />
               ))}
-            {combinedLists.length === 0 && (
-              <div className='list-status'>
-                No transaction of the {timeFilters[value]}
-              </div>
-            )}
           </ul>
+          // <ul className='list'>
+          //   {transition.map(({ item, props, key }) => (
+          //     <animated.div key={key} style={props}>
+          //       <Transaction transaction={item} />
+          //     </animated.div>
+          //   ))}
+          // </ul>
         ) : (
           <div className='list-status'>
-            {loading ? <CircularProgress color='primary' /> : 'No transaction'}
+            {loading 
+              ? (<CircularProgress color='primary' />) 
+              : (<p>No transaction of the {timeFilters[value]}</p>)
+            }
           </div>
         )}
       </div>

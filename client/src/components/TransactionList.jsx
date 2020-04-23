@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useTransition, animated } from 'react-spring';
+import { useTransition, animated, config } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkDay, sortAmountDsc, sortAmountAsc, sortDateDsc } from '../utils/calculation';
 import Filter from './common/Filter';
@@ -12,22 +12,26 @@ const TransactionList = () => {
   const [sortDsc, setSortDsc] = useState(true);
 
   const lists = transactions
-    .filter(transaction => checkDay(transaction.date))
+    .filter((transaction) => checkDay(transaction.date))
     .sort((a, b) => {
       if (sortColumn === 'date') return sortDateDsc(a, b);
-      return sortDsc ? sortAmountDsc(a, b) : sortAmountAsc(a, b);
+      return sortDsc
+        ? sortAmountDsc(a.amount, b.amount)
+        : sortAmountAsc(a.amount, b.amount);
     });
 
-  const transition = useTransition(lists, list => list._id, {
+  const transition = useTransition(lists, (list) => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
     leave: { height: 0, transform: 'translate3d(-200%,0,0)', opacity: 0 },
     trail: 100,
+    config: config.default,
   });
 
   const handleSortAmount = useCallback(() => {
-    setSortDsc(!sortDsc); setSortColum('amount')
-  }, [sortDsc])
+    setSortDsc(!sortDsc);
+    setSortColum('amount');
+  }, [sortDsc]);
 
   useEffect(() => {
     getTransactions();
@@ -36,30 +40,26 @@ const TransactionList = () => {
 
   return (
     <div className='container'>
-      <Filter 
+      <Filter
         value={0}
         sortDsc={sortDsc}
         handleSortAmount={handleSortAmount}
-        text="today"
+        text='today'
       />
 
       {lists.length > 0 ? (
         <ul className='list'>
-          {transition
-            .map(({ item, props, key }) => {
-              return (
-                <animated.div key={key} style={props}>
-                  <Transaction transaction={item} menu />
-                </animated.div>
-              );
-            })}
+          {transition.map(({ item, props, key }) => (
+            <animated.div key={key} style={props}>
+              <Transaction transaction={item} menu />
+            </animated.div>
+          ))}
         </ul>
       ) : (
         <div className='list-status'>
           {loading 
-            ? (<CircularProgress color='primary'/>)
-            : (<p>No transaction today</p>)
-          }
+            ? (<CircularProgress color='primary' />) 
+            : (<p>No transaction today</p>)}
         </div>
       )}
     </div>

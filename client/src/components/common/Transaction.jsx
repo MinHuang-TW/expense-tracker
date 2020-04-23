@@ -8,11 +8,14 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 const Transaction = ({ transaction, date, menu }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const [showMenu, setshowMenu] = useState(false);
-  const sign = transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
-  const income = formatAmount(transaction.income);
-  const expense = formatAmount(transaction.expense);
-  const amounts = [{ type: income, sign: '+' }, { type: expense, sign: '-' }];
-  const buttonWidth = 70, paddingLeft = 15;
+  const sign = transaction.amount === 0 
+    ? null : transaction.amount < 0 ? '-' : '+';
+
+  const income = formatAmount(transaction.income),
+        expense = formatAmount(transaction.expense);
+
+  const buttonWidth = 70, 
+        paddingLeft = 15;
 
   const listBlock = {
     cursor: menu && 'pointer',
@@ -81,25 +84,20 @@ const Transaction = ({ transaction, date, menu }) => {
       {transaction.amount ? (
         <span
           className={`list-amount ${
-            transaction.amount === 0
-              ? null
-              : transaction.amount > 0
-              ? 'plus'
-              : 'minus'
+            transaction.amount === 0 ? null
+              : transaction.amount > 0 ? 'plus' : 'minus'
           }`}
         >
           {sign}{numberEuro(Math.abs(transaction.amount))}
         </span>
       ) : (
         <div className='list-amount block-amount'>
-          {amounts.map(({ type, sign }, index) => (
-            <span
-              key={type + index}
-              className={`block ${type === income ? 'plus' : 'minus expense-amount'}`}
-            >
-              {type === 0 ? '-' : sign + numberEuro(type)}
-            </span>
-          ))}
+          <span className='block plus'>
+            {transaction.income === 0 ? '-' : '+' + numberEuro(income)}
+          </span>
+          <span className='block minus expense-amount'>
+            {transaction.expense === 0 ? '-' : '-' + numberEuro(expense)}
+          </span>
         </div>
       )}
     </li>

@@ -83,13 +83,13 @@ export function sortDateAsc(a, b) {
 }
 
 export function sortAmountDsc(a, b) {
-  if (a.amount < b.amount) return 1;
-  if (a.amount > b.amount) return -1;
+  if (a < b) return 1;
+  if (a > b) return -1;
   return 0;
 }
 
 export function sortAmountAsc(a, b) {
-  if (a.amount < b.amount) return -1;
-  if (a.amount > b.amount) return 1;
+  if (a < b) return -1;
+  if (a > b) return 1;
   return 0;
 }
