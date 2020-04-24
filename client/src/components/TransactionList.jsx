@@ -60,7 +60,7 @@ const TransactionList = () => {
         <ul className='list'>
           {transition.map(({ item, props, key }) => (
             <animated.div key={key} style={props}>
-              <Transaction transaction={item} menu date />
+              <Transaction transaction={item} date />
             </animated.div>
           ))}
         </ul>

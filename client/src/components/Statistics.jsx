@@ -5,7 +5,7 @@ import { v4 as id } from 'uuid';
 import { GlobalContext } from '../context/GlobalState';
 import { sortAmountAsc } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
-import Transaction from './common/Transaction';
+import List from './common/List';
 import BarChart from '../components/common/BarChart';
 import { CircularProgress } from '@material-ui/core';
 
@@ -79,7 +79,9 @@ const Statistics = () => {
               width={window.innerWidth > 320 ? 350 : 288}
             />
           ) : (
-            <p className='text-white-s vertical-align'>No transaction</p>
+            <p className='text-white-s vertical-align'>
+              No transaction
+            </p>
           )}
         </div>
       </div>
@@ -98,7 +100,7 @@ const Statistics = () => {
             >
               {item => props => (
                 <animated.div style={props}>
-                  <Transaction transaction={item} />
+                  <List transaction={item} />
                 </animated.div>)
               }
             </Transition>
