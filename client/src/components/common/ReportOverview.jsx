@@ -1,7 +1,7 @@
 import React from 'react';
-import Total from './common/Total';
-import PieChart from './common/PieChart';
-import { numberEuro } from '../utils/format';
+import Total from './Total';
+import PieChart from './PieChart';
+import { numberEuro } from '../../utils/format';
 
 const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
 

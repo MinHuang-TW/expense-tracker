@@ -3,15 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
 import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 
-const Filter = ({
-  value,
-  sortLatest,
-  sortDsc,
-  handleSortDate,
-  handleSortAmount,
-  text,
-}) => {
-
+const Filter = ({ value, sortLatest, sortDsc, handleSortDate, handleSortAmount, text, sortText }) => {
   const textItem = {
     display: 'flex',
     flexDirection: 'row',
@@ -38,7 +30,7 @@ const Filter = ({
       ) : (
         <div style={sortItem} onClick={handleSortDate}>
           <Typography variant='body2' style={alignItem}>
-            sort by Date
+            {sortText ? sortText : 'date'}
           </Typography>
           {sortLatest ? <ArrowDropDownSharpIcon /> : <ArrowDropUpSharpIcon />}
         </div>

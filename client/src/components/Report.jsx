@@ -3,7 +3,7 @@ import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
-import ReportOverview from './ReportOverview';
+import ReportOverview from './common/ReportOverview';
 import Transaction from './common/Transaction';
 import Filter from './common/Filter';
 import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';

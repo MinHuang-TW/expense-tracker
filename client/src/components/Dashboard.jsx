@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { checkWeek, sortAmountDsc, sortAmountAsc, sortDateDsc, sortDateAsc } from '../utils/calculation';
+import { checkDay, sortAmountDsc, sortAmountAsc, sortDateDsc, sortDateAsc } from '../utils/calculation';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
 import Filter from './common/Filter';
@@ -15,7 +15,7 @@ const TransactionList = () => {
   const [sortDsc, setSortDsc] = useState(true);
 
   const lists = transactions
-    .filter((transaction) => checkWeek(transaction.date))
+    .filter((transaction) => checkDay(transaction.date))
     .sort((a, b) => {
       if (sortColumn === 'date') {
         return sortLatest 
@@ -28,9 +28,9 @@ const TransactionList = () => {
     });
 
   const transition = useTransition(lists, (list) => list._id, {
-    from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-    enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-300%,0,0)', opacity: 0 },
+    from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
+    enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
+    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
     trail: 200,
   });
 
@@ -56,13 +56,14 @@ const TransactionList = () => {
         sortDsc={sortDsc}
         handleSortDate={handleSortDate}
         handleSortAmount={handleSortAmount}
+        sortText='today'
       />
 
       {lists.length > 0 ? (
         <ul className='list'>
           {transition.map(({ item, props, key }) => (
             <animated.div key={key} style={props}>
-              <Transaction transaction={item} date />
+              <Transaction transaction={item} />
             </animated.div>
           ))}
         </ul>
@@ -70,7 +71,7 @@ const TransactionList = () => {
         <div className='list-status'>
           {loading 
             ? (<CircularProgress color='primary' />) 
-            : (<p>No recent transactions</p>)}
+            : (<p>No transaction today</p>)}
         </div>
       )}
     </>
