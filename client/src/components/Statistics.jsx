@@ -96,7 +96,7 @@ const Statistics = () => {
               from={{ transform: 'translate3d(-5%,0,0)', opacity: 0 }}
               enter={{ transform: 'translate3d(0%,0,0)', opacity: 1 }}
               leave={{ display: 'none' }}
-              trail={150}
+              trail={100}
             >
               {item => props => (
                 <animated.div style={props}>

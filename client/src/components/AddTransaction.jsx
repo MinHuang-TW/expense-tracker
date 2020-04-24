@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { numberValid, numberCalc } from '../utils/format';
 import { datePickerExpense, defaultMaterialTheme } from '../utils/colorTheme';
@@ -81,20 +81,22 @@ const TransactionSwitch = withStyles((theme) => ({
 
 const AddTransaction = () => {
   const { addTransaction } = useContext(GlobalContext);
-  const [text, setText] = useState('');
-  const [amount, setAmount] = useState(null);
+  const [text, setText] = useState(''),
+        [errorText, setErrorText] = useState(false);
+  const [amount, setAmount] = useState(null),
+        [errorAmount, setErrorAmount] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
-  const [errorText, setErrorText] = useState(false);
-  const [errorAmount, setErrorAmount] = useState(false);
-
   const [minus, setMinus] = useState(true);
   const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
 
-  const handleClose = () => {
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
     setOpen(false);
     setErrorText(false);
     setErrorAmount(false);
@@ -103,9 +105,13 @@ const AddTransaction = () => {
     setDate(new Date());
     setMinus(true);
     setDisableBtn(true);
-  };
+  }, []);
 
-  const handleAmount = (e) => {
+  const handleMinus = useCallback(() => {
+    setMinus(!minus);
+  }, [minus]);
+
+  const handleAmount = useCallback((e) => {
     if (numberValid(e.target.value)) {
       setAmount(e.target.value);
       setErrorAmount(false);
@@ -118,9 +124,9 @@ const AddTransaction = () => {
       setErrorAmount(true);
       setDisableBtn(true);
     }
-  };
+  }, [text, errorText]);
 
-  const handleText = (e) => {
+  const handleText = useCallback((e) => {
     if (e.target.value) {
       setText(e.target.value);
       setErrorText(false);
@@ -133,11 +139,10 @@ const AddTransaction = () => {
       setErrorText(true);
       setDisableBtn(true);
     }
-  };
+  }, [amount, errorAmount]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     const newTransaction = {
       text,
       amount: minus ? -numberCalc(amount) : numberCalc(amount),
@@ -148,46 +153,31 @@ const AddTransaction = () => {
   };
 
   return (
-    <Fragment>
+    <>
       <Fab
         color='primary'
         aria-label='add'
         disableRipple
         className={`${classes.fab} no-outline`}
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
       >
         <AddIcon />
       </Fab>
 
       <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
-        <Dialog
-          fullScreen
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-        >
+        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant='h6' className={classes.title}>
                 New {minus ? 'Expense' : 'Income'}
               </Typography>
-              <IconButton
-                edge='start'
-                color='inherit'
-                onClick={handleClose}
-                aria-label='close'
-              >
+              <IconButton edge='start' color='inherit' onClick={handleClose} aria-label='close'>
                 <CloseIcon />
               </IconButton>
             </Toolbar>
           </AppBar>
 
-          <form
-            onSubmit={onSubmit}
-            className='new-form'
-            noValidate
-            autoComplete='off'
-          >
+          <form onSubmit={onSubmit} className='new-form' noValidate autoComplete='off'>
             <div className='input-amount'>
               <TextField
                 id='standard-full-width'
@@ -210,13 +200,13 @@ const AddTransaction = () => {
                     ? 'Please enter a valid number'
                     : 'Toggle Income / Expense'
                 }
-                onChange={(e) => handleAmount(e)}
+                onChange={handleAmount}
               />
 
               <TransactionSwitch
                 checked={minus}
                 tabIndex='-1'
-                onChange={() => setMinus(!minus)}
+                onChange={handleMinus}
                 inputProps={{ 'aria-label': 'secondary checkbox' }}
               />
             </div>
@@ -230,7 +220,7 @@ const AddTransaction = () => {
               InputLabelProps={{ shrink: true }}
               InputProps={{ className: classes.textColor }}
               helperText={errorText && 'Please describe the transaction'}
-              onChange={(e) => handleText(e)}
+              onChange={handleText}
             />
 
             <MuiPickersUtilsProvider utils={LocalizedUtils}>
@@ -245,6 +235,7 @@ const AddTransaction = () => {
                 fullWidth
               />
             </MuiPickersUtilsProvider>
+
             <button
               className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}
               style={{ marginTop: '50px' }}
@@ -255,7 +246,7 @@ const AddTransaction = () => {
           </form>
         </Dialog>
       </ThemeProvider>
-    </Fragment>
+    </>
   );
 };
 

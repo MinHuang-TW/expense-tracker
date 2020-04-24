@@ -230,15 +230,6 @@ body::-webkit-scrollbar {
   color: #f8777d;
 }
 
-.menu-icon {
-  color: #fff;
-  position: absolute;
-  margin: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .list-status {
   height: 35vh;
   line-height: 1.8;
@@ -248,6 +239,17 @@ body::-webkit-scrollbar {
   text-align: center;
   color: #232c2d;
   opacity: 0.8;
+}
+
+/* ----- TRANSACTION ----- */
+
+.menu-icon {
+  color: #fff;
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* ----- REPORT ----- */

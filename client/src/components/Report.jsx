@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
@@ -100,6 +100,7 @@ const Report = () => {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
     leave: { height: 0, opacity: 0, delay: 0 },
+    // leave: { height: 0, opacity: 0 },
     trail: 100,
   });
 
@@ -120,7 +121,7 @@ const Report = () => {
   
 
   return (
-    <Fragment>
+    <>
       <NewTabs 
         types={timeFilters} 
         value={value} 
@@ -133,7 +134,7 @@ const Report = () => {
         value={value} 
         amounts={amounts}
       />
-      
+
       <Selector 
         types={transFilters} 
         selected={selected} 
@@ -141,7 +142,6 @@ const Report = () => {
       />
 
       <div className='container'>
-
         <Filter
           value={value}
           text="today"
@@ -168,7 +168,7 @@ const Report = () => {
           </div>
         )}
       </div>
-    </Fragment>
+    </>
   );
 }
 
