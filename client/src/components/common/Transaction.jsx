@@ -8,6 +8,7 @@ import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 const Transaction = ({ transaction, date }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const [showMenu, setshowMenu] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
   const formatDate = (date) => moment(date).format('D MMM, YYYY');
   const sign =
@@ -36,11 +37,12 @@ const Transaction = ({ transaction, date }) => {
   // }
 
   const props = useSpring({
+    opacity: deleted ? 0 : 1,
     transform: showMenu
       ? `translate3d(${paddingLeft + buttonWidth}px, 0, 0)`
-      : 'translate3d(0px,0,0)',
-    cursor: 'pointer',
+      : deleted ? 'translate3d(-9999px,0,0)' : 'translate3d(0px,0,0)',
     config: config.stiff,
+    cursor: 'pointer',
   });
 
   const handleShowMenu = useCallback(() => {
@@ -50,6 +52,7 @@ const Transaction = ({ transaction, date }) => {
   const handleDelete = useCallback(
     (id) => (event) => {
       deleteTransaction(id);
+      setDeleted(true);
     },
     [deleteTransaction]
   );
