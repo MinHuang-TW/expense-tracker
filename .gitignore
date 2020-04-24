@@ -1,8 +1,9 @@
 # dependencies
 /node_modules
+/client/node_modules
 /.pnp
 .pnp.js
-.vscode
+/.vscode
 
 # testing
 /coverage
