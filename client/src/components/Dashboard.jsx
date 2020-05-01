@@ -8,11 +8,12 @@ import Filter from './common/Filter';
 import Transaction from './common/Transaction';
 import { CircularProgress } from '@material-ui/core';
 
-const TransactionList = () => {
+const Dashboard = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
   const [sortDsc, setSortDsc] = useState(true);
+  const amounts = transactions.map(transaction => transaction.amount);
 
   const lists = transactions
     .filter((transaction) => checkDay(transaction.date))
@@ -27,7 +28,7 @@ const TransactionList = () => {
         : sortAmountAsc(a.amount, b.amount);
     });
 
-  const transition = useTransition(lists, (list) => list._id, {
+  const transition = useTransition(lists, list => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
     leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
@@ -49,39 +50,6 @@ const TransactionList = () => {
     // eslint-disable-next-line
   }, []);
 
-  return (
-    <>
-      <Filter
-        sortLatest={sortLatest}
-        sortDsc={sortDsc}
-        handleSortDate={handleSortDate}
-        handleSortAmount={handleSortAmount}
-        sortText='today'
-      />
-
-      {lists.length > 0 ? (
-        <ul className='list'>
-          {transition.map(({ item, props, key }) => (
-            <animated.div key={key} style={props}>
-              <Transaction transaction={item} />
-            </animated.div>
-          ))}
-        </ul>
-      ) : (
-        <div className='list-status'>
-          {loading 
-            ? (<CircularProgress color='primary' />) 
-            : (<p>No transaction today</p>)}
-        </div>
-      )}
-    </>
-  );
-};
-
-const Dashboard = () => {
-  const { transactions } = useContext(GlobalContext);
-  const amounts = transactions.map(transaction => transaction.amount);
-
   return ( 
     <>
       <div className="container-top">
@@ -91,7 +59,29 @@ const Dashboard = () => {
         </div>
       </div>
       <div className='container'>
-        <TransactionList />
+        <Filter
+          sortLatest={sortLatest}
+          sortDsc={sortDsc}
+          handleSortDate={handleSortDate}
+          handleSortAmount={handleSortAmount}
+          sortText='today'
+        />
+
+        {lists.length > 0 ? (
+          <ul className='list'>
+            {transition.map(({ item, props, key }) => (
+              <animated.div key={key} style={props}>
+                <Transaction transaction={item} />
+              </animated.div>
+            ))}
+          </ul>
+        ) : (
+          <div className='list-status'>
+            {loading 
+              ? (<CircularProgress color='primary' />) 
+              : (<p>No transaction today</p>)}
+          </div>
+        )}
       </div>
     </>
   );

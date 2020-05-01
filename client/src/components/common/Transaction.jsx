@@ -4,7 +4,7 @@ import { GlobalContext } from '../../context/GlobalState';
 import { numberEuro } from '../../utils/format';
 import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
-import EditSharpIcon from '@material-ui/icons/EditSharp';
+// import EditSharpIcon from '@material-ui/icons/EditSharp';
 
 const Transaction = ({ transaction, date }) => {
   const { deleteTransaction } = useContext(GlobalContext);
@@ -17,7 +17,7 @@ const Transaction = ({ transaction, date }) => {
 
   const buttonWidth = 70,
         paddingLeft = 15,
-        totalWidth = buttonWidth * 2,
+        totalWidth = buttonWidth * 1,
         travelY = paddingLeft + totalWidth;
 
   const menuBlock = {
@@ -36,7 +36,7 @@ const Transaction = ({ transaction, date }) => {
   };
 
   const deleteBtn = { background: '#f8777d', ...menuBtn };
-  const editBtn = { background: '#232c2d9f', ...menuBtn };
+  // const editBtn = { background: '#232c2d9f', ...menuBtn };
 
   const props = useSpring({
     opacity: deleted ? 0 : 1,
@@ -65,9 +65,9 @@ const Transaction = ({ transaction, date }) => {
         <div style={deleteBtn} onClick={handleDelete(transaction._id)}>
           <DeleteSharpIcon className='menu-icon' />
         </div>
-        <div style={editBtn}>
+        {/* <div style={editBtn}>
           <EditSharpIcon className='menu-icon' />
-        </div>
+        </div> */}
       </div>
 
       <div>
