@@ -6,6 +6,12 @@ export default (state, action) => {
         loading: false,
         transactions: action.payload,
       }
+    case 'GET_TRANSACTION':
+      return {
+        ...state,
+        loading: false,
+        transactions: action.payload,
+      }
     case 'DELETE_TRANSACTION':
       return {
         ...state,
@@ -17,6 +23,11 @@ export default (state, action) => {
       return {
         ...state,
         transactions: [...state.transactions, action.payload]
+      };
+    case 'RESET_TRANSACTION':
+      return {
+        ...state,
+        transactions: []
       };
     case 'TRANSACTION_ERROR':
       return {

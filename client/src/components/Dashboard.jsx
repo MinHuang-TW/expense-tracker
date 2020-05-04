@@ -15,18 +15,20 @@ const Dashboard = () => {
   const [sortDsc, setSortDsc] = useState(true);
   const amounts = transactions.map(transaction => transaction.amount);
 
+  const sortDateAmount = (a, b) => {
+    if (sortColumn === 'date') {
+      return sortLatest 
+        ? sortDateDsc(a, b) 
+        : sortDateAsc(a, b);
+    }
+    return sortDsc 
+      ? sortAmountDsc(a.amount, b.amount) 
+      : sortAmountAsc(a.amount, b.amount);
+  };
+
   const lists = transactions
-    .filter((transaction) => checkDay(transaction.date))
-    .sort((a, b) => {
-      if (sortColumn === 'date') {
-        return sortLatest 
-          ? sortDateDsc(a, b) 
-          : sortDateAsc(a, b);
-      }
-      return sortDsc 
-        ? sortAmountDsc(a.amount, b.amount) 
-        : sortAmountAsc(a.amount, b.amount);
-    });
+    .filter(transaction => checkDay(transaction.date))
+    .sort((a, b) => sortDateAmount(a, b));
 
   const transition = useTransition(lists, list => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },

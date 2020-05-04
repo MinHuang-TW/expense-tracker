@@ -1,9 +1,10 @@
 const Transaction = require('../models/Transaction');
 const { User } = require('../models/User');
+const moment = require('moment');
 
 // get all transactions
 // GET /api/transactions
-// Public
+// Private
 exports.getTransactions = async (req, res, next) => {
   try {
     const transactions = await Transaction.find({ user: req.user.id });
@@ -13,6 +14,33 @@ exports.getTransactions = async (req, res, next) => {
       count: transactions.length,
       data: transactions,
     })
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    });
+  }
+};
+
+// get certain range of transactions
+// GET /api/transactions/:query
+// Private
+exports.getTransaction = async (req, res, next) => {
+  try {
+    const { query } = req.params;
+    const transactions = await Transaction.find({
+      user: req.user.id,
+      date: {
+        $gte: moment().startOf(query),
+        $lte: moment().endOf(query),
+      }, 
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: transactions.length,
+      data: transactions,
+    });
   } catch (err) {
     return res.status(500).json({
       success: false,

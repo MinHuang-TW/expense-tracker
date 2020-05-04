@@ -30,6 +30,21 @@ export const GlobalProvider = ({ children }) => {
   }
   
   axios.defaults.headers.common["x-auth-token"] = getToken();
+
+  async function getTransaction(query) {
+    try {
+      const res = await axios.get(`/api/transactions/${query}`);
+      dispatch({
+        type: 'GET_TRANSACTION',
+        payload: res.data.data
+      });
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data
+      });
+    }
+  }
   
   async function getTransactions() {
     try {
@@ -83,6 +98,12 @@ export const GlobalProvider = ({ children }) => {
         payload: err.response.data.error
       });
     }
+  }
+
+  function resetTransaction() {
+    dispatch({
+      type: 'RESET_TRANSACTION',
+    })
   }
 
   async function registerUser(user) {
@@ -158,8 +179,10 @@ export const GlobalProvider = ({ children }) => {
         error: state.error,
         loading: state.loading,
         getTransactions,
+        getTransaction,
         deleteTransaction,
         addTransaction,
+        resetTransaction,
         registerUser,
         loginUser,
         loadUser,

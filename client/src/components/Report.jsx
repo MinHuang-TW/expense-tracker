@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { checkWeek, checkDay, checkMonth, checkYear, sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
+import { sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
 import ReportOverview from './common/ReportOverview';
 import Transaction from './common/Transaction';
@@ -52,49 +52,36 @@ const Selector = ({ types, selected, setSelected }) => {
 };
 
 const Report = () => {
-  const { loading, transactions, getTransactions } = useContext(GlobalContext);
+  const { loading, transactions, getTransaction } = useContext(GlobalContext);
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState('all');
-  const [sortColumn, setSortColum] = useState('date');
-  const [sortLatest, setSortLatest] = useState(true);
-  const [sortDsc, setSortDsc] = useState(true);
-
+  const [sortColumn, setSortColum] = useState('date'),
+        [sortLatest, setSortLatest] = useState(true),
+        [sortDsc, setSortDsc] = useState(true);
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
-  const amounts = [];
+  const amounts = transactions.map(transaction => transaction.amount);
 
-  //#region 
+  const sortDateAmount = (a, b) => {
+    if (sortColumn === 'date') {
+      return sortLatest 
+        ? sortDateDsc(a, b) 
+        : sortDateAsc(a, b);
+    }
+    return sortDsc 
+      ? sortAmountDsc(a.amount, b.amount) 
+      : sortAmountAsc(a.amount, b.amount);
+  };
+
+  const filterAmount = amount => {
+    if (selected === 'income') return amount > 0;
+    if (selected === 'expense') return amount < 0;
+    return amount;
+  };
+
   const lists = transactions
-    .filter(transaction => {
-      const date = transaction.date;
-      if (value === 0) return checkDay(date);
-      if (value === 1) return checkWeek(date);
-      if (value === 2) return checkMonth(date);
-      if (value === 3) return checkYear(date);
-      return transaction;
-    })
-    .filter(transaction => {
-      amounts.push(transaction.amount);
-      switch (selected) {
-        case 'income':
-          return transaction.amount > 0;
-        case 'expense':
-          return transaction.amount < 0;
-        default:
-          return transaction;
-      }
-    })
-    .sort((a, b) => {
-      if (sortColumn === 'date') {
-        return sortLatest 
-          ? sortDateDsc(a, b) 
-          : sortDateAsc(a, b);
-      }
-      return sortDsc 
-        ? sortAmountDsc(a.amount, b.amount) 
-        : sortAmountAsc(a.amount, b.amount);
-    });
-    //#endregion
+    .filter(({ amount }) => filterAmount(amount))
+    .sort((a, b) => sortDateAmount(a, b));
 
   const transition = useTransition(lists, list => list._id, {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
@@ -111,13 +98,12 @@ const Report = () => {
   const handleSortAmount = useCallback(() => {
     setSortDsc(!sortDsc); 
     setSortColum('amount');
-  }, [sortDsc])
+  }, [sortDsc]);
 
   useEffect(() => {
-    getTransactions();
+    getTransaction(timeFilters[value]);
     // eslint-disable-next-line
-  }, []);
-  
+  }, [value]);
 
   return (
     <>
