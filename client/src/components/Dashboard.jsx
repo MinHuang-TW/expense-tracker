@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { checkDay, sortAmountDsc, sortAmountAsc, sortDateDsc, sortDateAsc } from '../utils/calculation';
+import { checkDay, sortDateAmount } from '../utils/calculation';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
 import Filter from './common/Filter';
@@ -15,20 +15,9 @@ const Dashboard = () => {
   const [sortDsc, setSortDsc] = useState(true);
   const amounts = transactions.map(transaction => transaction.amount);
 
-  const sortDateAmount = (a, b) => {
-    if (sortColumn === 'date') {
-      return sortLatest 
-        ? sortDateDsc(a, b) 
-        : sortDateAsc(a, b);
-    }
-    return sortDsc 
-      ? sortAmountDsc(a.amount, b.amount) 
-      : sortAmountAsc(a.amount, b.amount);
-  };
-
   const lists = transactions
-    .filter(transaction => checkDay(transaction.date))
-    .sort((a, b) => sortDateAmount(a, b));
+    .filter(({ date }) => checkDay(date))
+    .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
   const transition = useTransition(lists, list => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },

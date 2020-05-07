@@ -93,3 +93,24 @@ export function sortAmountAsc(a, b) {
   if (a > b) return 1;
   return 0;
 }
+
+export function sortDateAmount(a, b, sortColumn, sortLatest, sortDsc) {
+  if (sortColumn === 'date') {
+    return sortLatest 
+      ? sortDateDsc(a, b) 
+      : sortDateAsc(a, b);
+  }
+  return sortDsc 
+    ? sortAmountDsc(a.amount, b.amount) 
+    : sortAmountAsc(a.amount, b.amount);
+};
+
+export function filterDate(date, value, timeFilters) {
+  return moment().isSame(date, timeFilters[value]);
+};
+
+export function filterAmount(amount, selected) {
+  if (selected === 'income') return amount > 0;
+  if (selected === 'expense') return amount < 0;
+  return amount;
+};

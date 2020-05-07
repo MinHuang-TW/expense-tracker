@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { sortDateDsc, sortDateAsc, sortAmountDsc, sortAmountAsc } from '../utils/calculation';
+import { filterDate, filterAmount, sortDateAmount } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
 import ReportOverview from './common/ReportOverview';
 import Transaction from './common/Transaction';
@@ -52,7 +52,7 @@ const Selector = ({ types, selected, setSelected }) => {
 };
 
 const Report = () => {
-  const { loading, transactions, getTransaction } = useContext(GlobalContext);
+  const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const [value, setValue] = useState(0);
   const [selected, setSelected] = useState('all');
   const [sortColumn, setSortColum] = useState('date'),
@@ -62,32 +62,18 @@ const Report = () => {
   const transFilters = ['all', 'income', 'expense'];
   const amounts = transactions.map(transaction => transaction.amount);
 
-  const sortDateAmount = (a, b) => {
-    if (sortColumn === 'date') {
-      return sortLatest 
-        ? sortDateDsc(a, b) 
-        : sortDateAsc(a, b);
-    }
-    return sortDsc 
-      ? sortAmountDsc(a.amount, b.amount) 
-      : sortAmountAsc(a.amount, b.amount);
-  };
-
-  const filterAmount = amount => {
-    if (selected === 'income') return amount > 0;
-    if (selected === 'expense') return amount < 0;
-    return amount;
-  };
-
   const lists = transactions
-    .filter(({ amount }) => filterAmount(amount))
-    .sort((a, b) => sortDateAmount(a, b));
+    .filter(({ date }) => filterDate(date, value, timeFilters))
+    .filter(({ amount }) => filterAmount(amount, selected))
+    .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
-  const transition = useTransition(lists, list => list._id, {
-    from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-    enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, opacity: 0, delay: 0 },
-    trail: 100,
+  const transition = useTransition(
+    lists, 
+    list => list._id, {
+      from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
+      enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
+      leave: { height: 0, opacity: 0, delay: 0 },
+      trail: 100,
   });
 
   const handleSortDate = useCallback(() => {
@@ -101,9 +87,9 @@ const Report = () => {
   }, [sortDsc]);
 
   useEffect(() => {
-    getTransaction(timeFilters[value]);
+    getTransactions();
     // eslint-disable-next-line
-  }, [value]);
+  }, []);
 
   return (
     <>
