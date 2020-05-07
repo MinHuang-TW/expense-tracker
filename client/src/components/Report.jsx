@@ -53,13 +53,13 @@ const Selector = ({ types, selected, setSelected }) => {
 
 const Report = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
-  const [value, setValue] = useState(0);
-  const [selected, setSelected] = useState('all');
+  const timeFilters = ['day', 'week', 'month', 'year'],
+        [value, setValue] = useState(0);
+  const transFilters = ['all', 'income', 'expense'],
+        [selected, setSelected] = useState('all');
   const [sortColumn, setSortColum] = useState('date'),
         [sortLatest, setSortLatest] = useState(true),
         [sortDsc, setSortDsc] = useState(true);
-  const timeFilters = ['day', 'week', 'month', 'year'];
-  const transFilters = ['all', 'income', 'expense'];
   const amounts = [];
 
   const lists = transactions

@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
@@ -82,21 +82,28 @@ const Navigation = ({ container, children, location: { pathname } }) => {
   const classes = useStyles();
 
   const iconSize = { fontSize: '20px' };
-  const drawerList = [
-    { name: 'Dashboard', path: '/dashboard', icon: <DashboardSharpIcon style={iconSize} /> },
-    { name: 'Transactions', path: '/transactions', icon: <LibraryBooksSharpIcon style={iconSize} /> },
-    { name: 'Statistics', path: '/statistics', icon: <EqualizerSharpIcon style={iconSize} /> },
-    { name: 'Logout', path: '/logout', icon: <MeetingRoomSharpIcon style={iconSize} /> },
-  ]
+  const drawerList = [{ 
+    name: 'dashboard', 
+    icon: <DashboardSharpIcon style={iconSize} />
+  }, { 
+    name: 'transactions', 
+    icon: <LibraryBooksSharpIcon style={iconSize} />
+  }, { 
+    name: 'statistics', 
+    icon: <EqualizerSharpIcon style={iconSize} />
+  }, { 
+    name: 'logout',
+    icon: <MeetingRoomSharpIcon style={iconSize} />
+  }];
 
   const getCurrentTitle = pathname => {
     for (let i = 0; i < drawerList.length; i++) {
-      if (drawerList[i]['path'] === pathname) return drawerList[i]['name'];
+      if ('/' + drawerList[i]['name'] === pathname) return drawerList[i]['name'];
     }
-  }
+  };
 
   const drawer = (
-    <Fragment>
+    <>
       <div className='block-greeting'>
         <Typography variant='h6' className={classes.textColor} gutterBottom>
           <p style={{ opacity: 0.3 }}>{moment().format('dddd, D MMMM')}</p>
@@ -113,30 +120,34 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       </div>
 
       <MenuList id='menu'>
-      {drawerList.map(list => (
-        <MenuItem 
-          key={list.name} 
-          to={list.path} component={ NavLink } 
-          selected={list.path === pathname} 
-          style={{ minHeight: '48px' }}
-        >
-          <ListItemIcon
-            style={{ minWidth: '35px' }}
-            className={list.path === pathname ? classes.selectedColor : classes.textColor}
+      {drawerList.map(({ name, icon }) => {
+        const path = '/' + name;
+        const itemColor = path => {
+          if (path === pathname) return classes.selectedColor;
+          return classes.textColor;
+        };
+        return (
+          <MenuItem 
+            key={name} 
+            to={path} component={NavLink} 
+            selected={path === pathname} 
+            style={{ minHeight: '48px' }}
           >
-            {list.icon}
-          </ListItemIcon>
-          <p 
-            style={{ fontSize: '14px' }}
-            className={list.path === pathname  ? classes.selectedColor : classes.textColor}
-          >
-            {list.name}
-          </p>
-        </MenuItem>
-      ))}
+            <ListItemIcon className={itemColor(path)} style={{ minWidth: '35px' }}>
+              {icon}
+            </ListItemIcon>
+            <p className={itemColor(path)} style={{ fontSize: '14px' }}>
+              {name}
+            </p>
+          </MenuItem>
+        )})}
       </MenuList>
-    </Fragment>
+    </>
   );
+
+  const handleOpen = useCallback(() => {
+    setMobileOpen(!mobileOpen);
+  }, [mobileOpen]);
 
   return (
     <ThemeProvider theme={defaultMaterialTheme}>
@@ -148,17 +159,17 @@ const Navigation = ({ container, children, location: { pathname } }) => {
               <IconButton
                 aria-label="open drawer"
                 edge="start"
-                onClick={() => setMobileOpen(!mobileOpen)}
+                onClick={handleOpen}
                 className={classes.menuButton}
               >
                 <MenuIcon />
               </IconButton>}
 
             {!token 
-              ? <Typography variant="h6">Expense Tracker</Typography>
-              : <Typography variant="h6" className={classes.appbarTitle}>
+              ? (<Typography variant="h6">Expense Tracker</Typography>)
+              : (<Typography variant="h6" className={classes.appbarTitle}>
                   {getCurrentTitle(pathname)}
-                </Typography>
+                </Typography>)
             }
           </Toolbar>
         </AppBar>
@@ -170,7 +181,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
               container={container}
               variant="temporary"
               open={mobileOpen}
-              onClose={() => setMobileOpen(!mobileOpen)}
+              onClose={handleOpen}
               classes={{ paper: classes.drawerPaper }}
               ModalProps={{ keepMounted: true }}
             >
