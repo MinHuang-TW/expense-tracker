@@ -60,11 +60,14 @@ const Report = () => {
         [sortDsc, setSortDsc] = useState(true);
   const timeFilters = ['day', 'week', 'month', 'year'];
   const transFilters = ['all', 'income', 'expense'];
-  const amounts = transactions.map(transaction => transaction.amount);
+  const amounts = [];
 
   const lists = transactions
     .filter(({ date }) => filterDate(date, value, timeFilters))
-    .filter(({ amount }) => filterAmount(amount, selected))
+    .filter(({ amount }) => {
+      amounts.push(amount);
+      return filterAmount(amount, selected);
+    })
     .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
   const transition = useTransition(

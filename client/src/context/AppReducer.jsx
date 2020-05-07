@@ -27,6 +27,7 @@ export default (state, action) => {
     case 'RESET_TRANSACTION':
       return {
         ...state,
+        loading: true,
         transactions: []
       };
     case 'TRANSACTION_ERROR':
