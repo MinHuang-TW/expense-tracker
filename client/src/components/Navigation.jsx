@@ -2,22 +2,24 @@ import React, { useState, useContext, useCallback } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
-import { checkDayTime, getGreeting } from '../utils/calculation.js'
+import { checkDayTime, getGreeting } from '../utils/calculation.js';
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
-import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon } from '@material-ui/core';
+import AddTransaction from './AddTransaction';
+import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon, Fab } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-// import HomeSharpIcon from '@material-ui/icons/HomeSharp';
 import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 import EqualizerSharpIcon from '@material-ui/icons/EqualizerSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
+import AddIcon from '@material-ui/icons/Add';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 
 const Navigation = ({ container, children, location: { pathname } }) => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false),
+        [open, setOpen] = useState(false);
 
   const token = getToken();
   const drawerWidth = 240;
@@ -25,7 +27,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
   const now = new Date();
   const dayTime = checkDayTime(now);
 
-  const useStyles = makeStyles(theme => ({
+  const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
     },
@@ -74,31 +76,43 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       left: '50%',
       transform: 'translate(-50%)',
       margin: '0 auto',
-      fontSize: '16px', 
+      fontSize: '16px',
       textTransform: 'uppercase',
+    },
+    fab: {
+      position: 'fixed',
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
+      boxShadow: 'none',
     },
   }));
 
   const classes = useStyles();
 
   const iconSize = { fontSize: '20px' };
-  const drawerList = [{ 
-    name: 'dashboard', 
-    icon: <DashboardSharpIcon style={iconSize} />
-  }, { 
-    name: 'transactions', 
-    icon: <LibraryBooksSharpIcon style={iconSize} />
-  }, { 
-    name: 'statistics', 
-    icon: <EqualizerSharpIcon style={iconSize} />
-  }, { 
-    name: 'logout',
-    icon: <MeetingRoomSharpIcon style={iconSize} />
-  }];
+  const drawerList = [
+    {
+      name: 'dashboard',
+      icon: <DashboardSharpIcon style={iconSize} />,
+    },
+    {
+      name: 'transactions',
+      icon: <LibraryBooksSharpIcon style={iconSize} />,
+    },
+    {
+      name: 'statistics',
+      icon: <EqualizerSharpIcon style={iconSize} />,
+    },
+    {
+      name: 'logout',
+      icon: <MeetingRoomSharpIcon style={iconSize} />,
+    },
+  ];
 
-  const getCurrentTitle = pathname => {
+  const getCurrentTitle = (pathname) => {
     for (let i = 0; i < drawerList.length; i++) {
-      if ('/' + drawerList[i]['name'] === pathname) return drawerList[i]['name'];
+      if ('/' + drawerList[i]['name'] === pathname)
+        return drawerList[i]['name'];
     }
   };
 
@@ -120,27 +134,32 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       </div>
 
       <MenuList id='menu'>
-      {drawerList.map(({ name, icon }) => {
-        const path = '/' + name;
-        const itemColor = path => {
-          if (path === pathname) return classes.selectedColor;
-          return classes.textColor;
-        };
-        return (
-          <MenuItem 
-            key={name} 
-            to={path} component={NavLink} 
-            selected={path === pathname} 
-            style={{ minHeight: '48px' }}
-          >
-            <ListItemIcon className={itemColor(path)} style={{ minWidth: '35px' }}>
-              {icon}
-            </ListItemIcon>
-            <p className={itemColor(path)} style={{ fontSize: '14px' }}>
-              {name}
-            </p>
-          </MenuItem>
-        )})}
+        {drawerList.map(({ name, icon }) => {
+          const path = '/' + name;
+          const itemColor = (path) => {
+            if (path === pathname) return classes.selectedColor;
+            return classes.textColor;
+          };
+          return (
+            <MenuItem
+              key={name}
+              to={path}
+              component={NavLink}
+              selected={path === pathname}
+              style={{ minHeight: '48px' }}
+            >
+              <ListItemIcon
+                className={itemColor(path)}
+                style={{ minWidth: '35px' }}
+              >
+                {icon}
+              </ListItemIcon>
+              <p className={itemColor(path)} style={{ fontSize: '14px' }}>
+                {name}
+              </p>
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </>
   );
@@ -149,56 +168,78 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     setMobileOpen(!mobileOpen);
   }, [mobileOpen]);
 
+  const handleForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   return (
     <ThemeProvider theme={defaultMaterialTheme}>
       <CssBaseline />
       <div className={classes.root}>
-        <AppBar position="fixed" className={classes.appBar}>
+        <AppBar position='fixed' className={classes.appBar}>
           <Toolbar>
-            {token && 
+            {token && (
               <IconButton
-                aria-label="open drawer"
-                edge="start"
+                aria-label='open drawer'
+                edge='start'
                 onClick={handleOpen}
                 className={classes.menuButton}
               >
                 <MenuIcon />
-              </IconButton>}
+              </IconButton>
+            )}
 
-            {!token 
-              ? (<Typography variant="h6">Expense Tracker</Typography>)
-              : (<Typography variant="h6" className={classes.appbarTitle}>
-                  {getCurrentTitle(pathname)}
-                </Typography>)
-            }
+            {!token ? (
+              <Typography variant='h6'>Expense Tracker</Typography>
+            ) : (
+              <Typography variant='h6' className={classes.appbarTitle}>
+                {getCurrentTitle(pathname)}
+              </Typography>
+            )}
           </Toolbar>
         </AppBar>
 
-        {token && 
-        <nav className={classes.drawer} aria-label="navigation">
-          <Hidden smUp implementation="css">
-            <Drawer
-              container={container}
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleOpen}
-              classes={{ paper: classes.drawerPaper }}
-              ModalProps={{ keepMounted: true }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          
-          <Hidden xsDown implementation="css">
-            <Drawer classes={{ paper: classes.drawerPaper }} variant="permanent" open>
-              {drawer}
-            </Drawer>
-          </Hidden>
-        </nav>}
-    
-        <main className={classes.content}>
-          {children}
-        </main>
+        {token && (
+          <nav className={classes.drawer} aria-label='navigation'>
+            <Hidden smUp implementation='css'>
+              <Drawer
+                container={container}
+                variant='temporary'
+                open={mobileOpen}
+                onClose={handleOpen}
+                classes={{ paper: classes.drawerPaper }}
+                ModalProps={{ keepMounted: true }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+
+            <Hidden xsDown implementation='css'>
+              <Drawer
+                classes={{ paper: classes.drawerPaper }}
+                variant='permanent'
+                open
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          </nav>
+        )}
+
+        <main className={classes.content}>{children}</main>
+
+        {token && (
+          <Fab
+            color='primary'
+            aria-label='add'
+            disableRipple
+            className={`${classes.fab} no-outline`}
+            onClick={handleForm}
+          >
+            <AddIcon />
+          </Fab>
+        )}
+        <AddTransaction open={open} setOpen={setOpen} />
       </div>
     </ThemeProvider>
   );

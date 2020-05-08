@@ -4,7 +4,7 @@ import { numberValid, numberCalc } from '../utils/format';
 import { datePickerExpense, defaultMaterialTheme } from '../utils/colorTheme';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Fab, Switch } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Switch } from '@material-ui/core';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import format from 'date-fns/format';
@@ -38,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
   inputMinus: {
     color: '#f8777d',
   },
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-    boxShadow: 'none',
-  },
+  // fab: {
+  //   position: 'fixed',
+  //   bottom: theme.spacing(2),
+  //   right: theme.spacing(2),
+  //   boxShadow: 'none',
+  // },
 }));
 
 const dateFormat = 'd MMM, yyyy';
@@ -79,32 +79,28 @@ const TransactionSwitch = withStyles((theme) => ({
   },
 }))(Switch);
 
-const AddTransaction = () => {
+const AddTransaction = ({ open, setOpen }) => {
   const { addTransaction } = useContext(GlobalContext);
   const [text, setText] = useState(''),
         [errorText, setErrorText] = useState(false);
   const [amount, setAmount] = useState(null),
         [errorAmount, setErrorAmount] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
   const [minus, setMinus] = useState(true);
   const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
 
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-
   const handleClose = useCallback(() => {
     setOpen(false);
-    setErrorText(false);
-    setErrorAmount(false);
-    setAmount(null);
     setText('');
-    setDate(new Date());
+    setErrorText(false);
     setMinus(true);
+    setAmount(null);
+    setErrorAmount(false);
+    setDate(new Date());
     setDisableBtn(true);
+    // eslint-disable-next-line
   }, []);
 
   const handleMinus = useCallback(() => {
@@ -154,16 +150,6 @@ const AddTransaction = () => {
 
   return (
     <>
-      <Fab
-        color='primary'
-        aria-label='add'
-        disableRipple
-        className={`${classes.fab} no-outline`}
-        onClick={handleOpen}
-      >
-        <AddIcon />
-      </Fab>
-
       <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
         <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
           <AppBar className={classes.appBar}>

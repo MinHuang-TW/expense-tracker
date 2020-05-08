@@ -8,27 +8,24 @@ import Report from './components/Report';
 import Statistics from './components/Statistics';
 import Login from './components/Login';
 import Logout from './components/Logout';
-import AddTransaction from './components/AddTransaction';
 import './App.css';
 
-function App() {
-  return (
-    <GlobalProvider>
-      <Navigation>
-        <Switch>
-          <Route path='/login' component={Login} />
-          <Route path='/logout' component={Logout} />
-          <ProtectedRoute path='/dashboard' component={Dashboard} />
-          <ProtectedRoute path='/transactions' component={Report} />
-          <ProtectedRoute path='/statistics' component={Statistics} />
+const App = () => (
+  <GlobalProvider>
+    <Navigation>
+      <Switch>
+        <Route path='/login' component={Login} />
+        <Route path='/logout' component={Logout} />
 
-          <Redirect from='/' exact to='/dashboard' />
-          <Redirect to='/not-found' />
-        </Switch>
-        <AddTransaction />
-      </Navigation>
-    </GlobalProvider>
-  );
-}
+        <ProtectedRoute path='/dashboard' component={Dashboard} />
+        <ProtectedRoute path='/transactions' component={Report} />
+        <ProtectedRoute path='/statistics' component={Statistics} />
+
+        <Redirect from='/' exact to='/dashboard' />
+        <Redirect to='/not-found' />
+      </Switch>
+    </Navigation>
+  </GlobalProvider>
+);
 
 export default App;
