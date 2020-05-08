@@ -31,6 +31,10 @@ export const GlobalProvider = ({ children }) => {
   
   axios.defaults.headers.common["x-auth-token"] = getToken();
 
+  const config = {
+    headers: { 'Content-Type': 'application/json' },
+  };
+
   async function getTransaction(query) {
     try {
       const res = await axios.get(`/api/transactions/${query}`);
@@ -78,12 +82,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function addTransaction(transaction) {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
     try {
       const res = await axios.post('/api/transactions', transaction, config);
       dispatch({
@@ -100,6 +98,21 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updateTransaction(id, transaction) {
+    try {
+      const res = await axios.put(`/api/transactions/${id}`, transaction, config);
+      dispatch({
+        type: 'UPDATE_TRANSACTION',
+        payload: res.data.data
+      });
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      });
+    }
+  }
+
   function resetTransaction() {
     dispatch({
       type: 'RESET_TRANSACTION',
@@ -107,10 +120,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function registerUser(user) {
-    const config = {
-      headers: { 'Content-Type': 'application/json' }
-    }
-
     try {
       const res = await axios.post('/api/users', user, config);
       dispatch({
@@ -126,10 +135,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function loginUser(user) {
-    const config = {
-      headers: { 'Content-Type': 'application/json' }
-    }
-
     try {
       const res = await axios.post('/api/auth', user, config);
       dispatch({
@@ -146,10 +151,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function loadUser(user) {
-    const config = {
-      headers: { 'Content-Type': 'application/json' }
-    };
-
     try {
       const res = await axios.get('/api/users', user, config);
       dispatch({
@@ -182,6 +183,7 @@ export const GlobalProvider = ({ children }) => {
         getTransaction,
         deleteTransaction,
         addTransaction,
+        updateTransaction,
         resetTransaction,
         registerUser,
         loginUser,

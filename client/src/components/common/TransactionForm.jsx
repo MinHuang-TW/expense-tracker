@@ -80,7 +80,7 @@ const TransactionSwitch = withStyles((theme) => ({
 }))(Switch);
 
 const TransactionForm = ({ open, setOpen, action, transaction }) => {
-  const { addTransaction } = useContext(GlobalContext);
+  const { addTransaction, updateTransaction } = useContext(GlobalContext);
   const initialText = transaction ? transaction.text : '',
         initialAmount = transaction ? Math.abs(transaction.amount) : null,
         initialDate = transaction ? transaction.date : new Date(),
@@ -151,6 +151,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
       date,
     };
     if (action === 'new') addTransaction(newTransaction);
+    if (action === 'edit') updateTransaction(transaction._id, newTransaction);
     handleClose();
   };
 

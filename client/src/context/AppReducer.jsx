@@ -20,9 +20,16 @@ export default (state, action) => {
         )
       };
     case 'ADD_TRANSACTION':
+      // console.log(action.payload)
+      // {_id: , text: , amount: , date: , user: ,...}
       return {
         ...state,
         transactions: [...state.transactions, action.payload]
+      };
+    case 'UPDATE_TRANSACTION':
+      return {
+        ...state,
+        transactions: [...state.transactions, action.payload],
       };
     case 'RESET_TRANSACTION':
       return {

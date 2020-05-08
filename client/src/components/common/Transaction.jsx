@@ -12,10 +12,11 @@ const Transaction = ({ transaction, date }) => {
   const [showMenu, setshowMenu] = useState(false),
         [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
-
-  const formatDate = (date) => moment(date).format('D MMM, YYYY');
+  const amountColor =
+    transaction.amount === 0 ? null : transaction.amount > 0 ? 'plus' : 'minus';
   const sign =
     transaction.amount === 0 ? null : transaction.amount < 0 ? '-' : '+';
+  const formatDate = (date) => moment(date).format('D MMM, YYYY');
 
   const buttonWidth = 70,
         paddingLeft = 15,
@@ -42,9 +43,11 @@ const Transaction = ({ transaction, date }) => {
 
   const props = useSpring({
     opacity: deleted ? 0 : 1,
-    transform: 
-      showMenu ? `translate3d(${travelY}px, 0, 0)` : 
-      deleted ? 'translate3d(-2000px,0,0)' : 'translate3d(0px,0,0)',
+    transform: showMenu
+      ? `translate3d(${travelY}px, 0, 0)`
+      : deleted
+      ? 'translate3d(-2000px,0,0)'
+      : 'translate3d(0px,0,0)',
     config: config.stiff,
     cursor: 'pointer',
   });
@@ -53,7 +56,7 @@ const Transaction = ({ transaction, date }) => {
     setshowMenu(!showMenu);
   }, [showMenu]);
 
-  const handleEdit = useCallback(() => {
+  const handleShowForm = useCallback(() => {
     setOpen(true);
   }, []);
 
@@ -72,7 +75,7 @@ const Transaction = ({ transaction, date }) => {
           <div style={deleteBtn} onClick={handleDelete(transaction._id)}>
             <DeleteSharpIcon className='menu-icon' />
           </div>
-          <div style={editBtn} onClick={handleEdit}>
+          <div style={editBtn} onClick={handleShowForm}>
             <EditSharpIcon className='menu-icon' />
           </div>
         </div>
@@ -82,25 +85,16 @@ const Transaction = ({ transaction, date }) => {
           {date && <p className='list-date'>{formatDate(transaction.date)}</p>}
         </div>
 
-        <span
-          className={`list-amount ${
-            transaction.amount === 0
-              ? null
-              : transaction.amount > 0
-              ? 'plus'
-              : 'minus'
-          }`}
-        >
-          {sign}
-          {numberEuro(Math.abs(transaction.amount))}
+        <span className={`list-amount ${amountColor}`}>
+          {sign}{numberEuro(Math.abs(transaction.amount))}
         </span>
       </animated.li>
 
-      <TransactionForm 
-        open={open} 
-        setOpen={setOpen} 
-        action='edit' 
-        transaction={transaction} 
+      <TransactionForm
+        open={open}
+        setOpen={setOpen}
+        action='edit'
+        transaction={transaction}
       />
     </>
   );
