@@ -1,7 +1,7 @@
 import React, { useState, useContext, useCallback } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import { numberValid, numberCalc } from '../utils/format';
-import { datePickerExpense, defaultMaterialTheme } from '../utils/colorTheme';
+import { GlobalContext } from '../../context/GlobalState';
+import { numberValid, numberCalc } from '../../utils/format';
+import { datePickerExpense, defaultMaterialTheme } from '../../utils/colorTheme';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Switch } from '@material-ui/core';
@@ -79,27 +79,32 @@ const TransactionSwitch = withStyles((theme) => ({
   },
 }))(Switch);
 
-const AddTransaction = ({ open, setOpen }) => {
+const TransactionForm = ({ open, setOpen, action, transaction }) => {
   const { addTransaction } = useContext(GlobalContext);
-  const [text, setText] = useState(''),
+  const initialText = transaction ? transaction.text : '',
+        initialAmount = transaction ? Math.abs(transaction.amount) : null,
+        initialDate = transaction ? transaction.date : new Date(),
+        initialMinus = transaction && transaction.amount > 0 ? false : true;
+
+  const [text, setText] = useState(initialText),
         [errorText, setErrorText] = useState(false);
-  const [amount, setAmount] = useState(null),
+  const [amount, setAmount] = useState(initialAmount),
         [errorAmount, setErrorAmount] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [minus, setMinus] = useState(true);
+  const [date, setDate] = useState(initialDate);
+  const [minus, setMinus] = useState(initialMinus);
   const [disableBtn, setDisableBtn] = useState(true);
 
   const classes = useStyles();
 
   const handleClose = useCallback(() => {
     setOpen(false);
-    setText('');
+    setText(initialText);
     setErrorText(false);
-    setMinus(true);
-    setAmount(null);
+    setAmount(initialAmount);
     setErrorAmount(false);
-    setDate(new Date());
+    setDate(initialDate);
     setDisableBtn(true);
+    setMinus(initialMinus);
     // eslint-disable-next-line
   }, []);
 
@@ -107,15 +112,16 @@ const AddTransaction = ({ open, setOpen }) => {
     setMinus(!minus);
   }, [minus]);
 
+  const itemValid = (item, errorItem) => {
+    if (!item) setDisableBtn(true);
+    else errorItem ? setDisableBtn(true) : setDisableBtn(false);
+  };
+
   const handleAmount = useCallback((e) => {
+    setAmount(e.target.value);
     if (numberValid(e.target.value)) {
-      setAmount(e.target.value);
       setErrorAmount(false);
-      !text 
-        ? setDisableBtn(true)
-        : errorText
-        ? setDisableBtn(true)
-        : setDisableBtn(false);
+      itemValid(text, errorText);
     } else {
       setErrorAmount(true);
       setDisableBtn(true);
@@ -123,19 +129,19 @@ const AddTransaction = ({ open, setOpen }) => {
   }, [text, errorText]);
 
   const handleText = useCallback((e) => {
+    setText(e.target.value);
     if (e.target.value) {
-      setText(e.target.value);
       setErrorText(false);
-      !amount
-        ? setDisableBtn(true)
-        : errorAmount
-        ? setDisableBtn(true)
-        : setDisableBtn(false);
+      itemValid(amount, errorAmount);
     } else {
       setErrorText(true);
       setDisableBtn(true);
     }
   }, [amount, errorAmount]);
+
+  const handleDate = useCallback((date) => {
+    setDate(date);
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -144,32 +150,48 @@ const AddTransaction = ({ open, setOpen }) => {
       amount: minus ? -numberCalc(amount) : numberCalc(amount),
       date,
     };
-    addTransaction(newTransaction);
+    if (action === 'new') addTransaction(newTransaction);
     handleClose();
   };
 
   return (
     <>
       <ThemeProvider theme={minus ? datePickerExpense : defaultMaterialTheme}>
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+        >
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Typography variant='h6' className={classes.title}>
-                New {minus ? 'Expense' : 'Income'}
+                {action} {minus ? 'Expense' : 'Income'}
               </Typography>
-              <IconButton edge='start' color='inherit' onClick={handleClose} aria-label='close'>
+              <IconButton
+                edge='start'
+                color='inherit'
+                onClick={handleClose}
+                aria-label='close'
+              >
                 <CloseIcon />
               </IconButton>
             </Toolbar>
           </AppBar>
 
-          <form onSubmit={onSubmit} className='new-form' noValidate autoComplete='off'>
+          <form
+            onSubmit={onSubmit}
+            className='new-form'
+            noValidate
+            autoComplete='off'
+          >
             <div className='input-amount'>
               <TextField
-                id='standard-full-width'
+                id='input-amount'
                 label='Amount'
                 required
                 autoFocus
+                value={transaction && transaction.amount && amount}
                 InputProps={{
                   className: `${classes.input} ${
                     minus ? classes.inputMinus : classes.inputPlus
@@ -198,10 +220,11 @@ const AddTransaction = ({ open, setOpen }) => {
             </div>
 
             <TextField
-              id='standard-full-width'
+              id='input-description'
               label='Description'
               fullWidth
               required
+              value={transaction && transaction.text && text}
               error={errorText}
               InputLabelProps={{ shrink: true }}
               InputProps={{ className: classes.textColor }}
@@ -211,11 +234,11 @@ const AddTransaction = ({ open, setOpen }) => {
 
             <MuiPickersUtilsProvider utils={LocalizedUtils}>
               <KeyboardDatePicker
-                id='date-picker-dialog'
+                id='input-date'
                 label='Date'
                 value={date}
                 format={dateFormat}
-                onChange={(date) => setDate(date)}
+                onChange={handleDate}
                 InputProps={{ className: classes.textColor }}
                 KeyboardButtonProps={{ 'aria-label': 'change date' }}
                 fullWidth
@@ -236,4 +259,4 @@ const AddTransaction = ({ open, setOpen }) => {
   );
 };
 
-export default AddTransaction;
+export default TransactionForm;

@@ -2,13 +2,15 @@ import React, { useState, useContext, useCallback } from 'react';
 import { useSpring, config, animated } from 'react-spring';
 import { GlobalContext } from '../../context/GlobalState';
 import { numberEuro } from '../../utils/format';
+import TransactionForm from './TransactionForm';
 import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 
 const Transaction = ({ transaction, date }) => {
   const { deleteTransaction } = useContext(GlobalContext);
-  const [showMenu, setshowMenu] = useState(false);
+  const [showMenu, setshowMenu] = useState(false),
+        [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
   const formatDate = (date) => moment(date).format('D MMM, YYYY');
@@ -51,6 +53,10 @@ const Transaction = ({ transaction, date }) => {
     setshowMenu(!showMenu);
   }, [showMenu]);
 
+  const handleEdit = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   const handleDelete = useCallback(
     (id) => (event) => {
       deleteTransaction(id);
@@ -60,34 +66,43 @@ const Transaction = ({ transaction, date }) => {
   );
 
   return (
-    <animated.li style={props} onClick={handleShowMenu}>
-      <div style={menuBlock}>
-        <div style={deleteBtn} onClick={handleDelete(transaction._id)}>
-          <DeleteSharpIcon className='menu-icon' />
+    <>
+      <animated.li style={props} onClick={handleShowMenu}>
+        <div style={menuBlock}>
+          <div style={deleteBtn} onClick={handleDelete(transaction._id)}>
+            <DeleteSharpIcon className='menu-icon' />
+          </div>
+          <div style={editBtn} onClick={handleEdit}>
+            <EditSharpIcon className='menu-icon' />
+          </div>
         </div>
-        <div style={editBtn}>
-          <EditSharpIcon className='menu-icon' />
+
+        <div>
+          <p>{transaction.text}</p>
+          {date && <p className='list-date'>{formatDate(transaction.date)}</p>}
         </div>
-      </div>
 
-      <div>
-        <p>{transaction.text}</p>
-        {date && <p className='list-date'>{formatDate(transaction.date)}</p>}
-      </div>
+        <span
+          className={`list-amount ${
+            transaction.amount === 0
+              ? null
+              : transaction.amount > 0
+              ? 'plus'
+              : 'minus'
+          }`}
+        >
+          {sign}
+          {numberEuro(Math.abs(transaction.amount))}
+        </span>
+      </animated.li>
 
-      <span
-        className={`list-amount ${
-          transaction.amount === 0
-            ? null
-            : transaction.amount > 0
-            ? 'plus'
-            : 'minus'
-        }`}
-      >
-        {sign}
-        {numberEuro(Math.abs(transaction.amount))}
-      </span>
-    </animated.li>
+      <TransactionForm 
+        open={open} 
+        setOpen={setOpen} 
+        action='edit' 
+        transaction={transaction} 
+      />
+    </>
   );
 };
 

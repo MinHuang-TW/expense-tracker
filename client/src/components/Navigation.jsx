@@ -1,10 +1,9 @@
 import React, { useState, useContext, useCallback } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
-import moment from 'moment';
 import { GlobalContext } from '../context/GlobalState';
+import TransactionForm from './common/TransactionForm';
 import { checkDayTime, getGreeting } from '../utils/calculation.js';
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
-import AddTransaction from './AddTransaction';
 import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon, Fab } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
@@ -15,6 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 const Navigation = ({ container, children, location: { pathname } }) => {
   const { getToken, getCurrentUser } = useContext(GlobalContext);
@@ -239,7 +239,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
             <AddIcon />
           </Fab>
         )}
-        <AddTransaction open={open} setOpen={setOpen} />
+        <TransactionForm open={open} setOpen={setOpen} action='new' />
       </div>
     </ThemeProvider>
   );
