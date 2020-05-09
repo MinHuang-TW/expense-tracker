@@ -62,7 +62,7 @@ const Dashboard = () => {
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <Transaction transaction={item} />
+                <Transaction data={item} />
               </animated.div>
             ))}
           </ul>

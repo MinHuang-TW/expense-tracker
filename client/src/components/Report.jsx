@@ -129,7 +129,7 @@ const Report = () => {
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <Transaction transaction={item} date />
+                <Transaction data={item} date />
               </animated.div>
             ))}
           </ul>
