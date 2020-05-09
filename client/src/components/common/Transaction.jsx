@@ -60,13 +60,10 @@ const Transaction = ({ transaction, date }) => {
     setOpen(true);
   }, []);
 
-  const handleDelete = useCallback(
-    (id) => (event) => {
-      deleteTransaction(id);
-      setDeleted(true);
-    },
-    [deleteTransaction]
-  );
+  const handleDelete = useCallback((id) => (event) => {
+    deleteTransaction(id);
+    setDeleted(true);
+  }, [deleteTransaction]);
 
   return (
     <>

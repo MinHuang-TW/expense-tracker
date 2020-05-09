@@ -1,17 +1,14 @@
 import React, { useState, useContext, useCallback } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
-import { numberValid, numberCalc } from '../../utils/format';
+import { InputAmount, InputText, InputDate } from '../common/Input';
+import { numberValid, numberCalc, numberEuro } from '../../utils/format';
 import { datePickerExpense, defaultMaterialTheme } from '../../utils/colorTheme';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide, TextField, InputAdornment, Switch } from '@material-ui/core';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import format from 'date-fns/format';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide } from '@material-ui/core';
 import 'date-fns';
+import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -25,67 +22,34 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '16px',
     textTransform: 'uppercase',
   },
-  textColor: {
-    color: '#232C2D',
-    opacity: 0.8,
-  },
-  input: {
-    fontSize: '36px',
-  },
-  inputPlus: {
-    color: theme.palette.primary.main,
-  },
-  inputMinus: {
-    color: '#f8777d',
-  },
-  // fab: {
-  //   position: 'fixed',
-  //   bottom: theme.spacing(2),
-  //   right: theme.spacing(2),
-  //   boxShadow: 'none',
-  // },
 }));
-
-const dateFormat = 'd MMM, yyyy';
-class LocalizedUtils extends DateFnsUtils {
-  getDatePickerHeaderText(date) {
-    return format(date, dateFormat, { locale: this.locale });
-  }
-}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-const TransactionSwitch = withStyles((theme) => ({
-  root: {
-    marginRight: -12,
-  },
-  switchBase: {
-    color: theme.palette.primary.main,
-    '&$checked': {
-      color: theme.palette.primary.main,
-    },
-    '&$checked + $track': {
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
-  thumb: {
-    boxShadow: 'none',
-  },
-  checked: {},
-  track: {
-    backgroundColor: theme.palette.primary.main,
-  },
-}))(Switch);
+const TopBar = ({ action, minus, handleClose }) => {
+  const classes = useStyles();
+  return (
+    <AppBar className={classes.appBar}>
+      <Toolbar>
+        <Typography variant='h6' className={classes.title}>
+          {action} {minus ? 'Expense' : 'Income'}
+        </Typography>
+        <IconButton edge='start' color='inherit' onClick={handleClose} aria-label='close'>
+          <CloseIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 const TransactionForm = ({ open, setOpen, action, transaction }) => {
   const { addTransaction, updateTransaction } = useContext(GlobalContext);
   const initialText = transaction ? transaction.text : '',
-        initialAmount = transaction ? Math.abs(transaction.amount) : null,
-        initialDate = transaction ? transaction.date : new Date(),
+        initialAmount = transaction ? numberEuro(Math.abs(transaction.amount)).toString() : null,
+        initialDate = transaction ? transaction.date : moment(),
         initialMinus = transaction && transaction.amount > 0 ? false : true;
-
   const [text, setText] = useState(initialText),
         [errorText, setErrorText] = useState(false);
   const [amount, setAmount] = useState(initialAmount),
@@ -94,29 +58,36 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
   const [minus, setMinus] = useState(initialMinus);
   const [disableBtn, setDisableBtn] = useState(true);
 
-  const classes = useStyles();
+  const reset = () => {
+    setOpen(false);
+    setErrorText(false);
+    setErrorAmount(false);
+    setDisableBtn(true);
+  };
 
   const handleClose = useCallback(() => {
-    setOpen(false);
+    reset();
     setText(initialText);
-    setErrorText(false);
     setAmount(initialAmount);
-    setErrorAmount(false);
     setDate(initialDate);
-    setDisableBtn(true);
     setMinus(initialMinus);
     // eslint-disable-next-line
-  }, []);
+  }, [initialText, initialAmount, initialDate, initialMinus]);
 
-  const handleMinus = useCallback(() => {
-    setMinus(!minus);
-  }, [minus]);
+  const handleSave = useCallback(() => {
+    reset();
+    setText(text);
+    setAmount(amount);
+    setDate(date);
+    setMinus(minus);
+    // eslint-disable-next-line
+  }, [text, minus, amount, date]);
 
   const itemValid = (item, errorItem) => {
     if (!item) setDisableBtn(true);
     else errorItem ? setDisableBtn(true) : setDisableBtn(false);
   };
-
+  
   const handleAmount = useCallback((e) => {
     setAmount(e.target.value);
     if (numberValid(e.target.value)) {
@@ -139,9 +110,17 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
     }
   }, [amount, errorAmount]);
 
+  const handleMinus = useCallback(() => {
+    setMinus(!minus);
+    itemValid(text, errorText);
+    itemValid(amount, errorAmount);
+  }, [minus, amount, errorAmount, text, errorText]);
+
   const handleDate = useCallback((date) => {
     setDate(date);
-  }, []);
+    itemValid(text, errorText);
+    itemValid(amount, errorAmount);
+  }, [amount, errorAmount, text, errorText]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -152,7 +131,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
     };
     if (action === 'new') addTransaction(newTransaction);
     if (action === 'edit') updateTransaction(transaction._id, newTransaction);
-    handleClose();
+    handleSave();
   };
 
   return (
@@ -164,21 +143,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <Typography variant='h6' className={classes.title}>
-                {action} {minus ? 'Expense' : 'Income'}
-              </Typography>
-              <IconButton
-                edge='start'
-                color='inherit'
-                onClick={handleClose}
-                aria-label='close'
-              >
-                <CloseIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
+          <TopBar action={action} minus={minus} handleClose={handleClose} />
 
           <form
             onSubmit={onSubmit}
@@ -186,65 +151,21 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
             noValidate
             autoComplete='off'
           >
-            <div className='input-amount'>
-              <TextField
-                id='input-amount'
-                label='Amount'
-                required
-                autoFocus
-                value={transaction && transaction.amount && amount}
-                InputProps={{
-                  className: `${classes.input} ${
-                    minus ? classes.inputMinus : classes.inputPlus
-                  }`,
-                  startAdornment: (
-                    <InputAdornment position='start' style={{ margin: 0 }}>
-                      {minus ? <RemoveIcon /> : <AddIcon />}
-                    </InputAdornment>
-                  ),
-                }}
-                error={errorAmount}
-                helperText={
-                  errorAmount
-                    ? 'Please enter a valid number'
-                    : 'Toggle Income / Expense'
-                }
-                onChange={handleAmount}
-              />
-
-              <TransactionSwitch
-                checked={minus}
-                tabIndex='-1'
-                onChange={handleMinus}
-                inputProps={{ 'aria-label': 'secondary checkbox' }}
-              />
-            </div>
-
-            <TextField
-              id='input-description'
-              label='Description'
-              fullWidth
-              required
-              value={transaction && transaction.text && text}
-              error={errorText}
-              InputLabelProps={{ shrink: true }}
-              InputProps={{ className: classes.textColor }}
-              helperText={errorText && 'Please describe the transaction'}
-              onChange={handleText}
+            <InputAmount 
+              transaction={transaction} 
+              minus={minus} 
+              amount={amount} 
+              errorAmount={errorAmount} 
+              handleAmount={handleAmount}
+              handleMinus={handleMinus}
             />
-
-            <MuiPickersUtilsProvider utils={LocalizedUtils}>
-              <KeyboardDatePicker
-                id='input-date'
-                label='Date'
-                value={date}
-                format={dateFormat}
-                onChange={handleDate}
-                InputProps={{ className: classes.textColor }}
-                KeyboardButtonProps={{ 'aria-label': 'change date' }}
-                fullWidth
-              />
-            </MuiPickersUtilsProvider>
+            <InputText
+              transaction={transaction}
+              text={text}
+              errorText={errorText}
+              handleText={handleText}
+            />
+            <InputDate date={date} handleDate={handleDate}/>
 
             <button
               className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}
