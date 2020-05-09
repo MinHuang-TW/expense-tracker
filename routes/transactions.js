@@ -5,12 +5,9 @@ const {
   getTransactions,
   getTransaction,
   addTransactions,
+  updateTransaction,
   deleteTransactions
 } = require('../controllers/transactions');
-
-router
-  .route('/:query')
-  .get(auth, getTransaction);
 
 router
   .route('/')
@@ -19,7 +16,11 @@ router
   
 router
   .route('/:id')
+  .put(auth, updateTransaction)
   .delete(auth, deleteTransactions);
 
+router
+  .route('/:query')
+  .get(auth, getTransaction);
 
 module.exports = router;

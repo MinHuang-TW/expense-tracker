@@ -4,7 +4,6 @@ const moment = require('moment');
 
 // get all transactions
 // GET /api/transactions
-// Private
 exports.getTransactions = async (req, res, next) => {
   try {
     const transactions = await Transaction.find({ user: req.user.id });
@@ -24,7 +23,6 @@ exports.getTransactions = async (req, res, next) => {
 
 // get certain range of transactions
 // GET /api/transactions/:query
-// Private
 exports.getTransaction = async (req, res, next) => {
   try {
     const { query } = req.params;
@@ -51,7 +49,6 @@ exports.getTransaction = async (req, res, next) => {
 
 // add transaction
 // POST /api/transactions
-// Public
 exports.addTransactions = async (req, res, next) => {
   try {
     const { text, amount } = req.body;
@@ -84,9 +81,37 @@ exports.addTransactions = async (req, res, next) => {
   }
 };
 
+// update transaction
+// UPDATE /api/transactions/:id
+exports.updateTransaction = async (req, res, next) => {
+  try {
+    const { amount, text, date } = req.body;
+    const transaction = await Transaction.findByIdAndUpdate(
+      req.params.id,
+      { amount, text, date },
+      { new: true }
+    );
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        error: 'No transaction found'
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: transaction,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    })
+  }
+};
+
 // delete transaction
 // DELETE /api/transactions/:id
-// Public
 exports.deleteTransactions = async (req, res, next) => {
   try {
     const transaction = await Transaction.findById(req.params.id);
