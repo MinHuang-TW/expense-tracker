@@ -91,7 +91,7 @@ const Transaction = ({ transaction, date }) => {
         open={open}
         setOpen={setOpen}
         action='edit'
-        transaction={transaction}
+        data={transaction}
       />
     </>
   );

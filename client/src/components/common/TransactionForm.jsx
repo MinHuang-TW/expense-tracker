@@ -44,18 +44,22 @@ const TopBar = ({ action, minus, handleClose }) => {
   );
 };
 
-const TransactionForm = ({ open, setOpen, action, transaction }) => {
+const TransactionForm = ({ open, setOpen, action, data }) => {
   const { addTransaction, updateTransaction } = useContext(GlobalContext);
-  const initialText = transaction ? transaction.text : '',
-        initialAmount = transaction ? numberEuro(Math.abs(transaction.amount)).toString() : null,
-        initialDate = transaction ? transaction.date : moment(),
-        initialMinus = transaction && transaction.amount > 0 ? false : true;
+  const formatEuro = amount => numberEuro(Math.abs(amount)).toString();
+
+  const initialText = data ? data.text : '',
+        initialAmount = data ? formatEuro(data.amount) : null,
+        initialDate = data ? data.date : moment(),
+        initialMinus = data && data.amount > 0 ? false : true;
+
   const [text, setText] = useState(initialText),
         [errorText, setErrorText] = useState(false);
   const [amount, setAmount] = useState(initialAmount),
         [errorAmount, setErrorAmount] = useState(false);
   const [date, setDate] = useState(initialDate);
   const [minus, setMinus] = useState(initialMinus);
+
   const [disableBtn, setDisableBtn] = useState(true);
 
   const reset = () => {
@@ -79,7 +83,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
     setText(text);
     setAmount(amount);
     setDate(date);
-    setMinus(minus);
+    setMinus(action === 'new' ? true : minus);
     // eslint-disable-next-line
   }, [text, minus, amount, date]);
 
@@ -87,7 +91,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
     if (!item) setDisableBtn(true);
     else errorItem ? setDisableBtn(true) : setDisableBtn(false);
   };
-  
+
   const handleAmount = useCallback((e) => {
     setAmount(e.target.value);
     if (numberValid(e.target.value)) {
@@ -124,13 +128,14 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    const amountNumber = numberCalc(amount);
     const newTransaction = {
       text,
-      amount: minus ? -numberCalc(amount) : numberCalc(amount),
+      amount: minus ? -amountNumber : amountNumber,
       date,
     };
     if (action === 'new') addTransaction(newTransaction);
-    if (action === 'edit') updateTransaction(transaction._id, newTransaction);
+    if (action === 'edit') updateTransaction(data._id, newTransaction);
     handleSave();
   };
 
@@ -152,7 +157,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
             autoComplete='off'
           >
             <InputAmount 
-              transaction={transaction} 
+              data={data} 
               minus={minus} 
               amount={amount} 
               errorAmount={errorAmount} 
@@ -160,7 +165,7 @@ const TransactionForm = ({ open, setOpen, action, transaction }) => {
               handleMinus={handleMinus}
             />
             <InputText
-              transaction={transaction}
+              data={data}
               text={text}
               errorText={errorText}
               handleText={handleText}

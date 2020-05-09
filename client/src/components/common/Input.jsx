@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const InputAmount = ({
-  transaction,
+  data,
   minus,
   amount,
   errorAmount,
@@ -62,7 +62,7 @@ export const InputAmount = ({
         label='Amount'
         required
         autoFocus
-        value={transaction && transaction.amount && amount}
+        value={data && data.amount && amount}
         InputProps={{
           className: `${classes.input} ${
             minus ? classes.inputMinus : classes.inputPlus
@@ -91,7 +91,7 @@ export const InputAmount = ({
   );
 };
 
-export const InputText = ({ transaction, text, errorText, handleText }) => {
+export const InputText = ({ data, text, errorText, handleText }) => {
   const classes = useStyles();
 
   return (
@@ -100,7 +100,7 @@ export const InputText = ({ transaction, text, errorText, handleText }) => {
       label='Description'
       fullWidth
       required
-      value={transaction && transaction.text && text}
+      value={data && data.text && text}
       error={errorText}
       InputLabelProps={{ shrink: true }}
       InputProps={{ className: classes.textColor }}
