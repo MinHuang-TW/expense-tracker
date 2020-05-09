@@ -21,7 +21,7 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
   ];
   
   const noData = income === '0.00' & expense === '0.00';
-  const ratio = income !== '0.00' ? (expense / income * 100).toFixed(0) : 100;
+  const ratio = +income > +expense ? (expense / income * 100).toFixed(0) : 100;
   const data = [ratio, 100 - ratio];
 
   const width = 120, height = 120;
