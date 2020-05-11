@@ -5,7 +5,7 @@ import { checkDay, sortDateAmount } from '../utils/calculation';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
 import Filter from './common/Filter';
-import Transaction from './common/Transaction';
+import ListMenu from './common/ListMenu';
 import { CircularProgress } from '@material-ui/core';
 
 const Dashboard = () => {
@@ -62,7 +62,7 @@ const Dashboard = () => {
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <Transaction data={item} />
+                <ListMenu data={item} />
               </animated.div>
             ))}
           </ul>

@@ -7,7 +7,7 @@ import moment from 'moment';
 import DeleteSharpIcon from '@material-ui/icons/DeleteSharp';
 import EditSharpIcon from '@material-ui/icons/EditSharp';
 
-const Transaction = ({ data, date }) => {
+const ListMenu = ({ data, date }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   const [showMenu, setshowMenu] = useState(false),
         [open, setOpen] = useState(false);
@@ -90,4 +90,4 @@ const Transaction = ({ data, date }) => {
   );
 };
 
-export default Transaction;
+export default ListMenu;

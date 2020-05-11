@@ -252,7 +252,7 @@ body::-webkit-scrollbar {
   transform: translate(-50%, -50%);
 }
 
-/* ----- REPORT ----- */
+/* ----- TRANSACTIONS ----- */
 
 .MuiTabs-indicator {
   color: white;
@@ -263,7 +263,7 @@ body::-webkit-scrollbar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* ----- REPORT > REPORT OVERVIEW ----- */
+/* ----- TRANSACTIONS > REPORT OVERVIEW ----- */
 
 .box {
   position: relative;

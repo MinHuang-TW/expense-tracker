@@ -4,7 +4,7 @@ import { GlobalProvider } from './context/GlobalState.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
-import Report from './components/Report';
+import Transactions from './components/Transactions';
 import Statistics from './components/Statistics';
 import Login from './components/Login';
 import Logout from './components/Logout';
@@ -18,7 +18,7 @@ const App = () => (
         <Route path='/logout' component={Logout} />
 
         <ProtectedRoute path='/dashboard' component={Dashboard} />
-        <ProtectedRoute path='/transactions' component={Report} />
+        <ProtectedRoute path='/transactions' component={Transactions} />
         <ProtectedRoute path='/statistics' component={Statistics} />
 
         <Redirect from='/' exact to='/dashboard' />

@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import { filterDate, filterAmount, sortDateAmount } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
 import ReportOverview from './common/ReportOverview';
-import Transaction from './common/Transaction';
+import ListMenu from './common/ListMenu';
 import Filter from './common/Filter';
 import { Button, ButtonGroup, CircularProgress } from '@material-ui/core';
 import { whiteTheme } from '../utils/colorTheme.js';
@@ -51,7 +51,7 @@ const Selector = ({ types, selected, setSelected }) => {
   );
 };
 
-const Report = () => {
+const Transactions = () => {
   const { loading, transactions, getTransactions } = useContext(GlobalContext);
   const timeFilters = ['day', 'week', 'month', 'year'],
         [value, setValue] = useState(0);
@@ -129,7 +129,7 @@ const Report = () => {
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <Transaction data={item} date />
+                <ListMenu data={item} date />
               </animated.div>
             ))}
           </ul>
@@ -146,4 +146,4 @@ const Report = () => {
   );
 }
 
-export default Report;
+export default Transactions;
