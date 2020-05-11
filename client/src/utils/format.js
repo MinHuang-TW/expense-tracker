@@ -16,20 +16,6 @@ export function numberCalc(x) {
   return Number(x.replace(/\./g, '').replace(/,/, '.'));
 }
 
-export function amountCalc(amounts) {
-  const income = +amounts
-    .filter(item => item > 0)
-    .reduce((acc, item) => (acc += item), 0)
-    .toFixed(2);
-
-  const expense = +(amounts
-    .filter(item => item < 0)
-    .reduce((acc, item) => (acc += item), 0) * -1)
-    .toFixed(2);
-
-  return [income, expense];
-}
-
 export function formatDate(date) {
   let d = new Date(date),
       month = '' + (d.getMonth() + 1),
