@@ -46,7 +46,7 @@ const Dashboard = () => {
       <div className="container-top">
         <Total amounts={amounts} />
         <div className="inc-exp-container" style={{ marginBottom: 0 }}>
-          <IncomExpenses amounts={amounts} />
+          <IncomExpenses amounts={amounts} titleClass='sub-title' />
         </div>
       </div>
       <div className='container'>
