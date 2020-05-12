@@ -113,13 +113,11 @@ export const InputText = ({ data, text, errorText, handleText }) => {
 export const InputDate = ({ date, handleDate }) => {
   const classes = useStyles();
   const dateFormat = 'd MMM, yyyy';
-
   class LocalizedUtils extends DateFnsUtils {
     getDatePickerHeaderText(date) {
       return format(date, dateFormat, { locale: this.locale });
     }
   }
-
   return (
     <MuiPickersUtilsProvider utils={LocalizedUtils}>
       <KeyboardDatePicker

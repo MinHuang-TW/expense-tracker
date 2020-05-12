@@ -9,7 +9,7 @@ import ListMenu from './common/ListMenu';
 import { CircularProgress } from '@material-ui/core';
 
 const Dashboard = () => {
-  const { loading, transactions, getTransactions } = useContext(GlobalContext);
+  const { loading, transactions, getTransactions, resetTransaction } = useContext(GlobalContext);
   const [sortColumn, setSortColum] = useState('date');
   const [sortLatest, setSortLatest] = useState(true);
   const [sortDsc, setSortDsc] = useState(true);
@@ -22,9 +22,10 @@ const Dashboard = () => {
   const transition = useTransition(lists, list => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, opacity: 0, delay: 0 },
-    // leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
-    trail: 200, reset: true, config: config.stiff,
+    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
+    config: config.stiff,
+    trail: 200, 
+    reset: true,
   });
 
   const handleSortDate = useCallback(() => {
@@ -37,7 +38,9 @@ const Dashboard = () => {
     setSortColum('amount');
   }, [sortDsc]);
 
+  
   useEffect(() => {
+    resetTransaction();
     getTransactions();
     // eslint-disable-next-line
   }, []);
