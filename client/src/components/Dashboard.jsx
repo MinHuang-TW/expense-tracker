@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useTransition, animated } from 'react-spring';
+import { useTransition, animated, config } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkDay, sortDateAmount } from '../utils/calculation';
 import Total from './common/Total';
@@ -22,8 +22,9 @@ const Dashboard = () => {
   const transition = useTransition(lists, list => list._id, {
     from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
-    trail: 200,
+    leave: { height: 0, opacity: 0, delay: 0 },
+    // leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
+    trail: 200, reset: true, config: config.stiff,
   });
 
   const handleSortDate = useCallback(() => {

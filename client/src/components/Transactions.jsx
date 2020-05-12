@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useTransition, animated } from 'react-spring';
+import { useTransition, animated, config } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { filterDate, filterAmount, sortDateAmount } from '../utils/calculation';
 import NewTabs from './common/NewTabs';
@@ -71,12 +71,11 @@ const Transactions = () => {
     .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
   const transition = useTransition(
-    lists, 
-    list => list._id, {
+    lists, list => list._id, {
       from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
       enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
       leave: { height: 0, opacity: 0, delay: 0 },
-      trail: 100,
+      trail: 100, reset: true, config: config.stiff,
   });
 
   const handleSortDate = useCallback(() => {
