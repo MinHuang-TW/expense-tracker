@@ -73,10 +73,11 @@ const Transactions = () => {
   const transition = useTransition(lists, list => list._id, {
     from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
     enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, opacity: 0 },
+    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0, delay: 0 },
+    // leave: { height: 0, opacity: 0, delay: 0 },
     config: config.stiff,
+    reset: true,
     trail: 100, 
-    reset: true, 
   });
 
   const handleSortDate = useCallback(() => {
@@ -127,7 +128,7 @@ const Transactions = () => {
         />
 
         {lists.length > 0 ? (
-          <ul className='list'>
+          <ul className='list' style={{ marginBottom: 20 }}>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
                 <ListMenu data={item} date />
@@ -137,7 +138,7 @@ const Transactions = () => {
         ) : (
           <div className='list-status'>
             {loading 
-              ? (<CircularProgress color='primary'/>)
+              ? (<CircularProgress color='primary' />)
               : (<p>No {selected !== 'all' && selected} transaction</p>)
             }
           </div>
