@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useTransition, animated, config } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
 import { checkDay, sortDateAmount } from '../utils/calculation';
+import { transitionConfig } from '../utils/animation';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
 import Filter from './common/Filter';
@@ -19,14 +20,11 @@ const Dashboard = () => {
     .filter(({ date }) => checkDay(date))
     .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
-  const transition = useTransition(lists, list => list._id, {
-    from: { height: 75, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-    enter: { height: 75, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0 },
-    config: config.stiff,
-    trail: 200, 
-    reset: true,
-  });
+  const transition = useTransition(
+    lists, 
+    list => list._id, 
+    transitionConfig(75, 200),
+  );
 
   const handleSortDate = useCallback(() => {
     setSortLatest(!sortLatest); 

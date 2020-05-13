@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useTransition, animated, config } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { filterDate, filterAmount, sortDateAmount } from '../utils/calculation';
+import { filterAmount, sortDateAmount } from '../utils/calculation';
+import { transitionConfig } from '../utils/animation';
 import NewTabs from './common/NewTabs';
 import ReportOverview from './common/ReportOverview';
 import ListMenu from './common/ListMenu';
@@ -52,7 +53,7 @@ const Selector = ({ types, selected, setSelected }) => {
 };
 
 const Transactions = () => {
-  const { loading, transactions, getTransactions, resetTransaction } = useContext(GlobalContext);
+  const { loading, transactions, getTransaction, resetTransaction } = useContext(GlobalContext);
   const timeFilters = ['day', 'week', 'month', 'year'],
         [value, setValue] = useState(0);
   const transFilters = ['all', 'income', 'expense'],
@@ -60,26 +61,17 @@ const Transactions = () => {
   const [sortColumn, setSortColum] = useState('date'),
         [sortLatest, setSortLatest] = useState(true),
         [sortDsc, setSortDsc] = useState(true);
-  const amounts = [];
 
   const lists = transactions
-    .filter(({ date }) => filterDate(date, value, timeFilters))
-    .filter(({ amount }) => {
-      amounts.push(amount);
-      return filterAmount(amount, selected);
-    })
+    .filter(({ amount }) => filterAmount(amount, selected))
     .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
-  const transition = useTransition(lists, list => list._id, {
-    from: { height: 86, transform: 'translate3d(-5%,0,0)', opacity: 0 },
-    enter: { height: 86, transform: 'translate3d(0%,0,0)', opacity: 1 },
-    leave: { height: 0, transform: 'translate3d(-5000%,0,0)', opacity: 0, delay: 0 },
-    // leave: { height: 0, opacity: 0, delay: 0 },
-    config: config.stiff,
-    reset: true,
-    trail: 100, 
-  });
-
+  const transition = useTransition(
+    lists, 
+    list => list._id, 
+    transitionConfig(86, 100),
+  );
+  
   const handleSortDate = useCallback(() => {
     setSortLatest(!sortLatest); 
     setSortColum('date');
@@ -92,9 +84,9 @@ const Transactions = () => {
 
   useEffect(() => {
     resetTransaction();
-    getTransactions();
+    getTransaction(timeFilters[value]);
     // eslint-disable-next-line
-  }, []);
+  }, [value]);
 
   return (
     <>
@@ -108,7 +100,7 @@ const Transactions = () => {
         selected={selected} 
         timeFilters={timeFilters} 
         value={value} 
-        amounts={amounts}
+        amounts={transactions.map(t => t.amount)}
       />
 
       <Selector 
@@ -128,7 +120,7 @@ const Transactions = () => {
         />
 
         {lists.length > 0 ? (
-          <ul className='list' style={{ marginBottom: 20 }}>
+          <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
                 <ListMenu data={item} date />
