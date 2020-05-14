@@ -11,9 +11,9 @@ import { CircularProgress } from '@material-ui/core';
 
 const Dashboard = () => {
   const { loading, transactions, getTransactions, resetTransaction } = useContext(GlobalContext);
-  const [sortColumn, setSortColum] = useState('date');
-  const [sortLatest, setSortLatest] = useState(true);
-  const [sortDsc, setSortDsc] = useState(true);
+  const [sortColumn, setSortColum] = useState('date'),
+        [sortLatest, setSortLatest] = useState(true),
+        [sortDsc, setSortDsc] = useState(true);
   const amounts = transactions.map(transaction => transaction.amount);
 
   const lists = transactions
@@ -51,6 +51,7 @@ const Dashboard = () => {
           <IncomExpenses amounts={amounts} titleClass='sub-title' />
         </div>
       </div>
+
       <div className='container'>
         <Filter
           sortLatest={sortLatest}

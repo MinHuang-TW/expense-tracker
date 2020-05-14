@@ -100,7 +100,7 @@ const Transactions = () => {
         selected={selected} 
         timeFilters={timeFilters} 
         value={value} 
-        amounts={transactions.map(t => t.amount)}
+        amounts={transactions.map(({ amount }) => amount)}
       />
 
       <Selector 
