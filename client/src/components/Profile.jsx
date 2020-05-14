@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { TextField } from '@material-ui/core';
 import { GlobalContext } from '../context/GlobalState';
+import { InputText } from './common/Input';
 import { emailValid } from '../utils/format';
-import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-
-const useStyles = makeStyles((theme) => ({
-  textColor: { color: '#232C2D', opacity: 0.8 },
-}));
 
 const Profile = () => {
   const { users, loadUser, updateUser } = useContext(GlobalContext);
@@ -18,7 +13,6 @@ const Profile = () => {
   const [date, setDate] = useState('');
   const [disableBtn, setDisableBtn] = useState(true),
         [disableCancel, setDisableCancel] = useState(true);
-  const classes = useStyles();
 
   const centerAlign = {
     height: 'calc(100vh - 56px)',
@@ -33,9 +27,9 @@ const Profile = () => {
 
   const handleName = useCallback(
     (e) => {
-      setName(e.target.value);
       setDisableCancel(false);
-      if (e.target.value) {
+      setName(e.target.value);
+      if (e.target.value.length >= 3) {
         setErrorName(false);
         itemValid(email, errorEmail);
       } else {
@@ -48,8 +42,8 @@ const Profile = () => {
 
   const handleEmail = useCallback(
     (e) => {
-      setEmail(e.target.value);
       setDisableCancel(false);
+      setEmail(e.target.value);
       if (emailValid(e.target.value)) {
         setErrorEmail(false);
         itemValid(name, errorName);
@@ -111,26 +105,15 @@ const Profile = () => {
 
   return (
     <div style={centerAlign}>
-      <form
-        className='new-form'
-        style={{ height: 420 }}
-        autoComplete='off'
-        noValidate
-      >
-        {lists.map(({ label, value, error, onChange }, index) => (
-          <TextField
-            key={index}
-            id={label}
+      <form className='new-form' style={{ height: 420 }} noValidate>
+        {lists.map(({ label, value, error, onChange }) => (
+          <InputText
+            key={label}
             label={label}
             value={value || ''}
             error={error}
-            fullWidth
-            required={label !== 'Register Date' && true}
-            InputLabelProps={{ shrink: true }}
-            InputProps={{ className: classes.textColor }}
-            helperText={error && errorMessage(label)}
+            errorMsg={errorMessage(label)}
             onChange={onChange}
-            disabled={!onChange && true}
           />
         ))}
 

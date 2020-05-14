@@ -91,21 +91,22 @@ export const InputAmount = ({
   );
 };
 
-export const InputText = ({ label='Description', data, text, errorText, handleText }) => {
+export const InputText = ({ label, value, error, errorMsg, onChange }) => {
   const classes = useStyles();
 
   return (
     <TextField
-      id='text'
+      id={label}
       label={label}
       fullWidth
-      required
-      value={data && data.text && text}
-      error={errorText}
+      value={value}
+      error={error}
+      required={label !== 'Register Date' && true}
       InputLabelProps={{ shrink: true }}
       InputProps={{ className: classes.textColor }}
-      helperText={errorText && 'Please describe the transaction'}
-      onChange={handleText}
+      helperText={error && errorMsg}
+      onChange={onChange}
+      disabled={!onChange && true}
     />
   );
 };

@@ -165,10 +165,11 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
               handleMinus={handleMinus}
             />
             <InputText
-              data={data}
-              text={text}
-              errorText={errorText}
-              handleText={handleText}
+              label='Description'
+              value={data && data.text && text}
+              error={errorText}
+              errorMsg='Please describe the transaction'
+              onChange={handleText}
             />
             <InputDate date={date} handleDate={handleDate} />
 
