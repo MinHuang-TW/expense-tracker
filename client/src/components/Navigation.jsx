@@ -10,6 +10,7 @@ import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
 import EqualizerSharpIcon from '@material-ui/icons/EqualizerSharp';
 import MeetingRoomSharpIcon from '@material-ui/icons/MeetingRoomSharp';
+import AccountBoxSharpIcon from '@material-ui/icons/AccountBoxSharp';
 import AddIcon from '@material-ui/icons/Add';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -17,7 +18,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
 const Navigation = ({ container, children, location: { pathname } }) => {
-  const { getToken, getCurrentUser } = useContext(GlobalContext);
+  const { getToken, users } = useContext(GlobalContext);
   const [mobileOpen, setMobileOpen] = useState(false),
         [open, setOpen] = useState(false);
 
@@ -104,6 +105,10 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       icon: <EqualizerSharpIcon style={iconSize} />,
     },
     {
+      name: 'profile',
+      icon: <AccountBoxSharpIcon style={iconSize} />,
+    },
+    {
       name: 'logout',
       icon: <MeetingRoomSharpIcon style={iconSize} />,
     },
@@ -125,7 +130,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
         </Typography>
 
         <Typography color='primary' variant='h4' className='username'>
-          {token && getCurrentUser().name}
+          {token && users.name}
         </Typography>
 
         <div style={{ textAlign: 'right' }}>

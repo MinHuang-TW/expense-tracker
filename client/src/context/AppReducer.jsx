@@ -62,6 +62,13 @@ export default (state, action) => {
         users: action.payload,
       }
 
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        // users: { success: , token: , user: { id: , name: , email: }}
+        users: action.payload.user,
+      }
+
     case 'LOAD_USER':
       const token = localStorage.getItem('token');
       return {

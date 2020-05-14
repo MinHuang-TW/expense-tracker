@@ -4,7 +4,8 @@ const auth = require('../middleware/auth');
 const { 
   registerUser, 
   loginUser, 
-  loadUser 
+  loadUser,
+  updateUser
 } = require('../controllers/users');
 
 router
@@ -14,5 +15,9 @@ router
 router
   .route('/')
   .get(auth, loadUser);
+
+  router
+  .route('/:id')
+  .put(auth, updateUser);
 
 module.exports = router;

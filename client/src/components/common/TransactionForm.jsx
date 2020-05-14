@@ -170,7 +170,7 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
               errorText={errorText}
               handleText={handleText}
             />
-            <InputDate date={date} handleDate={handleDate}/>
+            <InputDate date={date} handleDate={handleDate} />
 
             <button
               className={`btn ${minus ? 'minus-bg' : 'plus-bg'}`}

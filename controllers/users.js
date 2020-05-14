@@ -91,3 +91,32 @@ exports.loadUser = async (req, res, next) => {
   const user = await User.findById(req.user.id).select('-password');
   return res.send(user);
 };
+
+// update user
+// UPDATE /api/users/:id
+exports.updateUser = async (req, res, next) => {
+  try {
+    const { name, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { name, email },
+      { new: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    })
+  }
+};

@@ -91,13 +91,13 @@ export const InputAmount = ({
   );
 };
 
-export const InputText = ({ data, text, errorText, handleText }) => {
+export const InputText = ({ label='Description', data, text, errorText, handleText }) => {
   const classes = useStyles();
 
   return (
     <TextField
       id='text'
-      label='Description'
+      label={label}
       fullWidth
       required
       value={data && data.text && text}

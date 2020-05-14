@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import Transactions from './components/Transactions';
 import Statistics from './components/Statistics';
+import Profile from './components/Profile';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import './App.css';
@@ -20,6 +21,7 @@ const App = () => (
         <ProtectedRoute path='/dashboard' component={Dashboard} />
         <ProtectedRoute path='/transactions' component={Transactions} />
         <ProtectedRoute path='/statistics' component={Statistics} />
+        <ProtectedRoute path='/profile' component={Profile} />
 
         <Redirect from='/' exact to='/dashboard' />
         <Redirect to='/not-found' />

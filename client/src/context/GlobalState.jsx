@@ -150,12 +150,27 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function loadUser(user) {
+  async function loadUser() {
     try {
-      const res = await axios.get('/api/users', user, config);
+      const res = await axios.get('/api/users');
       dispatch({
         type: 'LOAD_USER',
-        payload: res.data.user
+        payload: res.data
+      });
+    } catch (err) {
+      dispatch({
+        type: 'LOGIN_ERROR',
+        payload: err.response
+      });
+    }
+  }
+
+  async function updateUser(id, user) {
+    try {
+      const res = await axios.put(`/api/users/${id}`, user, config);
+      dispatch({
+        type: 'UPDATE_USER',
+        payload: res.data,
       });
     } catch (err) {
       dispatch({
@@ -188,6 +203,7 @@ export const GlobalProvider = ({ children }) => {
         registerUser,
         loginUser,
         loadUser,
+        updateUser,
         logoutUser,
         getToken,
         getCurrentUser,
