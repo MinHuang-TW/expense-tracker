@@ -54,7 +54,6 @@ export default (state, action) => {
     case 'REGISTER_USER':
     case 'LOGIN_USER':
       localStorage.setItem('token', action.payload.token);
-      window.location = '/';
       return {
         ...state,
         token: action.payload.token,

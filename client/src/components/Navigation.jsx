@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import TransactionForm from './common/TransactionForm';
 import { checkDayTime, getGreeting } from '../utils/calculation.js';
 import { DayIcon, NightIcon } from '../images/daytimeIcon';
-import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon, Fab } from '@material-ui/core';
+import { CssBaseline, AppBar, Drawer, Hidden, IconButton, Toolbar, Typography, MenuItem, MenuList, ListItemIcon, Fab, Zoom } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
 import LibraryBooksSharpIcon from '@material-ui/icons/LibraryBooksSharp';
@@ -14,19 +14,18 @@ import AccountBoxSharpIcon from '@material-ui/icons/AccountBoxSharp';
 import AddIcon from '@material-ui/icons/Add';
 import { defaultMaterialTheme } from '../utils/colorTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import moment from 'moment';
 
 const Navigation = ({ container, children, location: { pathname } }) => {
   const { getToken, users, loadUser } = useContext(GlobalContext);
   const [mobileOpen, setMobileOpen] = useState(false),
         [open, setOpen] = useState(false);
-
   const token = getToken();
   const drawerWidth = 240;
 
-  const now = new Date();
-  const dayTime = checkDayTime(now);
+  const now = new Date(),
+        dayTime = checkDayTime(now);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -87,8 +86,15 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       boxShadow: 'none',
     },
   }));
-
+  const theme = useTheme();
   const classes = useStyles();
+
+  const transition = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen,
+  };
+  const showAddButton = token !== null && pathname !== '/profile';
+  const delay = {transitionDelay: `${showAddButton ? transition.exit : 0}ms`};
 
   const iconSize = { fontSize: '20px' };
   const drawerList = [
@@ -121,53 +127,48 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     }
   };
 
-  const drawer = (
-    <>
-      <div className='block-greeting'>
-        <Typography variant='h6' className={classes.textColor} gutterBottom>
-          <p style={{ opacity: 0.3 }}>{moment().format('dddd, D MMMM')}</p>
-          Good {getGreeting(now)},
-        </Typography>
+  const drawer = (<>
+    <div className='block-greeting'>
+      <Typography variant='h6' className={classes.textColor} gutterBottom>
+        <p style={{ opacity: 0.3 }}>{moment().format('dddd, D MMMM')}</p>
+        Good {getGreeting(now)},
+      </Typography>
 
-        <Typography color='primary' variant='h4' className='username'>
-          {token && users.user && users.user.name}
-        </Typography>
+      <Typography color='primary' variant='h4' className='username'>
+        {token && users.user && users.user.name}
+      </Typography>
 
-        <div style={{ textAlign: 'right' }}>
-          {dayTime ? <DayIcon width='40%' /> : <NightIcon width='40%' />}
-        </div>
+      <div style={{ textAlign: 'right' }}>
+        {dayTime ? <DayIcon width='40%' /> : <NightIcon width='40%' />}
       </div>
+    </div>
 
-      <MenuList id='menu'>
-        {drawerList.map(({ name, icon }) => {
-          const path = '/' + name;
-          const itemColor = (path) => {
-            if (path === pathname) return classes.selectedColor;
-            return classes.textColor;
-          };
-          return (
-            <MenuItem
-              key={name}
-              to={path}
-              component={NavLink}
-              selected={path === pathname}
-              style={{ minHeight: '48px' }}
-            >
-              <ListItemIcon
-                className={itemColor(path)}
-                style={{ minWidth: '35px' }}
-              >
-                {icon}
-              </ListItemIcon>
-              <p className={itemColor(path)} style={{ fontSize: '14px' }}>
-                {name}
-              </p>
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </>
-  );
+    <MenuList id='menu'>
+      {drawerList.map(({ name, icon }) => {
+        const path = '/' + name;
+        const itemColor = (path) => {
+          if (path === pathname) return classes.selectedColor;
+          return classes.textColor;
+        };
+        return (
+          <MenuItem
+            key={name}
+            to={path}
+            component={NavLink}
+            selected={path === pathname}
+            style={{ minHeight: '48px' }}
+          >
+            <ListItemIcon className={itemColor(path)} style={{ minWidth: '35px' }}>
+              {icon}
+            </ListItemIcon>
+            <p className={itemColor(path)} style={{ fontSize: '14px' }}>
+              {name}
+            </p>
+          </MenuItem>
+        );
+      })}
+    </MenuList>
+  </>);
 
   const handleOpen = useCallback(() => {
     setMobileOpen(!mobileOpen);
@@ -238,7 +239,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
         <main className={classes.content}>{children}</main>
 
-        {token && (
+        <Zoom in={showAddButton} timeout={transition} style={delay} unmountOnExit>
           <Fab
             color='primary'
             aria-label='add'
@@ -248,7 +249,8 @@ const Navigation = ({ container, children, location: { pathname } }) => {
           >
             <AddIcon />
           </Fab>
-        )}
+        </Zoom>
+
         <TransactionForm open={open} setOpen={setOpen} action='new' />
       </div>
     </ThemeProvider>
