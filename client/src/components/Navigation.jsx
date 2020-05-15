@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import TransactionForm from './common/TransactionForm';
@@ -18,7 +18,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 
 const Navigation = ({ container, children, location: { pathname } }) => {
-  const { getToken, users } = useContext(GlobalContext);
+  const { getToken, users, loadUser } = useContext(GlobalContext);
   const [mobileOpen, setMobileOpen] = useState(false),
         [open, setOpen] = useState(false);
 
@@ -175,6 +175,11 @@ const Navigation = ({ container, children, location: { pathname } }) => {
 
   const handleForm = useCallback(() => {
     setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    token && loadUser();
+    // eslint-disable-next-line
   }, []);
 
   return (

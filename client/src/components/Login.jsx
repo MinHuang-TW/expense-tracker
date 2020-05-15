@@ -1,12 +1,27 @@
-import React, { useState, useContext } from 'react';
-import { Redirect } from 'react-router-dom' ;
+import React, { useState, useContext, useCallback } from 'react';
+import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import PasswordIcon from '../components/common/PasswordIcon';
 import { TextField, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
+  centerAlign: {
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 64,
+      height: 'calc(100vh - 178px)',
+    },
+    height: 'calc(100vh - 112px)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: '100%',
+    borderRadius: 0,
+  },
   alert: {
     textAlign: 'left',
     '&::first-letter': {
@@ -27,122 +42,154 @@ const useStyles = makeStyles(theme => ({
     marginLeft: '10px',
     textTransform: 'Uppercase',
     fontWeight: 600,
-  }
+  },
 }));
 
 const Login = () => {
   const { getToken, registerUser, loginUser, error } = useContext(GlobalContext);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowpassword] = useState(false);
+  const [name, setName] = useState(''),
+        [email, setEmail] = useState(''),
+        [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
-  // const [showAlert, setShowAlert] = useState(false);
-  // const [disableBtn, setDisableBtn] = useState(true);
-
+  const [showAlert, setShowAlert] = useState(false);
   const classes = useStyles();
 
-  const SubmitButton = ({ children, onClick }) => {
-    return (
-      <button
-        onClick={onClick}
-        className={`btn plus-bg ${classes.button}`}
-        // disabled={disableBtn ? true : false}
-      >
-        { children }
-      </button>
-    )
-  }
+  const SubmitButton = ({ children, onClick }) => (
+    <button onClick={onClick} className={`btn plus-bg ${classes.button}`}>
+      {children}
+    </button>
+  );
 
   const ModeSwitch = ({ mode, children }) => {
+    const handleClick = useCallback(() => {
+      setShowSignup(!showSignup);
+      setName('');
+      setShowAlert(false);
+    }, []);
+
     return (
       <div style={{ marginTop: '30px' }}>
-        <span style={{ color: '#232C2D', opacity: 0.8 }}>
-          { children }
-        </span>
+        <span style={{ color: '#232C2D', opacity: 0.8 }}>{children}</span>
         <Typography
           color='primary'
           className={classes.link}
-          onClick={() => {
-            setShowSignup(!showSignup); 
-            setName('');
-          }}
+          onClick={handleClick}
         >
-          { mode }
+          {mode}
         </Typography>
       </div>
-    )
-  }
-
-  const handleRegister = e => {
-    e.preventDefault();
-    const newUser = { name, email, password };
-    registerUser(newUser);
+    );
   };
 
-  const handleLogin = e => {
-    e.preventDefault();
-    loginUser({ email, password });
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (e.target.innerText === 'SIGN UP') {
+        const newUser = { name, email, password };
+        registerUser(newUser);
+        error && setShowAlert(true);
+      } else {
+        loginUser({ email, password });
+        error && setShowAlert(true);
+      }
+    },
+    [loginUser, registerUser, name, email, password, error]
+  );
+
+  const handleChange = useCallback((e) => {
+    // eslint-disable-next-line
+    switch (e.target.id) {
+      case 'Name':
+        setName(e.target.value);
+        break;
+      case 'Email':
+        setEmail(e.target.value);
+        break;
+      case 'Password':
+        setPassword(e.target.value);
+        break;
+    }
+  }, []);
+
+  const handleAlert = useCallback(() => {
+    setShowAlert(false);
+  }, []);
+
+  const handleShowPassword = useCallback(() => {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
+
+  const icon = {
+    endAdornment: (
+      <PasswordIcon
+        showPassword={showPassword}
+        setShowpassword={handleShowPassword}
+      />
+    ),
   };
 
-  if (getToken()) return <Redirect to='/' />
+  if (getToken()) return <Redirect to='/' />;
 
   return (
-    <form className='container login-form' noValidate autoComplete='off'>
-
-      {error && (
-        <Alert severity='error'>
-          <p className={classes.alert}>{error.replace(/"/g, "")}</p>
+    <div className={classes.centerAlign}>
+      {showAlert ? (
+        <Alert
+          severity='error'
+          className={classes.alertBox}
+          onClose={handleAlert}
+        >
+          <p className={classes.alert}>{String(error).replace(/"/g, '')}</p>
         </Alert>
-      )}
-
-      <TextField
-        label={showSignup ? 'Name' : ' '}
-        required={!showSignup? false : true}
-        disabled={showSignup? false : true}
-        value={name}
-        onChange={e => setName(e.target.value)}
-        className={classes.input}
-      />
-
-      <TextField
-        label='Email'
-        type='email'
-        required
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        className={classes.input}
-      />
-
-      <TextField
-        label='Password'
-        type={showPassword ? 'text' : 'password'}
-        required
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className={classes.input}
-        InputProps={{
-          endAdornment: (
-            <PasswordIcon
-              showPassword={showPassword}
-              setShowpassword={() => setShowpassword(!showPassword)}
-            />
-          )
-        }}
-      />
-
-      {showSignup ? (
-        <>
-          <SubmitButton onClick={e => handleRegister(e)}>Sign up</SubmitButton>
-          <ModeSwitch mode='Login'>Already have account?</ModeSwitch>
-        </>
       ) : (
-        <>
-          <SubmitButton onClick={e => handleLogin(e)}>Login</SubmitButton>
-          <ModeSwitch mode='Sign up'>No account?</ModeSwitch>
-        </>
+        <div style={{ height: 48 }} />
       )}
-    </form>
+
+      <form className='new-form' noValidate autoComplete='off'>
+        <TextField
+          id={showSignup ? 'Name' : ' '}
+          label={showSignup ? 'Name' : ' '}
+          required={!showSignup ? false : true}
+          disabled={showSignup ? false : true}
+          value={name}
+          onChange={handleChange}
+          className={classes.input}
+        />
+
+        <TextField
+          id='Email'
+          label='Email'
+          type='email'
+          required
+          value={email}
+          onChange={handleChange}
+          className={classes.input}
+        />
+
+        <TextField
+          id='Password'
+          label='Password'
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={handleChange}
+          InputProps={icon}
+          className={classes.input}
+          required
+        />
+
+        {showSignup ? (
+          <>
+            <SubmitButton onClick={handleSubmit}>Sign up</SubmitButton>
+            <ModeSwitch mode='Login'>Already have account?</ModeSwitch>
+          </>
+        ) : (
+          <>
+            <SubmitButton onClick={handleSubmit}>Login</SubmitButton>
+            <ModeSwitch mode='Sign up'>No account?</ModeSwitch>
+          </>
+        )}
+      </form>
+    </div>
   );
 };
 

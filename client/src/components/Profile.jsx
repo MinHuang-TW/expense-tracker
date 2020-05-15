@@ -3,7 +3,24 @@ import { GlobalContext } from '../context/GlobalState';
 import { InputText } from './common/Input';
 import { emailValid } from '../utils/format';
 import Alert from '@material-ui/lab/Alert';
+import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+
+const useStyles = makeStyles((theme) => ({
+  centerAlign: {
+    [theme.breakpoints.up('sm')]: {
+      height: 'calc(100vh - 48px)',
+    },
+    height: 'calc(100vh - 104px)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  alert: { 
+    width: '100%', 
+    borderRadius: 0, 
+  },
+}));
 
 const Profile = () => {
   const { users, loadUser, updateUser } = useContext(GlobalContext);
@@ -15,19 +32,7 @@ const Profile = () => {
   const [disableBtn, setDisableBtn] = useState(true),
         [disableCancel, setDisableCancel] = useState(true);
   const [success, setSuccess] = useState(false);
-
-  const style = {
-    centerAlign: {
-      height: 'calc(100vh - 104px)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    alert: { 
-      width: '100%', 
-      borderRadius: 0, 
-    }
-  };
+  const classes = useStyles();
 
   const itemValid = (item, errorItem) => {
     if (!item) setDisableBtn(true);
@@ -122,9 +127,9 @@ const Profile = () => {
   }, [users.user]);
 
   return (
-    <div style={style.centerAlign}>
+    <div className={classes.centerAlign}>
       {success ? (
-        <Alert style={style.alert} severity='success' onClose={handleAlert}>
+        <Alert className={classes.alert} severity='success' onClose={handleAlert}>
           <p>Profile updated successfully!</p>
         </Alert>
       ) : <div style={{ height: 48 }} />}

@@ -48,13 +48,6 @@ body::-webkit-scrollbar {
   background: transparent !important;
 }
 
-/* ----- LOGIN ----- */
-
-.login-form {
-  margin-top: 100px;
-  text-align: center;
-}
-
 /* ----- DASHBOARD ----- */
 
 .container-top {
