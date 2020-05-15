@@ -91,7 +91,7 @@ const Login = () => {
     <form className='container login-form' noValidate autoComplete='off'>
 
       {error && (
-        <Alert variant='outlined' severity='error'>
+        <Alert severity='error'>
           <p className={classes.alert}>{error.replace(/"/g, "")}</p>
         </Alert>
       )}

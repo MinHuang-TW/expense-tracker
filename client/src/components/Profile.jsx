@@ -2,22 +2,31 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { InputText } from './common/Input';
 import { emailValid } from '../utils/format';
+import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 
 const Profile = () => {
   const { users, loadUser, updateUser } = useContext(GlobalContext);
   const [name, setName] = useState(''),
-        [errorName, setErrorName] = useState(false);
-  const [email, setEmail] = useState(''),
+        [email, setEmail] = useState(''),
+        [date, setDate] = useState('');
+  const [errorName, setErrorName] = useState(false),
         [errorEmail, setErrorEmail] = useState(false);
-  const [date, setDate] = useState('');
   const [disableBtn, setDisableBtn] = useState(true),
         [disableCancel, setDisableCancel] = useState(true);
+  const [success, setSuccess] = useState(false);
 
-  const centerAlign = {
-    height: 'calc(100vh - 56px)',
-    display: 'flex',
-    alignItems: 'center',
+  const style = {
+    centerAlign: {
+      height: 'calc(100vh - 104px)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    alert: { 
+      width: '100%', 
+      borderRadius: 0, 
+    }
   };
 
   const itemValid = (item, errorItem) => {
@@ -26,33 +35,35 @@ const Profile = () => {
   };
 
   const handleName = useCallback(
-    (e) => {
+    ({ target: input }) => {
+      setSuccess(false);
       setDisableCancel(false);
-      setName(e.target.value);
-      if (e.target.value.length >= 3) {
+      setName(input.value);
+
+      if (input.value.length >= 3) {
         setErrorName(false);
         itemValid(email, errorEmail);
       } else {
         setErrorName(true);
         setDisableBtn(true);
       }
-    },
-    [email, errorEmail]
+    }, [email, errorEmail]
   );
 
   const handleEmail = useCallback(
-    (e) => {
+    ({ target: input }) => {
+      setSuccess(false);
       setDisableCancel(false);
-      setEmail(e.target.value);
-      if (emailValid(e.target.value)) {
+      setEmail(input.value);
+
+      if (emailValid(input.value)) {
         setErrorEmail(false);
         itemValid(name, errorName);
       } else {
         setErrorEmail(true);
         setDisableBtn(true);
       }
-    },
-    [name, errorName]
+    }, [name, errorName]
   );
 
   const lists = [
@@ -62,7 +73,7 @@ const Profile = () => {
   ];
 
   const errorMessage = (label) =>
-    `Please enter ${label === 'Name' ? label : 'valid ' + label}`;
+    `Please enter valid ${label === 'Name' ? label + '(at least 3 characters)' : label}`;
 
   const buttons = [
     { text: 'SAVE', state: disableBtn },
@@ -71,17 +82,18 @@ const Profile = () => {
 
   const handleClick = useCallback(
     (e) => {
-      const type = e.target.innerText;
       e.preventDefault();
+      const type = e.target.innerText;
 
       if (type === 'CANCEL') {
-        const { name, email } = users;
+        const { name, email } = users.user;
         setName(name);
         setEmail(email);
       }
       if (type === 'SAVE') {
         const editUser = { name, email };
-        updateUser(users._id, editUser);
+        updateUser(users.user._id, editUser);
+        setSuccess(users.success);
       }
       setErrorName(false);
       setErrorEmail(false);
@@ -91,21 +103,33 @@ const Profile = () => {
     [users, name, email, updateUser]
   );
 
+  const handleAlert = useCallback(() => {
+    setSuccess(false);
+  }, []);
+
   useEffect(() => {
     loadUser();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    const { name, email, register_date } = users;
-    setName(name);
-    setEmail(email);
-    setDate(moment(register_date).format('d MMM, YYYY'));
-  }, [users]);
+    if (users.user) {
+      const { name, email, register_date } = users.user;
+      setName(name);
+      setEmail(email);
+      setDate(moment(register_date).format('d MMM, YYYY'));
+    }
+  }, [users.user]);
 
   return (
-    <div style={centerAlign}>
-      <form className='new-form' style={{ height: 420 }} noValidate>
+    <div style={style.centerAlign}>
+      {success ? (
+        <Alert style={style.alert} severity='success' onClose={handleAlert}>
+          <p>Profile updated successfully!</p>
+        </Alert>
+      ) : <div style={{ height: 48 }} />}
+
+      <form className='new-form' noValidate>
         {lists.map(({ label, value, error, onChange }) => (
           <InputText
             key={label}

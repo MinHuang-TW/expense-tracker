@@ -130,7 +130,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
         </Typography>
 
         <Typography color='primary' variant='h4' className='username'>
-          {token && users.name}
+          {token && users.user && users.user.name}
         </Typography>
 
         <div style={{ textAlign: 'right' }}>

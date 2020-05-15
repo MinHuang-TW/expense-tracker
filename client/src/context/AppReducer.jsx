@@ -24,7 +24,7 @@ export default (state, action) => {
       // {_id: , text: , amount: , date: , user: ,...}
       return {
         ...state,
-        transactions: [...state.transactions, action.payload]
+        transactions: [...state.transactions, action.payload],
       };
     case 'UPDATE_TRANSACTION':
       const { _id, amount, text, date } = action.payload;
@@ -63,10 +63,12 @@ export default (state, action) => {
       }
 
     case 'UPDATE_USER':
+      const { success, user } = action.payload;
       return {
         ...state,
-        // users: { success: , token: , user: { id: , name: , email: }}
-        users: action.payload.user,
+        // users: { success: , user: { id: , name: , email: }}
+        // users: action.payload,
+        users: { success, user },
       }
 
     case 'LOAD_USER':
