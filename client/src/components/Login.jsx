@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import PasswordIcon from '../components/common/PasswordIcon';
@@ -56,16 +56,19 @@ const Login = () => {
   const classes = useStyles();
 
   const SubmitButton = ({ children, onClick }) => (
-    <button onClick={onClick} className={`btn plus-bg ${classes.button}`}>
+    <button 
+      onClick={onClick} 
+      className={`btn plus-bg ${classes.button}`}
+    >
       {children}
     </button>
   );
 
   const ModeSwitch = ({ mode, children }) => {
     const handleClick = useCallback(() => {
+      setShowAlert(false);
       setShowSignup(!showSignup);
       setName('');
-      setShowAlert(false);
     }, []);
 
     return (
@@ -85,17 +88,17 @@ const Login = () => {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      if (e.target.innerText === 'SIGN UP') {
-        const newUser = { name, email, password };
-        registerUser(newUser);
-        error && setShowAlert(true);
-      } else {
-        loginUser({ email, password });
-        error && setShowAlert(true);
-      }
+      const login = e.target.innerText === 'LOGIN';
+      if (login) loginUser({ email, password });
+      else registerUser({ name, email, password });
     },
-    [loginUser, registerUser, name, email, password, error]
+    // eslint-disable-next-line
+    [name, email, password]
   );
+
+  useEffect(() => {
+    if (error) setShowAlert(true);
+  }, [error]);
 
   const handleChange = useCallback((e) => {
     // eslint-disable-next-line
