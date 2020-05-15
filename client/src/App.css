@@ -331,6 +331,7 @@ body::-webkit-scrollbar {
 
 .center-align {
   margin: auto;
+  margin-top: 25px;
   overflow: visible;
 }
 
