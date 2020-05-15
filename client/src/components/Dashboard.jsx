@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { useTransition, animated } from 'react-spring';
 import { GlobalContext } from '../context/GlobalState';
-import { checkDay, sortDateAmount } from '../utils/calculation';
+import { checkRecent, sortDateAmount } from '../utils/calculation';
 import { transitionConfig } from '../utils/animation';
 import Total from './common/Total';
 import IncomExpenses from './common/IncomeExpenses';
@@ -17,13 +17,13 @@ const Dashboard = () => {
   const amounts = transactions.map(transaction => transaction.amount);
 
   const lists = transactions
-    .filter(({ date }) => checkDay(date))
+    .filter(({ date }) => checkRecent(date))
     .sort((a, b) => sortDateAmount(a, b, sortColumn, sortLatest, sortDsc));
 
   const transition = useTransition(
     lists, 
     list => list._id, 
-    transitionConfig(75, 200),
+    transitionConfig(86, 200),
   );
 
   const handleSortDate = useCallback(() => {
@@ -58,14 +58,14 @@ const Dashboard = () => {
           sortDsc={sortDsc}
           handleSortDate={handleSortDate}
           handleSortAmount={handleSortAmount}
-          sortText='today'
+          sortText='recent'
         />
 
         {lists.length > 0 ? (
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <ListMenu data={item} />
+                <ListMenu data={item} date />
               </animated.div>
             ))}
           </ul>
@@ -73,7 +73,7 @@ const Dashboard = () => {
           <div className='list-status'>
             {loading 
               ? (<CircularProgress color='primary' />) 
-              : (<p>No transaction today</p>)}
+              : (<p>No recent transaction</p>)}
           </div>
         )}
       </div>

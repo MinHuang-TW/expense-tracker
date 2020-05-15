@@ -28,6 +28,16 @@ export function checkDay(d) {
   return false;
 }
 
+export function checkRecent(d) {
+  const start = moment().subtract(3, 'days');
+  const end = moment().add(3, 'days');
+  const date = moment(d);
+  const range = moment().range(start, end);
+
+  if (date.within(range)) return true;
+  return false;
+}
+
 export function checkWeek(d) {
   const sunday = moment().startOf('week');
   const saturday = moment().endOf('week');
