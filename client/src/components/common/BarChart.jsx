@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 const BarChart = ({ data, keys, select, width, height }) => {
   const ref = useRef(null);
   const barWidth = 6;
-  const colorList = { income: '#fff', expense: '#f8777d' };
+  const colorList = { income: 'rgba(255, 255, 255, 0.3)', expense: '#fff' };
 
   const dayList = moment.weekdays();
   const monthList = moment.months();

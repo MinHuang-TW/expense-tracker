@@ -32,25 +32,19 @@ const ReportOverview = ({ selected, timeFilters, value, amounts }) => {
       ) : (
         <div className='container box-incomeExpense'>
           <div className='block-chart'>
-            {!noData ? (
-              <>
-                <div className='vertical-align block-ratio'>
-                  <p className='main-amount'>{ratio}</p>
-                  <p className='text-white-m'>%</p>
-                </div>
-                <div className='vertical-align' style={{ height: height }}>
-                  <PieChart
-                    data={data}
-                    width={width}
-                    height={height}
-                    outerRadius={outerRadius}
-                    innerRadius={innerRadius}
-                  />
-                </div>
-              </>
-            ) : (
-              <p className='text-white-s vertical-align'>No transaction</p>
-            )}
+            <div className='vertical-align block-ratio'>
+              <p className='main-amount'>{noData ? 0 : ratio}</p>
+              <p className='text-white-m'>%</p>
+            </div>
+            <div className='vertical-align' style={{ height: height }}>
+              <PieChart
+                data={noData ? [0, 100] : data}
+                width={width}
+                height={height}
+                outerRadius={outerRadius}
+                innerRadius={innerRadius}
+              />
+            </div>
           </div>
 
           <div className='block-text'>
