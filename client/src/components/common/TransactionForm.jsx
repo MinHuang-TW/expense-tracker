@@ -92,9 +92,9 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
     else errorItem ? setDisableBtn(true) : setDisableBtn(false);
   };
 
-  const handleAmount = useCallback((e) => {
-    setAmount(e.target.value);
-    if (numberValid(e.target.value)) {
+  const handleAmount = useCallback(({ target: input }) => {
+    setAmount(input.value);
+    if (numberValid(input.value)) {
       setErrorAmount(false);
       itemValid(text, errorText);
     } else {
@@ -103,9 +103,9 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
     }
   }, [text, errorText]);
 
-  const handleText = useCallback((e) => {
-    setText(e.target.value);
-    if (e.target.value) {
+  const handleText = useCallback(({ target: input }) => {
+    setText(input.value);
+    if (input.value) {
       setErrorText(false);
       itemValid(amount, errorAmount);
     } else {
@@ -157,7 +157,6 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
             autoComplete='off'
           >
             <InputAmount 
-              data={data} 
               action={action}
               minus={minus} 
               amount={amount} 
@@ -167,7 +166,7 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
             />
             <InputText
               label='Description'
-              value={data && data.text && text}
+              value={text || ''}
               error={errorText}
               errorMsg='Please describe the transaction'
               onChange={handleText}

@@ -65,7 +65,7 @@ const Dashboard = () => {
           <ul className='list'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
-                <ListMenu data={item} date />
+                <ListMenu data={item} date='relative' />
               </animated.div>
             ))}
           </ul>

@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const InputAmount = ({
-  data,
   action,
   minus,
   amount,
@@ -63,7 +62,7 @@ export const InputAmount = ({
         label='Amount'
         required
         autoFocus={action === 'new' && true}
-        value={data && data.amount && amount}
+        value={amount || ''}
         InputProps={{
           className: `${classes.input} ${
             minus ? classes.inputMinus : classes.inputPlus

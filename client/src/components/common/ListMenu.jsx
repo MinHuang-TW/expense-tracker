@@ -12,9 +12,10 @@ const ListMenu = ({ data, date }) => {
   const [showMenu, setshowMenu] = useState(false),
         [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  const amountColor = data.amount === 0 ? null : data.amount > 0 ? 'plus' : 'minus';
-  const sign = data.amount === 0 ? null : data.amount < 0 ? '-' : '+';
-  const formatDate = date => moment(date).format('D MMM, YYYY');
+  const sign = !data.amount ? null : data.amount > 0 ? '+' : '-',
+        color = !data.amount ? null : data.amount > 0 ? 'plus' : 'minus';
+  const formatDate = (date) => moment(date).format('D MMM, YYYY'),
+        formatRelative = (date) => moment(date).fromNow();
 
   const buttonWidth = 70,
         paddingLeft = 15,
@@ -58,10 +59,13 @@ const ListMenu = ({ data, date }) => {
     setOpen(true);
   }, []);
 
-  const handleDelete = useCallback((id) => (event) => {
-    deleteTransaction(id);
-    setDeleted(true);
-  }, [deleteTransaction]);
+  const handleDelete = useCallback(
+    (id) => (event) => {
+      deleteTransaction(id);
+      setDeleted(true);
+    },
+    [deleteTransaction]
+  );
 
   return (
     <>
@@ -77,15 +81,27 @@ const ListMenu = ({ data, date }) => {
 
         <div>
           <p>{data.text}</p>
-          {date && <p className='list-date'>{formatDate(data.date)}</p>}
+          {date && (
+            <p className='list-date'>
+              {date === 'relative'
+                ? formatRelative(data.date)
+                : formatDate(data.date)}
+            </p>
+          )}
         </div>
 
-        <span className={`list-amount ${amountColor}`}>
-          {sign}{numberEuro(Math.abs(data.amount))}
+        <span className={`list-amount ${color}`}>
+          {sign}
+          {numberEuro(Math.abs(data.amount))}
         </span>
       </animated.li>
 
-      <TransactionForm data={data} open={open} setOpen={setOpen} action='edit' />
+      <TransactionForm
+        data={data}
+        open={open}
+        setOpen={setOpen}
+        action='edit'
+      />
     </>
   );
 };
