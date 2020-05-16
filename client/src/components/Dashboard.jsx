@@ -62,7 +62,7 @@ const Dashboard = () => {
         />
 
         {lists.length > 0 ? (
-          <ul className='list'>
+          <ul className='list list-bottom'>
             {transition.map(({ item, props, key }) => (
               <animated.div key={key} style={props}>
                 <ListMenu data={item} date='relative' />

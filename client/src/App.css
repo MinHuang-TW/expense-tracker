@@ -146,6 +146,10 @@ body::-webkit-scrollbar {
   background: #f8777d;
 }
 
+.zero-bg {
+  background: #232c2d9f;
+}
+
 .btn {
   /* opacity: 1; */
   cursor: pointer;
@@ -188,8 +192,11 @@ body::-webkit-scrollbar {
   padding: 0;
   color: #232c2d;
   opacity: 0.8;
-  margin-bottom: 90px;
   overflow: hidden;
+}
+
+.list-bottom {
+  margin-bottom: 90px;
 }
 
 .list li {
@@ -221,6 +228,10 @@ body::-webkit-scrollbar {
 
 .minus {
   color: #f8777d;
+}
+
+.zero {
+  color: #232c2d9f;
 }
 
 .list-status {

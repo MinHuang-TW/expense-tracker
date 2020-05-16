@@ -13,7 +13,7 @@ const ListMenu = ({ data, date }) => {
         [open, setOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const sign = !data.amount ? null : data.amount > 0 ? '+' : '-',
-        color = !data.amount ? null : data.amount > 0 ? 'plus' : 'minus';
+        color = !data.amount ? 'zero' : data.amount > 0 ? 'plus' : 'minus';
   const formatDate = (date) => moment(date).format('D MMM, YYYY'),
         formatRelative = (date) => moment(date).fromNow();
 
@@ -37,9 +37,6 @@ const ListMenu = ({ data, date }) => {
     cursor: 'pointer',
   };
 
-  const deleteBtn = { background: '#f8777d', ...menuBtn };
-  const editBtn = { background: '#232c2d9f', ...menuBtn };
-
   const props = useSpring({
     opacity: deleted ? 0 : 1,
     transform: showMenu
@@ -59,22 +56,19 @@ const ListMenu = ({ data, date }) => {
     setOpen(true);
   }, []);
 
-  const handleDelete = useCallback(
-    (id) => (event) => {
-      deleteTransaction(id);
-      setDeleted(true);
-    },
-    [deleteTransaction]
-  );
+  const handleDelete = useCallback((id) => (event) => {
+    deleteTransaction(id);
+    setDeleted(true);
+  }, [deleteTransaction]);
 
   return (
     <>
       <animated.li style={props} onClick={handleShowMenu}>
         <div style={menuBlock}>
-          <div style={deleteBtn} onClick={handleDelete(data._id)}>
+          <div className='minus-bg' style={menuBtn} onClick={handleDelete(data._id)}>
             <DeleteSharpIcon className='menu-icon' />
           </div>
-          <div style={editBtn} onClick={handleShowForm}>
+          <div className='zero-bg' style={menuBtn} onClick={handleShowForm}>
             <EditSharpIcon className='menu-icon' />
           </div>
         </div>
@@ -83,25 +77,17 @@ const ListMenu = ({ data, date }) => {
           <p>{data.text}</p>
           {date && (
             <p className='list-date'>
-              {date === 'relative'
-                ? formatRelative(data.date)
-                : formatDate(data.date)}
+              {date === 'relative' ? formatRelative(data.date) : formatDate(data.date)}
             </p>
           )}
         </div>
 
         <span className={`list-amount ${color}`}>
-          {sign}
-          {numberEuro(Math.abs(data.amount))}
+          {sign}{numberEuro(Math.abs(data.amount))}
         </span>
       </animated.li>
 
-      <TransactionForm
-        data={data}
-        open={open}
-        setOpen={setOpen}
-        action='edit'
-      />
+      <TransactionForm data={data} open={open} setOpen={setOpen} action='edit' />
     </>
   );
 };
