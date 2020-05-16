@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const InputAmount = ({
   data,
+  action,
   minus,
   amount,
   errorAmount,
@@ -61,7 +62,7 @@ export const InputAmount = ({
         id='amount'
         label='Amount'
         required
-        autoFocus
+        autoFocus={action === 'new' && true}
         value={data && data.amount && amount}
         InputProps={{
           className: `${classes.input} ${

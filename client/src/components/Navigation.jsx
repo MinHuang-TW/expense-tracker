@@ -93,7 +93,8 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     enter: theme.transitions.duration.enteringScreen,
     exit: theme.transitions.duration.leavingScreen,
   };
-  const showAddButton = token !== null && pathname !== '/profile';
+  const showAddButton = 
+    token !== null && pathname !== '/profile' && pathname !== '/statistics';
   const delay = {transitionDelay: `${showAddButton ? transition.exit : 0}ms`};
 
   const iconSize = { fontSize: '20px' };
@@ -127,6 +128,18 @@ const Navigation = ({ container, children, location: { pathname } }) => {
     }
   };
 
+  const handleClose = useCallback(() => {
+    setMobileOpen(false);
+  }, []);
+
+  const handleOpen = useCallback(() => {
+    setMobileOpen(!mobileOpen);
+  }, [mobileOpen]);
+
+  const handleForm = useCallback(() => {
+    setOpen(true);
+  }, []);
+
   const drawer = (<>
     <div className='block-greeting'>
       <Typography variant='h6' className={classes.textColor} gutterBottom>
@@ -157,6 +170,7 @@ const Navigation = ({ container, children, location: { pathname } }) => {
             component={NavLink}
             selected={path === pathname}
             style={{ minHeight: '48px' }}
+            onClick={handleClose}
           >
             <ListItemIcon className={itemColor(path)} style={{ minWidth: '35px' }}>
               {icon}
@@ -169,14 +183,6 @@ const Navigation = ({ container, children, location: { pathname } }) => {
       })}
     </MenuList>
   </>);
-
-  const handleOpen = useCallback(() => {
-    setMobileOpen(!mobileOpen);
-  }, [mobileOpen]);
-
-  const handleForm = useCallback(() => {
-    setOpen(true);
-  }, []);
 
   useEffect(() => {
     token && loadUser();

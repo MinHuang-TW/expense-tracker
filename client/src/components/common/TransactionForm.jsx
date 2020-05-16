@@ -158,6 +158,7 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
           >
             <InputAmount 
               data={data} 
+              action={action}
               minus={minus} 
               amount={amount} 
               errorAmount={errorAmount} 
