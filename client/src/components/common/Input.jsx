@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { TextField, InputAdornment, Switch } from '@material-ui/core';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -32,6 +32,11 @@ export const InputAmount = ({
   handleMinus,
 }) => {
   const classes = useStyles();
+  const ref = useRef();
+
+  const handleFocus = useCallback(() => {
+    ref.current.focus();
+  }, [])
 
   const TransactionSwitch = withStyles((theme) => ({
     root: {
@@ -59,6 +64,7 @@ export const InputAmount = ({
     <div className='input-amount'>
       <TextField
         id='amount'
+        inputRef={ref}
         label='Amount'
         required
         autoFocus={action === 'new' && true}
@@ -85,6 +91,7 @@ export const InputAmount = ({
         checked={minus}
         tabIndex='-1'
         onChange={handleMinus}
+        onClick={handleFocus}
         inputProps={{ 'aria-label': 'secondary checkbox' }}
       />
     </div>

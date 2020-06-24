@@ -62,30 +62,28 @@ const TransactionForm = ({ open, setOpen, action, data }) => {
 
   const [disableBtn, setDisableBtn] = useState(true);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setOpen(false);
     setErrorText(false);
     setErrorAmount(false);
     setDisableBtn(true);
-  };
+  }, [setOpen]);
 
   const handleClose = useCallback(() => {
-    reset();
     setText(initialText);
     setAmount(initialAmount);
     setDate(initialDate);
     setMinus(initialMinus);
-    // eslint-disable-next-line
-  }, [initialText, initialAmount, initialDate, initialMinus]);
+    reset();
+  }, [initialText, initialAmount, initialDate, initialMinus, reset]);
 
   const handleSave = useCallback(() => {
-    reset();
-    setText(text);
-    setAmount(amount);
-    setDate(date);
+    setText(action === 'new' ? '' : text);
+    setAmount(action === 'new' ? null : amount);
+    setDate(action === 'new' ? moment() : date);
     setMinus(action === 'new' ? true : minus);
-    // eslint-disable-next-line
-  }, [text, minus, amount, date]);
+    reset();
+  }, [text, minus, amount, date, action, reset]);
 
   const itemValid = (item, errorItem) => {
     if (!item) setDisableBtn(true);
