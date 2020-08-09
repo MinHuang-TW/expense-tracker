@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const { getToken, registerUser, loginUser, error } = useContext(GlobalContext);
   const [name, setName] = useState(''),
-        [email, setEmail] = useState(''),
-        [password, setPassword] = useState('');
+        [email, setEmail] = useState('test@mail.com'),
+        [password, setPassword] = useState('1234');
   const [showPassword, setShowPassword] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
